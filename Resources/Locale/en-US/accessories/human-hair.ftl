@@ -185,7 +185,7 @@ marking-HumanHairCrewcut2 = Crewcut 2
 marking-HumanHairCrewcut2-crewcut2 = Crewcut 2
 
 marking-HumanHairCube = Cube
-marking-HumanHairCube-cube = Cube
+marking-HumanHairCube-cubism = Cube
 
 marking-HumanHairCurls = Curls
 marking-HumanHairCurls-curls = Curls
@@ -610,3 +610,36 @@ marking-HumanHairTerminal = Terminal
 marking-HumanHairTerminal-terminal = Primary
 marking-HumanHairTerminal-terminal_highlight = Highlight
 marking-HumanHairTerminal-terminal_headband = Headband
+
+marking-HumanHairDeathKid = Death Kid
+marking-HumanHairDeathKid-deathkid = Death Kid
+
+marking-HumanHairLongRoundedExtensions = Long Round with Extensions
+marking-HumanHairLongRoundedExtensions-longroundextensions = Long Round with Extensions
+
+marking-HumanHairLongTuftTipped = Long Tuft-tipped
+marking-HumanHairLongTuftTipped-longtufttipped = Long Tuft-tipped
+
+marking-HumanHairOrb = Orb
+marking-HumanHairOrb-orb = Orb
+
+marking-HumanHairPigtailsExtensions = Pigtails with Extensions
+marking-HumanHairPigtailsExtensions-pigtailextensions = Pigtails with Extensions
+
+marking-HumanHairShortCurvy = Short and Curly
+marking-HumanHairShortCurvy-shortandcurvy = Short and Curly
+
+marking-HumanHairShortRoundedExtensions = Short Rounded with Extensions
+marking-HumanHairShortRoundedExtensions-shortroundedextensions = Short Rounded with Extensions
+
+marking-HumanHairShortTuftTipped = Short Tuft-tipped
+marking-HumanHairShortTuftTipped-shorttufttipped = Short Tuft-tipped
+
+marking-HumanHairTriangulum = Triangulum
+marking-HumanHairTriangulum-triangulum = Triangulum
+
+marking-HumanHairWolfcutClean = Wolfcut Clean
+marking-HumanHairWolfcutClean-wolfcutclean = Wolfcut Clean
+
+marking-HumanHairWolfcutMeow = Wolfcut Meow
+marking-HumanHairWolfcutMeow-wolfcutmeow = Wolfcut Meow
