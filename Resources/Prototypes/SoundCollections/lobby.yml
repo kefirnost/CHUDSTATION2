@@ -1,18 +1,20 @@
 - type: soundCollection
   id: LobbyMusic
   files:
-    - /Audio/Lobby/thunderdome.ogg
-    - /Audio/Lobby/absconditus.ogg
-    - /Audio/Lobby/space_asshole.ogg
-    - /Audio/Lobby/the_wizard.ogg
-    - /Audio/Lobby/endless_space.ogg
-    - /Audio/Lobby/singuloose.ogg
-    - /Audio/Lobby/comet_haley.ogg
-    - /Audio/Lobby/title2.ogg
-    - /Audio/Lobby/title3.ogg
-    - /Audio/Lobby/mod.flip-flap.ogg
-    - /Audio/Lobby/Spac_Stac.ogg
-    - /Audio/Lobby/pwmur.ogg
-    - /Audio/Lobby/lasers_rip_apart_the_bulkhead.ogg
-    - /Audio/Lobby/every_light_is_blinking_at_once.ogg
-    - /Audio/Lobby/atomicamnesiammx.ogg
+    - /Audio/Lobby/atlas.ogg
+    - /Audio/Lobby/atmosphere.ogg
+    - /Audio/Lobby/biodome.ogg
+    - /Audio/Lobby/december.ogg
+    - /Audio/Lobby/distant_star.ogg
+    - /Audio/Lobby/everyone_is_so_alive.ogg
+    - /Audio/Lobby/floaty.ogg
+    - /Audio/Lobby/funkadelic.ogg
+    - /Audio/Lobby/giga.ogg
+    - /Audio/Lobby/graveyard.ogg
+    - /Audio/Lobby/high_technologic_beat.ogg
+    - /Audio/Lobby/it_feels_good_to_be_alive_too.ogg
+    - /Audio/Lobby/monkey_riot.ogg
+    - /Audio/Lobby/planets.ogg
+    - /Audio/Lobby/riverdancer.ogg
+    - /Audio/Lobby/uguu.ogg
+    - /Audio/Lobby/waystations.ogg

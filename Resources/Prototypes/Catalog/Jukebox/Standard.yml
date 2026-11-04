@@ -33,3 +33,93 @@
   name: Qwertyquerty - Starlight
   path:
     path: /Audio/Jukebox/starlight.ogg
+
+- type: jukebox
+  id: atlassong
+  name: Atlas
+  path:
+    path: /Audio/Jukebox/atlas.ogg
+
+- type: jukebox
+  id: atmospheresong
+  name: Atmosphere
+  path:
+    path: /Audio/Jukebox/atmosphere.ogg
+
+- type: jukebox
+  id: biodomesong
+  name: Biodome
+  path:
+    path: /Audio/Jukebox/biodome.ogg
+
+- type: jukebox
+  id: distantstarsong
+  name: Thundermine - Distant Star
+  path:
+    path: /Audio/Jukebox/distant_star.ogg
+
+- type: jukebox
+  id: floatysong
+  name: Floaty
+  path:
+    path: /Audio/Jukebox/floaty.ogg
+
+- type: jukebox
+  id: funkadelicsong
+  name: Loyalty Freak Music - Funkadelic
+  path:
+    path: /Audio/Jukebox/funkadelic.ogg
+
+- type: jukebox
+  id: gigasong
+  name: Loyalty Freak Music - Giga
+  path:
+    path: /Audio/Jukebox/giga.ogg
+
+- type: jukebox
+  id: graveyardsong
+  name: Graveyard
+  path:
+    path: /Audio/Jukebox/graveyard.ogg
+
+- type: jukebox
+  id: techbeat
+  name: Loyalty Freak Music - High Technologic Beat
+  path:
+    path: /Audio/Jukebox/high_technologic_beat.ogg
+
+- type: jukebox
+  id: itfeelsgood
+  name: Loyalty Freak Music - It Feels Good To Be Alive Too
+  path:
+    path: /Audio/Jukebox/it_feels_good_to_be_alive_too.ogg
+
+- type: jukebox
+  id: monkeyriotsong
+  name: Monkey Riot
+  path:
+    path: /Audio/Jukebox/monkey_riot.ogg
+
+- type: jukebox
+  id: planetssong
+  name: Planets
+  path:
+    path: /Audio/Jukebox/planets.ogg
+
+- type: jukebox
+  id: riverdancersong
+  name: RiverDancer
+  path:
+    path: /Audio/Jukebox/riverdancer.ogg
+
+- type: jukebox
+  id: uguusong
+  name: Uguu (strange one)
+  path:
+    path: /Audio/Jukebox/uguu.ogg
+
+- type: jukebox
+  id: waystationssong
+  name: WayStations
+  path:
+    path: /Audio/Jukebox/waystations.ogg
