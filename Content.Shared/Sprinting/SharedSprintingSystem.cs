@@ -13,7 +13,7 @@ namespace Content.Shared.Sprinting;
 /// <summary>
 /// Shared sprint input, movement speed and stamina handling.
 /// </summary>
-public sealed class SharedSprintingSystem : EntitySystem
+public sealed partial class SharedSprintingSystem : EntitySystem
 {
     [Dependency] private SharedStaminaSystem _stamina = default!;
     [Dependency] private MovementSpeedModifierSystem _movement = default!;
