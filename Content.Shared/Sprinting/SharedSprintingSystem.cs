@@ -57,14 +57,15 @@ public sealed class SharedSprintingSystem : EntitySystem
 
             if (message.State == BoundKeyState.Down)
             {
-                if (sprinter.IsSprinting || system._timing.CurTime - sprinter.LastSprint < sprinter.SprintCooldown)
+                if (sprinter.IsSprinting || sprinter.HasSprinted && system._timing.CurTime - sprinter.LastSprint < sprinter.SprintCooldown)
                     return false;
 
-                if (system.TryComp<StaminaComponent>(uid, out var stamina) && stamina.Critical)
+                if (!system.TryComp<StaminaComponent>(uid, out var stamina) || stamina.Critical)
                     return false;
 
                 sprinter.IsSprinting = true;
                 sprinter.LastSprint = system._timing.CurTime;
+                sprinter.HasSprinted = true;
             }
             else
             {
