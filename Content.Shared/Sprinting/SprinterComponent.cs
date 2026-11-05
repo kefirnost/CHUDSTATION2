@@ -22,4 +22,7 @@ public sealed partial class SprinterComponent : Component
 
     [DataField, AutoNetworkedField]
     public TimeSpan LastSprint;
+
+    [DataField, AutoNetworkedField]
+    public bool HasSprinted;
 }
