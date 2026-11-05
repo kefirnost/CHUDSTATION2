@@ -1,7 +1,6 @@
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Input;
-using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Systems;
 using Robust.Shared.Input;
 using Robust.Shared.Input.Binding;
@@ -23,7 +22,6 @@ public sealed partial class SharedSprintingSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<InputMoverComponent, ComponentStartup>(OnMoverStartup);
         SubscribeLocalEvent<SprinterComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshSpeed);
 
         CommandBinds.Builder
@@ -37,11 +35,6 @@ public sealed partial class SharedSprintingSystem : EntitySystem
         CommandBinds.Unregister<SharedSprintingSystem>();
     }
 
-    private void OnMoverStartup(Entity<InputMoverComponent> ent, ref ComponentStartup args)
-    {
-        EnsureComp<SprinterComponent>(ent);
-    }
-
     private void OnRefreshSpeed(Entity<SprinterComponent> ent, ref RefreshMovementSpeedModifiersEvent args)
     {
         if (ent.Comp.IsSprinting)
@@ -52,8 +45,11 @@ public sealed partial class SharedSprintingSystem : EntitySystem
     {
         public override bool HandleCmdMessage(IEntityManager entManager, ICommonSession? session, IFullInputCmdMessage message)
         {
-            if (session?.AttachedEntity is not { } uid || !system.TryComp<SprinterComponent>(uid, out var sprinter))
+            if (session?.AttachedEntity is not { } uid)
                 return false;
+
+            // Create sprint state lazily when the player first presses the sprint key.
+            var sprinter = system.EnsureComp<SprinterComponent>(uid);
 
             if (message.State == BoundKeyState.Down)
             {
