@@ -47,7 +47,7 @@
   desc: reagent-desc-cream
   physicalDesc: reagent-physical-desc-creamy
   flavor: creamy
-  color: "#DFD7AF"
+  color: "#DFD7AFCC"
   metabolisms:
     Digestion:
       effects:
@@ -57,12 +57,13 @@
 
 - type: reagent
   id: CoconutWater
+  puddleSpriteSet: Shiny
   name: reagent-name-coconut-water
   parent: BaseDrink
   desc: reagent-desc-coconut-water
   physicalDesc: reagent-physical-desc-milky
   flavor: nutty
-  color: "#f4eadb"
+  color: "#f4eadbCC"
   metabolisms:
     Digestion:
       effects:
@@ -77,7 +78,7 @@
   desc: reagent-desc-cream-of-coconut
   physicalDesc: reagent-physical-desc-syrupy
   flavor: creamy
-  color: "#FFEABF"
+  color: "#FFEABFCC"
   metabolisms:
     Digestion:
       effects:
@@ -320,6 +321,7 @@
 
 - type: reagent
   id: Nothing
+  puddleSpriteSet: Water
   name: reagent-name-nothing
   desc: reagent-desc-nothing
   group: Drinks
@@ -503,6 +505,7 @@
 
 - type: reagent
   id: DryRamen
+  puddleSpriteSet: Shiny
   name: reagent-name-dry-ramen
   parent: BaseDrink
   desc: reagent-desc-dry-ramen
@@ -518,6 +521,7 @@
 
 - type: reagent
   id: HotRamen
+  puddleSpriteSet: Shiny
   name: reagent-name-hot-ramen
   parent: BaseDrink
   desc: reagent-desc-hot-ramen
