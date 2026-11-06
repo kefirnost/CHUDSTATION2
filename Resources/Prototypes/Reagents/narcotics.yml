@@ -1,5 +1,6 @@
 - type: reagent
   id: Desoxyephedrine
+  puddleSpriteSet: Shiny
   name: reagent-name-desoxyephedrine
   group: Narcotics
   desc: reagent-desc-desoxyephedrine
@@ -142,6 +143,7 @@
 
 - type: reagent
   id: Stimulants
+  puddleSpriteSet: Acid
   name: reagent-name-stimulants
   group: Narcotics
   desc: reagent-desc-stimulants

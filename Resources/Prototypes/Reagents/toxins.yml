@@ -1,5 +1,6 @@
 - type: reagent
   id: Toxin
+  puddleSpriteSet: Blood
   name: reagent-name-toxin
   group: Toxins
   desc: reagent-desc-toxin
@@ -22,6 +23,7 @@
 
 - type: reagent
   id: CarpoToxin
+  puddleSpriteSet: Blood
   name: reagent-name-carpotoxin
   group: Toxins
   desc: reagent-desc-carpotoxin
@@ -50,11 +52,12 @@
 
 - type: reagent
   id: ChloralHydrate
+  puddleSpriteSet: Shiny
   name: reagent-name-chloral-hydrate
   group: Toxins
   desc: reagent-desc-chloral-hydrate
   flavor: bitter
-  color: "#000067"
+  color: "#000067CC"
   physicalDesc: reagent-physical-desc-nondescript
   allowedDepartments:
   - Medical
@@ -104,6 +107,7 @@
 
 - type: reagent
   id: Mold
+  puddleSpriteSet: Splotchy
   name: reagent-name-mold
   group: Toxins
   desc: reagent-desc-mold
@@ -281,6 +285,7 @@
 
 - type: reagent
   id: UnstableMutagen
+  puddleSpriteSet: Acid
   name: reagent-name-unstable-mutagen
   group: Toxins
   desc: reagent-desc-unstable-mutagen
@@ -289,7 +294,7 @@
   - Chemist
   - Botanist
   flavor: bitter
-  color: "#00ff5f"
+  color: "#00ff5fCC"
   boilingPoint: 340282300 # Ethidium bromide, which doesn't boil.
   meltingPoint: 261.0
   plantMetabolism:
@@ -306,6 +311,7 @@
 
 - type: reagent
   id: HeartbreakerToxin
+  puddleSpriteSet: Acid
   name: reagent-name-heartbreaker-toxin
   group: Toxins
   desc: reagent-desc-heartbreaker-toxin
@@ -363,6 +369,7 @@
 
 - type: reagent
   id: Histamine
+  puddleSpriteSet: Splotchy
   name: reagent-name-histamine
   group: Toxins
   desc: reagent-desc-histamine
@@ -430,12 +437,13 @@
 
 - type: reagent
   id: Amatoxin
+  puddleSpriteSet: Acid
   name: reagent-name-amatoxin
   group: Toxins
   desc: reagent-desc-amatoxin
   physicalDesc: reagent-physical-desc-nondescript
   contrabandSeverity: Major
-  color: "#D6CE7B"
+  color: "#D6CE7BCC"
   metabolisms:
     Bloodstream:
       metabolismRate: 0.2
@@ -447,12 +455,13 @@
 
 - type: reagent
   id: VentCrud
+  puddleSpriteSet: Acid # off-kilter and splotchy looking texture
   name: reagent-name-vent-crud
   group: Toxins
   desc: reagent-desc-vent-crud
   physicalDesc: reagent-physical-desc-sticky
   flavor: bitter
-  color: "#000000"
+  color: "#1c1c1cFF"
   metabolisms:
     Bloodstream:
       effects:
@@ -536,6 +545,7 @@
 
 - type: reagent
   id: Allicin
+  puddleSpriteSet: Splotchy
   name: reagent-name-allicin
   group: Foods
   desc: reagent-desc-allicin
