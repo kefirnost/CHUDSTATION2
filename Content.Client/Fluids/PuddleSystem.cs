@@ -1,4 +1,4 @@
-using Content.Client.IconSmoothing;
+using Robust.Shared.Maths;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Fluids;
 using Content.Shared.Fluids.Components;
@@ -9,7 +9,6 @@ namespace Content.Client.Fluids;
 
 public sealed partial class PuddleSystem : SharedPuddleSystem
 {
-    [Dependency] private IconSmoothSystem _smooth = default!;
     [Dependency] private SpriteSystem _sprite = default!;
 
     [SubscribeLocalEvent]
@@ -21,28 +20,31 @@ public sealed partial class PuddleSystem : SharedPuddleSystem
         if (!args.TryGetData<float>(PuddleVisuals.CurrentVolume, out var volume))
             volume = 1.0f;
 
-        // Update smoothing and sprite based on volume.
-        if (volume < LowThreshold)
+        var spriteSetPrototype = DefaultPuddleSpriteSet;
+        if (args.AppearanceData.TryGetValue(PuddleVisuals.SpriteSet, out var spriteSetObj))
+            spriteSetPrototype = (string) spriteSetObj;
+
+        var spriteSet = ProtoMan.Index(spriteSetPrototype);
+        var sprites = volume switch
         {
-            _sprite.LayerSetRsiState((uid, args.Sprite), component.PuddleKey, $"{component.PuddleState}a");
-            _smooth.SetEnabled(uid, false, false);
-        }
-        else if (volume < MediumThreshold)
-        {
-            _sprite.LayerSetRsiState((uid, args.Sprite), component.PuddleKey, $"{component.PuddleState}b");
-            _smooth.SetEnabled(uid, false, false);
-        }
+            < LowThreshold => spriteSet.SmallSprites,
+            < MediumThreshold => spriteSet.MediumSprites,
+            _ => spriteSet.LargeSprites,
+        };
+
+        if (sprites.Count == 0)
+            return;
+
+        // Pick a stable per-entity sprite so all clients render the same puddle variant.
+        var random = new Random(unchecked((int) GetNetEntity(uid).Id));
+        _sprite.LayerSetSprite((uid, args.Sprite), 0, sprites[random.Next(sprites.Count)]);
+        _sprite.LayerSetRotation((uid, args.Sprite), 0, Angle.FromDegrees(random.Next(4) * 90));
+
+        var baseColor = spriteSet.BaseColor;
+        if (spriteSet.Recolor && args.AppearanceData.TryGetValue(PuddleVisuals.SolutionColor, out var colorObj))
+            _sprite.SetColor((uid, args.Sprite), (Color) colorObj * baseColor);
         else
-        {
-            _smooth.SetEnabled(uid, true);
-        }
-
-        var baseColor = Color.White;
-
-        if (!args.TryGetData<Color>(PuddleVisuals.SolutionColor, out var color))
-            color = args.Sprite.Color;
-
-        _sprite.SetColor((uid, args.Sprite), color * baseColor);
+            _sprite.SetColor((uid, args.Sprite), baseColor);
     }
 
     #region Spill
