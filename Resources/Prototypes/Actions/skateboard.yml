@@ -1,0 +1,16 @@
+- type: entity
+  parent: BaseAction
+  id: ActionSkateboardTrick
+  name: 360 flip
+  description: Perform a full rotation on your skateboard, spending stamina.
+  components:
+  - type: Action
+    useDelay: 2.5
+    priority: 1
+  - type: Sprite
+    sprite: Objects/Vehicles/skateboard.rsi
+    layers:
+    - state: icon
+      map: ["enum.ActionVisuals.Icon"]
+  - type: InstantAction
+    event: !type:SkateboardTrickEvent

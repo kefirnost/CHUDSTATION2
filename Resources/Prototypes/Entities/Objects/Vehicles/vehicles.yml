@@ -176,3 +176,32 @@
           tags:
           - TrashBag
     sprite: Objects/Vehicles/janicart.rsi
+
+
+# Skateboard
+- type: entity
+  id: VehicleSkateboard
+  parent: BaseVehicleStrap
+  name: skateboard
+  description: A sturdy four-wheeled board. Stand on it and roll around the station.
+  components:
+  - type: Sprite
+    sprite: Objects/Vehicles/skateboard.rsi
+    drawdepth: Mobs
+    layers:
+    - state: skateboard
+  - type: Strap
+    buckleOffset: "0,0.10"
+    modifyBuckleDrawDepth: false
+  - type: MovementSpeedModifier
+    acceleration: 5
+    friction: 0.75
+    frictionNoInput: 0.35
+    baseWalkSpeed: 5.25
+    baseSprintSpeed: 7
+  - type: Skateboard
+    trickStaminaCost: 15
+  - type: ActionGrant
+    actions:
+    - ActionSkateboardTrick
+  - type: Appearance
