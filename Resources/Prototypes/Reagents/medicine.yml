@@ -178,7 +178,8 @@
   desc: reagent-desc-cryoxadone
   physicalDesc: reagent-physical-desc-fizzy
   flavor: medicine
-  color: "#0091ff"
+  puddleSpriteSet: Acid
+  color: "#0091ffCC"
   plantMetabolism:
   - !type:PlantAdjustToxins
     amount: -5
@@ -1596,3 +1597,4 @@
           reagent: Heparin
           min: 15
         amount: 0.25
+

@@ -130,6 +130,7 @@
   color: "#a1000b"
   boilingPoint: 78.2 # This isn't a real chemical...
   meltingPoint: -19.4
+  puddleSpriteSet: Acid
   plantMetabolism:
   - !type:PlantAdjustToxins
     amount: 20
@@ -198,6 +199,7 @@
   color: "#5050ff"
   boilingPoint: 165
   meltingPoint: -87
+  puddleSpriteSet: Acid
   reactiveEffects:
     Acidic:
       methods: [ Touch ]
@@ -240,6 +242,7 @@
   recognizable: true
   boilingPoint: 337.0
   meltingPoint: 10.31
+  puddleSpriteSet: Acid
   plantMetabolism:
   - !type:PlantAdjustToxins
     amount: 10
@@ -345,6 +348,7 @@
   physicalDesc: reagent-physical-desc-opaque
   flavor: bitter
   color: "#77b58e"
+  puddleSpriteSet: Acid
   plantMetabolism:
   - !type:PlantAdjustToxins
     amount: 10
@@ -403,6 +407,7 @@
   group: Toxins
   desc: reagent-desc-theobromine
   physicalDesc: reagent-physical-desc-grainy
+  puddleSpriteSet: Powder
   color: "#f5f5f5"
   meltingPoint: 351
   boilingPoint: 554 # I'm not a chemist, but it boils at 295, lower than melting point, idk how it works so I gave it higher value
@@ -908,3 +913,4 @@
         delay: 2.5
         walkSpeedModifier: 0.5
         sprintSpeedModifier: 0.5
+
