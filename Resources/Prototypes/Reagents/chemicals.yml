@@ -1,5 +1,6 @@
 - type: reagent
   id: Acetone
+  puddleSpriteSet: Acid
   name: reagent-name-acetone
   desc: reagent-desc-acetone
   physicalDesc: reagent-physical-desc-acidic
@@ -10,6 +11,7 @@
 
 - type: reagent
   id: Phenol
+  puddleSpriteSet: Acid
   name: reagent-name-phenol
   desc: reagent-desc-phenol
   physicalDesc: reagent-physical-desc-acidic
@@ -28,6 +30,7 @@
 
 - type: reagent
   id: Charcoal
+  puddleSpriteSet: Powder
   name: reagent-name-charcoal
   desc: reagent-desc-charcoal
   physicalDesc: reagent-physical-desc-porous
@@ -47,6 +50,7 @@
 
 - type: reagent
   id: Ash
+  puddleSpriteSet: Powder
   name: reagent-name-ash
   desc: reagent-desc-ash
   physicalDesc: reagent-physical-desc-powdery
@@ -54,6 +58,7 @@
 
 - type: reagent
   id: Lye
+  puddleSpriteSet: Shiny
   name: reagent-name-lye
   desc: reagent-desc-lye
   flavor: alkaline
@@ -69,6 +74,7 @@
 
 - type: reagent
   id: SodiumCarbonate
+  puddleSpriteSet: Powder
   name: reagent-name-sodium-carbonate
   desc: reagent-desc-sodium-carbonate
   physicalDesc: reagent-physical-desc-powdery
@@ -114,6 +120,7 @@
 
 - type: reagent
   id: Benzene
+  puddleSpriteSet: Acid
   name: reagent-name-benzene
   desc: reagent-desc-benzene
   physicalDesc: reagent-physical-desc-acidic
@@ -132,6 +139,7 @@
 
 - type: reagent
   id: Hydroxide
+  puddleSpriteSet: Shiny
   name: reagent-name-hydroxide
   desc: reagent-desc-hydroxide
   physicalDesc: reagent-physical-desc-alkaline
@@ -141,6 +149,7 @@
 
 - type: reagent
   id: SodiumHydroxide
+  puddleSpriteSet: Shiny
   name: reagent-name-sodium-hydroxide
   desc: reagent-desc-sodium-hydroxide
   physicalDesc: reagent-physical-desc-alkaline
@@ -192,6 +201,7 @@
 
 - type: reagent
   id: Cellulose
+  puddleSpriteSet: Powder
   name: reagent-name-cellulose
   group: Biological
   desc: reagent-desc-cellulose

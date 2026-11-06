@@ -3,6 +3,7 @@
 
 - type: reagent
   id: Oxygen
+  puddleSpriteSet: Acid
   name: reagent-name-oxygen
   desc: reagent-desc-oxygen
   physicalDesc: reagent-physical-desc-gaseous
@@ -160,6 +161,7 @@
 
 - type: reagent
   id: CarbonDioxide
+  puddleSpriteSet: Acid
   name: reagent-name-carbon-dioxide
   desc: reagent-desc-carbon-dioxide
   physicalDesc: reagent-physical-desc-odorless

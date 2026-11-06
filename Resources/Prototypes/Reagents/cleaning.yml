@@ -1,5 +1,6 @@
 - type: reagent
   id: Bleach
+  puddleSpriteSet: Shiny
   name: reagent-name-bleach
   desc: reagent-desc-bleach
   physicalDesc: reagent-physical-desc-strong-smelling
