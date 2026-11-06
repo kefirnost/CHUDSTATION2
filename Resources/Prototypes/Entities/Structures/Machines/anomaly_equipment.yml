@@ -111,6 +111,7 @@
     intensitySlope: 7.5
     totalIntensity: 500
     canCreateVacuum: true
+  - type: ExplosionEffect # Funky RMC Explosions
 
 - type: entity
   id: MachineAPE

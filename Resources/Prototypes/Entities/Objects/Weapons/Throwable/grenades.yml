@@ -8,7 +8,7 @@
     keysIn:
     - timer
   - type: Explosive
-    explosionType: Default
+    explosionType: Transparent # Funky RMC Explosions
     maxIntensity: 10
     intensitySlope: 3
     totalIntensity: 120 # about a ~4 tile radius
@@ -116,13 +116,14 @@
     keysIn:
     - timer
   - type: Explosive
-    explosionType: Minibomb
+    explosionType: TransparentMinibomb # Funky RMC Explosions
     totalIntensity: 400
     intensitySlope: 30
     maxIntensity: 125
     deleteAfterExplosion: false
     repeatable: true
     canCreateVacuum: true
+  - type: ExplosionEffect # Funky RMC Explosions
   - type: TimerTrigger
     delay: 4.5
     beepSound:
