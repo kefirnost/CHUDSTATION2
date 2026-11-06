@@ -21,7 +21,7 @@ public sealed class RunechatSpeechBubble : SpeechBubble
     private const float RunechatMaxWidth = 200;
     private static readonly TimeSpan FadeInTime = TimeSpan.FromSeconds(0.15);
     private static readonly Color LoocColor = Color.FromHex("#48d1cc");
-    private static readonly Type[] AllowedTags = [typeof(ColorTag)];
+    private static readonly Type[] AllowedTags = [typeof(ColorTag), typeof(ItalicTag)];
 
     private TimeSpan _spawnTime;
     private IGameTiming? _timing;
@@ -80,8 +80,12 @@ public sealed class RunechatSpeechBubble : SpeechBubble
                 break;
         }
 
+        var formattedText = FormattedMessage.EscapeText(text.Trim());
+        if (type == SpeechType.Whisper)
+            formattedText = $"[italic]{formattedText}[/italic]";
+
         var msg = new FormattedMessage();
-        msg.AddMarkupPermissive($"[color={color.ToHex()}]{FormattedMessage.EscapeText(text.Trim())}[/color]");
+        msg.AddMarkupPermissive($"[color={color.ToHex()}]{formattedText}[/color]");
 
         var outline = GetDesignPixelSize(size);
         var pad = MathF.Ceiling(outline);
