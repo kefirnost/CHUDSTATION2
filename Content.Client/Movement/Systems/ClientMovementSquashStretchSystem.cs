@@ -11,7 +11,7 @@ namespace Content.Client.Movement.Systems;
 /// <summary>
 /// Applies a subtle squash-and-stretch effect to mob sprites while movement input is held.
 /// </summary>
-public sealed class ClientMovementSquashStretchSystem : EntitySystem
+public sealed partial class ClientMovementSquashStretchSystem : EntitySystem
 {
     private const string AnimationKey = "movement_squash_stretch";
 
