@@ -37,6 +37,7 @@
   - type: Injurable
     damageContainer: Inorganic
   - type: Explosive
+  - type: ExplosionEffect # Funky RMC Explosions
     explosionType: Default
     intensitySlope: 2
     maxIntensity: 100
@@ -67,6 +68,7 @@
         - Impassable
         - BulletImpassable
   - type: Explosive
+  - type: ExplosionEffect # Funky RMC Explosions
     totalIntensity: 25
   - type: Destructible
     thresholds:
@@ -102,6 +104,7 @@
         - Impassable
         - BulletImpassable
   - type: Explosive
+  - type: ExplosionEffect # Funky RMC Explosions
     totalIntensity: 50
   - type: Destructible
     thresholds:
@@ -142,6 +145,7 @@
         - Impassable
         - BulletImpassable
   - type: Explosive
+  - type: ExplosionEffect # Funky RMC Explosions
     totalIntensity: 100
   - type: Destructible
     thresholds:
@@ -170,6 +174,7 @@
   - type: Sprite
     state: big
   - type: Explosive
+  - type: ExplosionEffect # Funky RMC Explosions
     totalIntensity: 150
   - type: Destructible
     thresholds:
@@ -210,6 +215,7 @@
       - ReagentId: Blood
         Quantity: 480
   - type: Explosive
+  - type: ExplosionEffect # Funky RMC Explosions
     totalIntensity: 25
   - type: Destructible
     thresholds:
@@ -244,6 +250,7 @@
   - type: Sprite
     state: cow_pixel
   - type: Explosive
+  - type: ExplosionEffect # Funky RMC Explosions
     totalIntensity: 25
   - type: Solution
     solution:
@@ -284,6 +291,7 @@
   - type: Sprite
     state: clown_pixel
   - type: Explosive
+  - type: ExplosionEffect # Funky RMC Explosions
     totalIntensity: 25
   - type: Solution
     solution:
@@ -326,6 +334,7 @@
   - type: Sprite
     state: potato
   - type: Explosive
+  - type: ExplosionEffect # Funky RMC Explosions
     totalIntensity: 25
   - type: Solution
     solution:
