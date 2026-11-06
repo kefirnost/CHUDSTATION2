@@ -1,40 +1,45 @@
 using System.Numerics;
 using Content.Client.Movement.Components;
 using Content.Shared.Movement.Components;
-using Content.Shared.Movement.Events;
 using Robust.Client.Animations;
 using Robust.Client.GameObjects;
 using Robust.Shared.Animations;
+using Robust.Shared.Physics.Components;
 
 namespace Content.Client.Movement.Systems;
 
 /// <summary>
-/// Applies a subtle squash-and-stretch effect to mob sprites while movement input is held.
+/// Applies a subtle squash-and-stretch effect to every mob with a sprite while it is physically moving.
 /// </summary>
 public sealed partial class ClientMovementSquashStretchSystem : EntitySystem
 {
     private const string AnimationKey = "movement_squash_stretch";
 
-    private const float CycleDuration = 0.42f;
-    private const float BlendInDuration = 0.08f;
-    private const float ReturnDuration = 0.14f;
-    private const float ScaleAmplitude = 0.045f;
+    private const float CycleDuration = 0.46f;
+    private const float BlendInDuration = 0.09f;
+    private const float ReturnDuration = 0.15f;
+    private const float ScaleAmplitude = 0.04f;
     private const int CycleKeyFrames = 16;
+
+    // Ignore tiny residual velocities so a mob eventually returns to its idle scale.
+    private const float MovementThreshold = 0.025f;
+    private const float MovementThresholdSquared = MovementThreshold * MovementThreshold;
 
     [Dependency] private AnimationPlayerSystem _animationPlayer = default!;
     [Dependency] private SpriteSystem _sprite = default!;
-    [Dependency] private EntityQuery<SpriteComponent> _spriteQuery;
 
-    [SubscribeLocalEvent]
-    private void OnSpriteMoveInput(Entity<InputMoverComponent> ent, ref SpriteMoveEvent args)
+    public override void FrameUpdate(float frameTime)
     {
-        UpdateMovement(ent.Owner, args.IsMoving);
-    }
+        base.FrameUpdate(frameTime);
 
-    [SubscribeLocalEvent]
-    private void OnAfterAutoHandleState(Entity<InputMoverComponent> ent, ref AfterAutoHandleStateEvent args)
-    {
-        UpdateMovement(ent.Owner, ent.Comp.HasDirectionalMovement);
+        // MobMoverComponent is present on the common mob base prototype. Checking actual
+        // physics velocity covers players, NPCs, pushed mobs and other physically moving mobs.
+        var query = EntityQueryEnumerator<MobMoverComponent, SpriteComponent, PhysicsComponent>();
+
+        while (query.MoveNext(out var uid, out _, out _, out var physics))
+        {
+            UpdateMovement(uid, physics.LinearVelocity.LengthSquared() > MovementThresholdSquared);
+        }
     }
 
     [SubscribeLocalEvent]
@@ -46,7 +51,7 @@ public sealed partial class ClientMovementSquashStretchSystem : EntitySystem
         if (ent.Comp.IsReturning)
         {
             if (ent.Comp.OriginalScale is { } originalScale
-                && _spriteQuery.TryGetComponent(ent.Owner, out var sprite))
+                && TryComp<SpriteComponent>(ent.Owner, out var sprite))
             {
                 _sprite.SetScale((ent.Owner, sprite), originalScale);
             }
@@ -56,7 +61,8 @@ public sealed partial class ClientMovementSquashStretchSystem : EntitySystem
             return;
         }
 
-        if (TryComp<InputMoverComponent>(ent.Owner, out var mover) && mover.HasDirectionalMovement)
+        if (TryComp<PhysicsComponent>(ent.Owner, out var physics)
+            && IsMoving(physics))
         {
             if (ent.Comp.OriginalScale is not { } scale)
                 return;
@@ -71,6 +77,11 @@ public sealed partial class ClientMovementSquashStretchSystem : EntitySystem
         StartReturnAnimation(ent.Owner, ent.Comp);
     }
 
+    private static bool IsMoving(PhysicsComponent physics)
+    {
+        return physics.LinearVelocity.LengthSquared() > MovementThresholdSquared;
+    }
+
     private void UpdateMovement(EntityUid uid, bool isMoving)
     {
         if (isMoving)
@@ -81,7 +92,7 @@ public sealed partial class ClientMovementSquashStretchSystem : EntitySystem
 
     private void StartMovementAnimation(EntityUid uid)
     {
-        if (!_spriteQuery.TryGetComponent(uid, out var sprite))
+        if (!TryComp<SpriteComponent>(uid, out var sprite))
             return;
 
         var animation = EnsureComp<MovementSquashStretchAnimationComponent>(uid);
@@ -115,7 +126,7 @@ public sealed partial class ClientMovementSquashStretchSystem : EntitySystem
         if (animation.IsReturning || animation.OriginalScale is not { } originalScale)
             return;
 
-        if (!_spriteQuery.TryGetComponent(uid, out var sprite))
+        if (!TryComp<SpriteComponent>(uid, out var sprite))
         {
             animation.OriginalScale = null;
             return;
