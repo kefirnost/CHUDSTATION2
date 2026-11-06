@@ -18,7 +18,7 @@ public sealed partial class SkateboardSystem : EntitySystem
     [Dependency] private SharedAppearanceSystem _appearance = default!;
 
     [SubscribeLocalEvent]
-    private void OnVehicleEntered(EntityUid uid, ref OnVehicleEnteredEvent args)
+    private void OnVehicleEntered(ref OnVehicleEnteredEvent args)
     {
         if (!HasComp<SkateboardComponent>(args.Vehicle.Owner) ||
             !TryComp<ActionsContainerComponent>(args.Vehicle.Owner, out var container))
@@ -30,7 +30,7 @@ public sealed partial class SkateboardSystem : EntitySystem
     }
 
     [SubscribeLocalEvent]
-    private void OnVehicleExited(EntityUid uid, ref OnVehicleExitedEvent args)
+    private void OnVehicleExited(ref OnVehicleExitedEvent args)
     {
         if (!HasComp<SkateboardComponent>(args.Vehicle.Owner))
             return;
