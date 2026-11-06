@@ -7,6 +7,7 @@
   - type: Action
     useDelay: 2.5
     priority: 1
+    checkCanInteract: false
   - type: Sprite
     sprite: Objects/Vehicles/skateboard.rsi
     layers:
