@@ -73,6 +73,7 @@
 
 - type: reagent
   id: Sugar #Candy and grains
+  puddleSpriteSet: Powder
   name: reagent-name-sugar
   group: Foods
   desc: reagent-desc-sugar

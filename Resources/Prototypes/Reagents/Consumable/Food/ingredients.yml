@@ -20,6 +20,7 @@
 
 - type: reagent
   id: Cornmeal
+  puddleSpriteSet: Powder
   name: reagent-name-cornmeal
   group: Foods
   desc: reagent-desc-cornmeal
@@ -37,6 +38,7 @@
 
 - type: reagent
   id: Oats
+  puddleSpriteSet: Powder
   name: reagent-name-oats
   group: Foods
   desc: reagent-desc-oats
@@ -61,6 +63,7 @@
 
 - type: reagent
   id: Egg
+  puddleSpriteSet: Egg
   name: reagent-name-raw-egg
   group: Foods
   desc: reagent-desc-raw-egg
@@ -75,6 +78,7 @@
 
 - type: reagent
   id: EggCooked
+  puddleSpriteSet: Egg
   name: reagent-name-egg
   group: Foods
   desc: reagent-desc-egg
@@ -157,6 +161,7 @@
 
 - type: reagent
   id: OilOlive
+  puddleSpriteSet: Shiny
   name: reagent-name-oil-olive
   group: Foods
   desc: reagent-desc-oil-olive
@@ -221,6 +226,7 @@
 
 - type: reagent
   id: CocoaPowder #Candy and chocolate
+  puddleSpriteSet: Powder
   name: reagent-name-cocoapowder
   group: Foods
   desc: reagent-desc-cocoapowder
@@ -283,6 +289,7 @@
 
 - type: reagent
   id: FrostOil
+  puddleSpriteSet: Shiny
   name: reagent-name-frost-oil
   group: Foods
   desc: reagent-desc-frost-oil

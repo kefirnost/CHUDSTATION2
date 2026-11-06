@@ -340,6 +340,7 @@
 
 - type: reagent
   id: GreyMatter
+  puddleSpriteSet: Blood
   name: reagent-name-grey-matter
   group: Biological
   desc: reagent-desc-grey-matter
