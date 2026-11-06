@@ -26,6 +26,7 @@
   flavor: bitter
   color: "#5b406c"
   physicalDesc: reagent-physical-desc-heterogeneous
+  puddleSpriteSet: Shiny
   plantMetabolism:
     - !type:PlantAdjustNutrition
       amount: 1
@@ -70,7 +71,8 @@
   group: Botanical
   desc: reagent-desc-pest-killer
   flavor: bitter
-  color: "#9e9886"
+  puddleSpriteSet: Acid
+  color: "#9e9880CC"
   physicalDesc: reagent-physical-desc-bubbling
   plantMetabolism:
     - !type:PlantAdjustToxins
@@ -94,7 +96,8 @@
   group: Botanical
   desc: reagent-desc-plant-b-gone
   flavor: bitter
-  color: "#49002E"
+  puddleSpriteSet: Acid
+  color: "#49002E80"
   physicalDesc: reagent-physical-desc-bubbling
   plantMetabolism:
     - !type:PlantAdjustToxins
@@ -128,6 +131,7 @@
   group: Botanical
   desc: reagent-desc-robust-harvest
   flavor: bitter
+  puddleSpriteSet: Shiny
   color: "#3e901c"
   physicalDesc: reagent-physical-desc-robust
   plantMetabolism:
@@ -196,6 +200,7 @@
   group: Botanical
   desc: reagent-desc-weed-killer
   flavor: bitter
+  puddleSpriteSet: Acid
   color: "#968395"
   physicalDesc: reagent-physical-desc-bubbling
   plantMetabolism:
@@ -221,6 +226,7 @@
   desc: reagent-desc-ammonia
   physicalDesc: reagent-physical-desc-pungent
   flavor: bitter
+  puddleSpriteSet: Shiny
   color: "#77b58e"
   boilingPoint: -33.0
   meltingPoint: -77.7
@@ -303,6 +309,7 @@
   desc: reagent-desc-diethylamine
   physicalDesc: reagent-physical-desc-strong-smelling
   flavor: bitter
+  puddleSpriteSet: Shiny
   color: "#a1000b"
   boilingPoint: 55.5
   meltingPoint: -50.0
@@ -325,3 +332,4 @@
         damage:
           types:
             Caustic: 1
+

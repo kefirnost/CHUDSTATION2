@@ -305,6 +305,7 @@
   group: Biological
   desc: reagent-desc-fat
   flavor: terrible
+  puddleSpriteSet: Blood
   color: "#d8d8b0"
   physicalDesc: reagent-physical-desc-exotic-smelling
   footstepSound:
@@ -407,3 +408,4 @@
         minScale: 1
         target: true
         guidebookText: entity-effect-guidebook-dna-hunt
+

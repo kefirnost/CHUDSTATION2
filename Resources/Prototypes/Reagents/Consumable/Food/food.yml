@@ -105,9 +105,20 @@
   metamorphicChangeColor: false
 
 - type: reagent
+  id: SmashedPie
+  name: es-reagent-name-smashed-pie
+  group: Foods
+  desc: es-reagent-desc-smashed-pie
+  physicalDesc: reagent-physical-desc-funny
+  flavor: sweet
+  puddleSpriteSet: Pie
+  recognizable: true
+
+- type: reagent
   id: PumpkinFlesh #Just so pumpkins spill orange stuff when smashed
   parent: Nutriment
   name: reagent-name-pumpkin-flesh
   desc: reagent-desc-pumpkin-flesh
   flavor: pumpkin
   color: "#fc9300"
+

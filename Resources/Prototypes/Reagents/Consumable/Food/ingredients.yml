@@ -5,6 +5,7 @@
   desc: reagent-desc-flour
   physicalDesc: reagent-physical-desc-powdery
   flavor: chalky
+  puddleSpriteSet: Powder
   color: white
   recognizable: true
   metabolisms:
@@ -54,6 +55,7 @@
   group: Foods
   desc: reagent-desc-enzyme
   physicalDesc: reagent-physical-desc-chalky
+  puddleSpriteSet: Splotchy
   flavor: bitter
   color: "#009900"
 
@@ -92,6 +94,7 @@
   desc: reagent-desc-blackpepper
   physicalDesc: reagent-physical-desc-grainy
   flavor: peppery
+  puddleSpriteSet: Powder
   color: black
   recognizable: true
   metabolisms:
@@ -120,6 +123,7 @@
   desc: reagent-desc-vinegar
   physicalDesc: reagent-physical-desc-sour
   flavor: bitter
+  puddleSpriteSet: Shiny
   color: tan
   recognizable: true
   metabolisms:
@@ -142,6 +146,7 @@
   desc: reagent-desc-rice
   physicalDesc: reagent-physical-desc-chewy
   flavor: rice
+  puddleSpriteSet: Powder
   color: white
   recognizable: true
   metabolisms:
@@ -174,6 +179,7 @@
   flavor: oily
   flavorMinimum: 0.05
   recognizable: true
+  puddleSpriteSet: Shiny
   color: "#b67823"
   boilingPoint: 300.0
   meltingPoint: -16.0
@@ -188,6 +194,7 @@
   physicalDesc: reagent-physical-desc-oily
   flavor: spicy
   flavorMinimum: 0.05
+  puddleSpriteSet: Shiny
   color: "#FF0000"
   recognizable: true
   meltingPoint: 146
@@ -246,6 +253,7 @@
   desc: reagent-desc-butter
   physicalDesc: reagent-physical-desc-creamy
   flavor: butter
+  puddleSpriteSet: Splotchy
   color: yellow
   meltingPoint: 32.0
   boilingPoint: 100.0
@@ -261,6 +269,7 @@
   desc: reagent-desc-tea-powder
   physicalDesc: reagent-physical-desc-powdery
   flavor: tea
+  puddleSpriteSet: Powder
   color: "#7F8400"
   group: Foods
   metabolisms:
@@ -299,3 +308,4 @@
         type: Local
         messages: [ "frost-oil-effect-light-cold" ]
         probability: 0.2
+
