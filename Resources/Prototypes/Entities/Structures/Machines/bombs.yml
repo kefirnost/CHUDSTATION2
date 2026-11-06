@@ -22,6 +22,7 @@
       totalIntensity: 20.0
       intensitySlope: 5
       maxIntensity: 4
+    - type: ExplosionEffect # Funky RMC Explosions
     - type: ExplodeOnTrigger
       keysIn:
       - timer
@@ -81,11 +82,12 @@
       radius: 1.1
       softness: 1
     - type: Explosive
-      explosionType: Default
+      explosionType: Transparent # Funky RMC Explosionsault
       totalIntensity: 5.0
       intensitySlope: 5
       maxIntensity: 4
       canCreateVacuum: false
+    - type: ExplosionEffect # Funky RMC Explosions
     - type: Defusable
       disposable: false
 
@@ -120,6 +122,7 @@
       totalIntensity: 4000.0
       intensitySlope: 10
       maxIntensity: 75
+    - type: ExplosionEffect # Funky RMC Explosions
     - type: StaticPrice
       price: 10000 # Good luck!
 
@@ -129,11 +132,12 @@
   suffix: fake
   components:
     - type: Explosive
-      explosionType: Default
+      explosionType: Transparent # Funky RMC Explosions
       totalIntensity: 5.0
       intensitySlope: 5
       maxIntensity: 4
       canCreateVacuum: false
+    - type: ExplosionEffect # Funky RMC Explosions
 
 - type: entity
   parent: SyndicateBomb
