@@ -8,7 +8,7 @@ using Robust.Shared.Utility;
 namespace Content.Client.Chat.UI;
 
 /// <summary>
-/// SS13-style runechat: outlined white text floating over the speaker.
+/// SS13-style runechat: outlined white text floating over the speaker, with turquoise LOOC.
 /// </summary>
 public sealed class RunechatSpeechBubble : SpeechBubble
 {
@@ -20,6 +20,7 @@ public sealed class RunechatSpeechBubble : SpeechBubble
     private const float DesignPixelsPerEm = 8f;
     private const float RunechatMaxWidth = 200;
     private static readonly TimeSpan FadeInTime = TimeSpan.FromSeconds(0.15);
+    private static readonly Color LoocColor = Color.FromHex("#48d1cc");
     private static readonly Type[] AllowedTags = [typeof(ColorTag)];
 
     private TimeSpan _spawnTime;
@@ -65,6 +66,7 @@ public sealed class RunechatSpeechBubble : SpeechBubble
                 break;
             case SpeechType.Looc:
                 text = FormattedMessage.RemoveMarkupPermissive(message.Message);
+                color = LoocColor;
                 break;
             default:
                 var content = SharedChatSystem.GetStringInsideTag(message, "BubbleContent");
