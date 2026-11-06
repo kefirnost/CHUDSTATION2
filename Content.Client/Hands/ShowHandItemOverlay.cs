@@ -2,7 +2,8 @@ using System.Numerics;
 using Content.Client.Cooldown;
 using Content.Client.Hands.Systems;
 using Content.Shared.CCVar;
-using Content.Shared.Timing;
+using Content.Shared.Timing.Components;
+using Content.Shared.Timing.Systems;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.Input;
@@ -109,7 +110,9 @@ namespace Content.Client.Hands
                 return;
 
             _delay ??= _entMan.System<UseDelaySystem>();
-            var cooldown = _delay.GetLastEndingDelay((handEntity.Value, delay));
+            if (!_delay.GetLastActiveDelay((handEntity.Value, delay), out var cooldown))
+                return;
+
             if (cooldown.StartTime == cooldown.EndTime || cooldown.Length == TimeSpan.Zero)
             {
                 return;
