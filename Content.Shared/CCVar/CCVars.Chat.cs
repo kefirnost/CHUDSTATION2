@@ -99,4 +99,11 @@ public sealed partial class CCVars
     /// </summary>
     public static readonly CVarDef<bool> ChatNameLinks =
         CVarDef.Create("chat.chat_name_links", true, CVar.REPLICATED | CVar.SERVER, "Toggles Chat Name Link functionality.");
+
+    /// <summary>
+    ///     Enables SS13-style pixel speech bubbles above characters.
+    /// </summary>
+    public static readonly CVarDef<bool> ChatRunechat =
+        CVarDef.Create("chat.runechat", true, CVar.CLIENTONLY | CVar.ARCHIVE,
+            "Toggles displaying rune-style speech bubbles.");
 }

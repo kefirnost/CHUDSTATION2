@@ -4,6 +4,7 @@ using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Timing;
+using Robust.Shared.Configuration;
 using Robust.Shared.Utility;
 
 namespace Content.Client.Chat.UI
@@ -45,6 +46,9 @@ namespace Content.Client.Chat.UI
 
         public static SpeechBubble CreateSpeechBubble(SpeechType type, ChatMessage message, EntityUid senderEntity)
         {
+            if (IoCManager.Resolve<IConfigurationManager>().GetCVar(CCVars.ChatRunechat))
+                return new RunechatSpeechBubble(message, senderEntity, type);
+
             switch (type)
             {
                 case SpeechType.Emote:

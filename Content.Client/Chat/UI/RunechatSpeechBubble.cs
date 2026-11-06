@@ -1,0 +1,118 @@
+using Content.Shared.Chat;
+using Robust.Client.UserInterface;
+using Robust.Client.UserInterface.Controls;
+using Robust.Client.UserInterface.RichText;
+using Robust.Shared.Timing;
+using Robust.Shared.Utility;
+
+namespace Content.Client.Chat.UI;
+
+/// <summary>
+/// SS13-style runechat: outlined white text floating over the speaker.
+/// </summary>
+public sealed class RunechatSpeechBubble : SpeechBubble
+{
+    public const string StyleClassNormal = "runechat";
+    public const string StyleClassLoud = "runechatLoud";
+    public const string StyleClassWhisper = "runechatWhisper";
+    public const int NormalSize = 12;
+    public const int LoudSize = 18;
+    private const float DesignPixelsPerEm = 8f;
+    private const float RunechatMaxWidth = 200;
+    private static readonly TimeSpan FadeInTime = TimeSpan.FromSeconds(0.15);
+    private static readonly Type[] AllowedTags = [typeof(ColorTag)];
+
+    private TimeSpan _spawnTime;
+    private IGameTiming? _timing;
+
+    public RunechatSpeechBubble(ChatMessage message, EntityUid senderEntity, SpeechType type)
+        : base(message, senderEntity, GetStyleKey(type))
+    {
+    }
+
+    private static string GetStyleKey(SpeechType type)
+    {
+        return type switch
+        {
+            SpeechType.Emote => "emote",
+            SpeechType.Whisper => "whisper",
+            SpeechType.Looc => "looc",
+            _ => "say",
+        };
+    }
+
+    protected override Control BuildBubble(ChatMessage message, string speechStyleClass, Color? fontColor = null)
+    {
+        _timing = IoCManager.Resolve<IGameTiming>();
+        _spawnTime = _timing.RealTime;
+
+        var type = speechStyleClass switch
+        {
+            "emote" => SpeechType.Emote,
+            "whisper" => SpeechType.Whisper,
+            "looc" => SpeechType.Looc,
+            _ => SpeechType.Say,
+        };
+
+        string text;
+        var color = Color.White;
+        var size = NormalSize;
+
+        switch (type)
+        {
+            case SpeechType.Emote:
+                text = "*" + FormattedMessage.RemoveMarkupPermissive(message.Message).Trim() + "*";
+                break;
+            case SpeechType.Looc:
+                text = FormattedMessage.RemoveMarkupPermissive(message.Message);
+                break;
+            default:
+                var content = SharedChatSystem.GetStringInsideTag(message, "BubbleContent");
+                if (content.Length == 0)
+                    content = message.Message;
+
+                if (content.Contains("[bold]"))
+                    size = LoudSize;
+
+                text = FormattedMessage.RemoveMarkupPermissive(content);
+                break;
+        }
+
+        var msg = new FormattedMessage();
+        msg.AddMarkupPermissive($"[color={color.ToHex()}]{FormattedMessage.EscapeText(text.Trim())}[/color]");
+
+        var outline = GetDesignPixelSize(size);
+        var pad = MathF.Ceiling(outline);
+        var label = new RichTextLabel
+        {
+            MaxWidth = RunechatMaxWidth,
+            OutlineThicknessOverride = outline,
+            OutlineColorOverride = Color.Black,
+            Margin = new Thickness(pad, pad, pad, pad + 2),
+            StyleClasses = { type == SpeechType.Whisper ? StyleClassWhisper : size == LoudSize ? StyleClassLoud : StyleClassNormal },
+        };
+        label.SetMessage(msg, AllowedTags);
+
+        return label;
+    }
+
+    protected override void FrameUpdate(FrameEventArgs args)
+    {
+        base.FrameUpdate(args);
+
+        var pixelPosition = (Position * UIScale).Rounded() / UIScale;
+        LayoutContainer.SetPosition(this, pixelPosition);
+
+        if (_timing == null)
+            return;
+
+        var age = (float) ((_timing.RealTime - _spawnTime).TotalSeconds / FadeInTime.TotalSeconds);
+        if (age < 1f)
+            Modulate = Modulate.WithAlpha(Modulate.A * Math.Clamp(age, 0f, 1f));
+    }
+
+    private static float GetDesignPixelSize(int pointSize)
+    {
+        return pointSize * 96f / 72f / DesignPixelsPerEm;
+    }
+}
