@@ -11,8 +11,10 @@ using Robust.Client;
 using Robust.Client.Console;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
+using Robust.Client.ResourceManagement;
 using Robust.Shared.Configuration;
 using Robust.Shared.Timing;
+using Robust.Shared.Utility;
 
 namespace Content.Client.Lobby
 {
@@ -26,6 +28,7 @@ namespace Content.Client.Lobby
         [Dependency] private IGameTiming _gameTiming = default!;
         [Dependency] private IVoteManager _voteManager = default!;
         [Dependency] private ClientsidePlaytimeTrackingManager _playtimeTracking = default!;
+        [Dependency] private IResourceCache _resourceCache = default!;
 
         private ClientGameTicker _gameTicker = default!;
         private ContentAudioSystem _contentAudioSystem = default!;
@@ -224,7 +227,10 @@ namespace Content.Client.Lobby
             }
             else if (
                 ev.SoundtrackFilename != null
-                && _resourceCache.TryGetResource<AudioResource>(ev.SoundtrackFilename, out var lobbySongResource)
+                && _resourceCache.TryGetResource(
+                    new ResPath(ev.SoundtrackFilename),
+                    out AudioResource? lobbySongResource
+                )
                 )
             {
                 var lobbyStream = lobbySongResource.AudioStream;
