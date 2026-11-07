@@ -36,4 +36,9 @@ public sealed partial class SprinterComponent : Component
     /// </summary>
     [DataField]
     public TimeSpan TimeBetweenSteps = TimeSpan.FromSeconds(0.6);
+
+    /// <summary>
+    /// Time until sprint can be started again.
+    /// </summary>
+    public TimeSpan NextSprintAllowed;
 }
