@@ -87,7 +87,8 @@ public sealed partial class ProjectileSystem : SharedProjectileSystem
             _guns.PlayImpactSound(target, damage, component.SoundHit, component.ForceSound);
 
             if (!args.OurBody.LinearVelocity.IsLengthZero())
-                _sharedCameraRecoil.KickCamera(target, args.OurBody.LinearVelocity.Normalized());
+                _sharedCameraRecoil.KickCamera(target, args.OurBody.LinearVelocity.Normalized() * 0.08f); // Goob
+            _shake.Screenshake(target, HitShake, null); // Goob
         }
 
         if (component.DeleteOnCollide && component.ProjectileSpent)

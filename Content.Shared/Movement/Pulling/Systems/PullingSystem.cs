@@ -33,6 +33,8 @@ using Robust.Shared.Player;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
+using Content.Shared._ST.Interaction;
+
 namespace Content.Shared.Movement.Pulling.Systems;
 
 /// <summary>
@@ -545,7 +547,7 @@ public sealed partial class PullingSystem : EntitySystem
 
         // Pulling confirmed
 
-        _interaction.DoContactInteraction(pullableUid, pullerUid);
+        _interaction.DoContactInteraction(pullerUid, pullableUid, null, true, interactionParticleType: StellarInteractionParticleType.Pull); // Goob
 
         // Use net entity so it's consistent across client and server.
         pullableComp.PullJointId = $"pull-joint-{GetNetEntity(pullableUid)}";

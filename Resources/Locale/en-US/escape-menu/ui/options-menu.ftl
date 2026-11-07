@@ -451,3 +451,5 @@ ui-options-admin-overlay-ghost-hide-distance = Ghost overlay hide range from mou
 
 ui-options-admin-strip-overlay-title = Strip Overlay
 ui-options-admin-strip-overlay-setting = Show strip overlay by default
+
+ui-options-inhand-interaction-particle-scale = Overhead interaction icon size

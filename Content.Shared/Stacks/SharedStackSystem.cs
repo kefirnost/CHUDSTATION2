@@ -100,6 +100,8 @@ public abstract partial class SharedStackSystem : EntitySystem
             var localRotation = Transform(args.Used).LocalRotation;
             _storage.PlayPickupAnimation(args.Used, popupPos, userCoords, localRotation, args.User);
         }
+
+        args.InteractionParticle = false; // Goob
     }
 
     [SubscribeLocalEvent]
