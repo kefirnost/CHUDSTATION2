@@ -86,10 +86,9 @@
   - type: DrawableSolution
     solution: battery
   - type: Explosive
-    explosionType: Transparent # Funky RMC Explosions
+    explosionType: Default
     intensitySlope: 1.5
     maxIntensity: 200
-  - type: ExplosionEffect # Funky RMC Explosions
   - type: PhysicalComposition
     materialComposition:
       Steel: 100

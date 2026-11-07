@@ -268,12 +268,11 @@
     targetUser: true
     deleteItems: true
   - type: Explosive
-    explosionType: TransparentMicroBomb # Funky RMC Explosions
+    explosionType: MicroBomb
     totalIntensity: 120
     intensitySlope: 5
     maxIntensity: 30
     canCreateVacuum: false
-  - type: ExplosionEffect # Funky RMC Explosions
   - type: Tag
     tags:
     - SubdermalImplant

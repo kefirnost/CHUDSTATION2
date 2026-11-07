@@ -131,12 +131,6 @@
   kind: source
   path: "/Textures/Shaders/screech_shock_wave.swsl"
 
-# Funky RMC Explosions
-- type: shader
-  id: ShockWave
-  kind: source
-  path: "/Textures/_Funkystation/Shaders/shock_wave.swsl"
-
 - type: shader
   id: NightVision
   kind: source
@@ -151,38 +145,3 @@
   id: VacuumDesaturation
   kind: source
   path: "/Textures/Shaders/vacuum_desaturation.swsl"
-
-# Wall-stain stencil shaders.
-- type: shader
-  id: StencilClear
-  kind: source
-  path: "/Textures/Shaders/stencil_clear.swsl"
-  stencil:
-    ref: 0
-    op: Replace
-    func: Always
-
-- type: shader
-  id: StencilMask
-  kind: source
-  path: "/Textures/Shaders/stencil_mask.swsl"
-  stencil:
-    ref: 1
-    op: Replace
-    func: Always
-
-- type: shader
-  id: StencilDraw
-  kind: canvas
-  stencil:
-    ref: 1
-    op: Keep
-    func: NotEqual
-
-- type: shader
-  id: StencilEqualDraw
-  kind: canvas
-  stencil:
-    ref: 1
-    op: Keep
-    func: Equal
