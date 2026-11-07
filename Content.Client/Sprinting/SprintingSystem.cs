@@ -46,3 +46,9 @@ public sealed partial class SprintingSystem : EntitySystem
         }
     }
 }
+
+    public enum SprintVisualLayers : byte
+    {
+        Base,
+    }
+}
