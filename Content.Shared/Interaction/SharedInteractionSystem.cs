@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Content.Shared._ST.Interaction;
 using Content.Shared.ActionBlocker;
 using Content.Shared.Administration.Logs;
 using Content.Shared.CCVar;
@@ -1420,7 +1421,7 @@ namespace Content.Shared.Interaction
         /// <summary>
         ///     Simple convenience function to raise contact events (disease, forensics, etc).
         /// </summary>
-        public void DoContactInteraction(EntityUid uidA, EntityUid? uidB, HandledEntityEventArgs? args = null)
+        public void DoContactInteraction(EntityUid uidA, EntityUid? uidB, HandledEntityEventArgs? args = null, bool interactionParticles = true, StellarInteractionParticleType interactionParticleType = StellarInteractionParticleType.Use)
         {
             if (uidB == null || args?.Handled == false)
                 return;
@@ -1440,6 +1441,8 @@ namespace Content.Shared.Interaction
 
             ev.Other = uidA;
             RaiseLocalEvent(uidB.Value, ev);
+            if (interactionParticles)
+                RaiseInteractionParticle(uidA, uidB.Value, interactionParticleType);
         }
 
 
