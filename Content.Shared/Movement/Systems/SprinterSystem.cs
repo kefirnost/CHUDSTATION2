@@ -3,6 +3,7 @@ using Content.Shared.Damage.Systems;
 using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Events;
 using Robust.Shared.Audio.Systems;
+using Robust.Shared.Timing;
 
 namespace Content.Shared.Movement.Systems;
 
@@ -14,6 +15,7 @@ public sealed partial class SprinterSystem : EntitySystem
     [Dependency] private SharedStaminaSystem _stamina = default!;
     [Dependency] private MovementSpeedModifierSystem _speed = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private IGameTiming _timing = default!;
 
     private const float SprintSpeedMultiplier = 1.4f;
     private const float StaminaDrainPerSecond = 8f;
@@ -38,9 +40,7 @@ public sealed partial class SprinterSystem : EntitySystem
             if (!mover.CanMove || stamina.Critical ||
                 !_stamina.TryTakeStamina(uid, StaminaDrainPerSecond * frameTime, stamina))
             {
-                sprinter.Sprinting = false;
-                Dirty(uid, sprinter);
-                _speed.RefreshMovementSpeedModifiers(uid);
+                StopSprint(uid, sprinter);
             }
         }
     }
@@ -50,16 +50,32 @@ public sealed partial class SprinterSystem : EntitySystem
         if (ent.Comp.Sprinting == args.Active)
             return;
 
-        if (args.Active &&
-            (!TryComp<StaminaComponent>(ent.Owner, out var stamina) || stamina.Critical ||
-             !TryComp<InputMoverComponent>(ent.Owner, out var mover) || !mover.CanMove))
+        if (args.Active)
+        {
+            if (_timing.CurTime < ent.Comp.NextSprintAllowed ||
+                !TryComp<StaminaComponent>(ent.Owner, out var stamina) || stamina.Critical ||
+                !TryComp<InputMoverComponent>(ent.Owner, out var mover) || !mover.CanMove)
+                return;
+
+            ent.Comp.Sprinting = true;
+            _audio.PlayPredicted(ent.Comp.SprintStartupSound, ent.Owner, ent.Owner);
+            Dirty(ent);
+            _speed.RefreshMovementSpeedModifiers(ent.Owner);
+            return;
+        }
+
+        StopSprint(ent.Owner, ent.Comp);
+    }
+
+    private void StopSprint(EntityUid uid, SprinterComponent sprinter)
+    {
+        if (!sprinter.Sprinting)
             return;
 
-        ent.Comp.Sprinting = args.Active;
-        if (args.Active)
-            _audio.PlayPredicted(ent.Comp.SprintStartupSound, ent.Owner, ent.Owner);
-        Dirty(ent);
-        _speed.RefreshMovementSpeedModifiers(ent.Owner);
+        sprinter.Sprinting = false;
+        sprinter.NextSprintAllowed = _timing.CurTime + TimeSpan.FromSeconds(2.5);
+        Dirty(uid, sprinter);
+        _speed.RefreshMovementSpeedModifiers(uid);
     }
 
     private void OnRefreshSpeed(Entity<SprinterComponent> ent, ref RefreshMovementSpeedModifiersEvent args)
