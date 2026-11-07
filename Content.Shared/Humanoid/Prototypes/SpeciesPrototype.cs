@@ -117,6 +117,28 @@ public sealed partial class SpeciesPrototype : IPrototype
     /// </summary>
     [DataField]
     public int MaxAge = 120;
+
+    /// <summary>Minimum, default and maximum height multipliers for this species.</summary>
+    [DataField]
+    public float MinHeight = 0.80f;
+    [DataField]
+    public float DefaultHeight = 1f;
+    [DataField]
+    public float MaxHeight = 1.20f;
+
+    /// <summary>Minimum, default and maximum width multipliers for this species.</summary>
+    [DataField]
+    public float MinWidth = 0.85f;
+    [DataField]
+    public float DefaultWidth = 1f;
+    [DataField]
+    public float MaxWidth = 1.15f;
+
+    /// <summary>Average physical dimensions used by species-relative systems.</summary>
+    [DataField]
+    public float AverageHeight = 176.1f;
+    [DataField]
+    public float AverageWidth = 40f;
 }
 
 public enum SpeciesNaming : byte

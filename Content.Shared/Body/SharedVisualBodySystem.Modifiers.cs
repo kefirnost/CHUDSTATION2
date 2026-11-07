@@ -1,10 +1,12 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Linq;
 using Content.Shared.Administration.Managers;
 using Content.Shared.Administration;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Markings;
 using Content.Shared.Preferences;
+using Content.Shared.Sprite;
 using Content.Shared.Verbs;
 using JetBrains.Annotations;
 using Robust.Shared.Containers;
@@ -17,6 +19,7 @@ public abstract partial class SharedVisualBodySystem
 {
     [Dependency] private ISharedAdminManager _admin = default!;
     [Dependency] private SharedUserInterfaceSystem _userInterface = default!;
+    [Dependency] private SharedScaleVisualsSystem _scaleVisuals = default!;
 
     private void InitializeModifiers()
     {
@@ -171,6 +174,7 @@ public abstract partial class SharedVisualBodySystem
     public void ApplyProfileTo(Entity<VisualBodyComponent?> ent, HumanoidCharacterProfile profile)
     {
         ApplyAppearanceTo(ent, profile.Appearance, profile.Sex);
+        _scaleVisuals.SetSpriteScale(ent.Owner, new Vector2(profile.Width, profile.Height));
     }
 
     /// <summary>

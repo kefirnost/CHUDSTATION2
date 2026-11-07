@@ -33,6 +33,8 @@
                                 <ui:RandomizeLockButton For="Name" LabelText="{Loc 'humanoid-profile-editor-randomize-name-button'}"/>
                                 <ui:RandomizeLockButton For="Species" LabelText="{Loc 'humanoid-profile-editor-randomize-species-button'}"/>
                                 <ui:RandomizeLockButton For="Age" LabelText="{Loc 'humanoid-profile-editor-randomize-age-button'}"/>
+                                <ui:RandomizeLockButton For="Height" LabelText="{Loc 'humanoid-profile-editor-randomize-height-button'}"/>
+                                <ui:RandomizeLockButton For="Width" LabelText="{Loc 'humanoid-profile-editor-randomize-width-button'}"/>
                                 <ui:RandomizeLockButton For="Sex" LabelText="{Loc 'humanoid-profile-editor-randomize-sex-button'}"/>
                                 <ui:RandomizeLockButton For="Skin" LabelText="{Loc 'humanoid-profile-editor-randomize-skin-button'}"/>
                                 <ui:RandomizeLockButton For="Eyes" LabelText="{Loc 'humanoid-profile-editor-randomize-eye-button'}"/>
@@ -81,6 +83,22 @@
                                     <Label Text="{Loc 'humanoid-profile-editor-age-label'}" />
                                     <Control HorizontalExpand="True"/>
                                     <LineEdit Name="AgeEdit" MinSize="40 0" HorizontalAlignment="Right" />
+                                </BoxContainer>
+                                <BoxContainer Orientation="Vertical" HorizontalExpand="True" Margin="0 4">
+                                    <BoxContainer Orientation="Horizontal">
+                                        <Label Text="{Loc 'humanoid-profile-editor-height-label'}" />
+                                        <Control HorizontalExpand="True"/>
+                                        <Label Name="HeightValueLabel" Text="100%" />
+                                    </BoxContainer>
+                                    <Slider Name="HeightSlider" MinValue="0.8" MaxValue="1.2" Value="1" HorizontalExpand="True" />
+                                </BoxContainer>
+                                <BoxContainer Orientation="Vertical" HorizontalExpand="True" Margin="0 4">
+                                    <BoxContainer Orientation="Horizontal">
+                                        <Label Text="{Loc 'humanoid-profile-editor-width-label'}" />
+                                        <Control HorizontalExpand="True"/>
+                                        <Label Name="WidthValueLabel" Text="100%" />
+                                    </BoxContainer>
+                                    <Slider Name="WidthSlider" MinValue="0.85" MaxValue="1.15" Value="1" HorizontalExpand="True" />
                                 </BoxContainer>
                                 <!-- Sex -->
                                 <BoxContainer HorizontalExpand="True">
