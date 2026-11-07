@@ -1,6 +1,7 @@
 using System.Collections.Frozen;
 using System.Linq;
 using Content.Shared.FixedPoint;
+using Content.Shared._ES.Fluids;
 using System.Text.Json.Serialization;
 using Content.Shared.Chemistry.Reaction;
 using Content.Shared.Contraband;
@@ -111,6 +112,15 @@ namespace Content.Shared.Chemistry.Reagent
 
         [DataField]
         public float? MeltingPoint { get; private set; }
+
+        [DataField]
+        public ProtoId<ESPuddleSpriteSetPrototype> PuddleSpriteSet = "Default";
+
+        /// <summary>
+        /// Optional override for <see cref="SubstanceColor"/> used only for puddles.
+        /// </summary>
+        [DataField]
+        public Color? PuddleColor;
 
         [DataField]
         public SpriteSpecifier? MetamorphicSprite { get; private set; } = null;

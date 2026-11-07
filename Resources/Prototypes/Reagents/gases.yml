@@ -3,6 +3,7 @@
 
 - type: reagent
   id: Oxygen
+  puddleSpriteSet: Acid
   name: reagent-name-oxygen
   desc: reagent-desc-oxygen
   physicalDesc: reagent-physical-desc-gaseous
@@ -80,6 +81,7 @@
   desc: reagent-desc-plasma
   physicalDesc: reagent-physical-desc-gaseous
   flavor: bitter
+  puddleSpriteSet: Acid
   color: "#7e009e"
   recognizable: true
   boilingPoint: -127.3 # Random values picked between the actual values for CO2 and O2
@@ -159,6 +161,7 @@
 
 - type: reagent
   id: CarbonDioxide
+  puddleSpriteSet: Acid
   name: reagent-name-carbon-dioxide
   desc: reagent-desc-carbon-dioxide
   physicalDesc: reagent-physical-desc-odorless
@@ -221,6 +224,7 @@
   name: reagent-name-nitrogen
   desc: reagent-desc-nitrogen
   physicalDesc: reagent-physical-desc-gaseous
+  puddleSpriteSet: Acid
   flavor: bitter
   color: "#a1e1ff"
   boilingPoint: -195.8
@@ -260,6 +264,7 @@
   desc: reagent-desc-nitrous-oxide
   physicalDesc: reagent-physical-desc-gaseous
   flavor: bitter
+  puddleSpriteSet: Acid
   color: "#5d88c9"
   boilingPoint: -88
   meltingPoint: -90
@@ -393,3 +398,4 @@
         messages: [ "frezon-euphoric" ]
         probability: 0.1
         minScale: 1
+

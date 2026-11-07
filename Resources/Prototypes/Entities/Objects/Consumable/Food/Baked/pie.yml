@@ -169,6 +169,26 @@
           path: /Audio/Weapons/Guns/Empty/empty.ogg
         swap: false
         disableEject: true
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 12
+        reagents:
+        - ReagentId: SmashedPie
+          Quantity: 12
+  - type: DamageOnHighSpeedImpact
+    minimumSpeed: 0.1
+    damage:
+      types:
+        Blunt: 1
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 1
+      behaviors:
+      - !type:SpillBehavior
+        solution: food
   - type: Tag
     tags:
     - Fruit
@@ -622,3 +642,4 @@
       - ReagentId: Theobromine
         Quantity: 8
 # Tastes like tart, dark chocolate.
+

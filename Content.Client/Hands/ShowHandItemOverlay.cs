@@ -1,6 +1,9 @@
 using System.Numerics;
+using Content.Client.Cooldown;
 using Content.Client.Hands.Systems;
 using Content.Shared.CCVar;
+using Content.Shared.Timing.Components;
+using Content.Shared.Timing.Systems;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.Input;
@@ -15,13 +18,16 @@ namespace Content.Client.Hands
 {
     public sealed partial class ShowHandItemOverlay : Overlay
     {
+        [Dependency] private IUserInterfaceManager _ui = default!;
         [Dependency] private IConfigurationManager _cfg = default!;
         [Dependency] private IInputManager _inputManager = default!;
         [Dependency] private IClyde _clyde = default!;
         [Dependency] private IEntityManager _entMan = default!;
 
         private HandsSystem? _hands;
+        private UseDelaySystem? _delay;
         private readonly IRenderTexture _renderBackbuffer;
+        private readonly CooldownGraphic _cooldownGraphic;
 
         public override OverlaySpace Space => OverlaySpace.ScreenSpace;
 
@@ -31,6 +37,14 @@ namespace Content.Client.Hands
         public ShowHandItemOverlay()
         {
             IoCManager.InjectDependencies(this);
+
+            _cooldownGraphic = new()
+            {
+                SetSize = new(64, 64)
+            };
+
+            // mild jank to get it to size correctly since we are rendering this directly.
+            _cooldownGraphic.Arrange(UIBox2.FromDimensions(Vector2.Zero, new Vector2(64, 64)));
 
             _renderBackbuffer = _clyde.CreateRenderTarget(
                 (64, 64),
@@ -81,7 +95,8 @@ namespace Content.Client.Hands
                 return;
 
             var halfSize = _renderBackbuffer.Size / 2;
-            var uiScale = (args.ViewportControl as Control)?.UIScale ?? 1f;
+            var vpControl = args.ViewportControl as Control;
+            var uiScale = vpControl?.UIScale ?? 1f;
 
             screen.RenderInRenderTarget(_renderBackbuffer, () =>
             {
@@ -89,6 +104,25 @@ namespace Content.Client.Hands
             }, Color.Transparent);
 
             screen.DrawTexture(_renderBackbuffer.Texture, mousePos.Position - halfSize + offsetVec, Color.White.WithAlpha(0.75f));
+
+            // render cooldown circle graphic
+            if (!_entMan.TryGetComponent<UseDelayComponent>(handEntity, out var delay))
+                return;
+
+            _delay ??= _entMan.System<UseDelaySystem>();
+            if (!_delay.GetLastActiveDelay((handEntity.Value, delay), out var cooldown))
+                return;
+
+            if (cooldown.StartTime == cooldown.EndTime || cooldown.Length == TimeSpan.Zero)
+            {
+                return;
+            }
+
+            _cooldownGraphic.FromTime(cooldown.StartTime, cooldown.EndTime);
+            // add child temporarily to get the ui scale to work
+            vpControl?.AddChild(_cooldownGraphic);
+            _ui.RenderControl(args.RenderHandle, _cooldownGraphic, (Vector2i) (mousePos.Position - (_cooldownGraphic.PixelSize) / 2));
+            vpControl?.RemoveChild(_cooldownGraphic);
         }
     }
 }

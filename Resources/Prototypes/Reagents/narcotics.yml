@@ -1,5 +1,6 @@
 - type: reagent
   id: Desoxyephedrine
+  puddleSpriteSet: Shiny
   name: reagent-name-desoxyephedrine
   group: Narcotics
   desc: reagent-desc-desoxyephedrine
@@ -71,6 +72,7 @@
   desc: reagent-desc-ephedrine
   physicalDesc: reagent-physical-desc-powdery
   flavor: bitter
+  puddleSpriteSet: Powder
   color: "#D2FFFA"
   boilingPoint: 255.0
   meltingPoint: 36.0
@@ -141,6 +143,7 @@
 
 - type: reagent
   id: Stimulants
+  puddleSpriteSet: Acid
   name: reagent-name-stimulants
   group: Narcotics
   desc: reagent-desc-stimulants
@@ -234,6 +237,7 @@
   desc: reagent-desc-thc
   flavor: bitter
   flavorMinimum: 0.05
+  puddleSpriteSet: Powder
   color: "#808080"
   physicalDesc: reagent-physical-desc-crystalline
   plantMetabolism:
@@ -255,6 +259,7 @@
   group: Narcotics
   desc: reagent-desc-nicotine
   flavor: bitter
+  puddleSpriteSet: Powder
   color: "#C0C0C0"
   physicalDesc: reagent-physical-desc-strong-smelling
   plantMetabolism:
@@ -653,3 +658,4 @@
         damage:
           types:
            Radiation: 0.5
+

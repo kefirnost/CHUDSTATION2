@@ -5,6 +5,7 @@
   desc: reagent-desc-blood
   flavor: metallic
   color: "#800000"
+  puddleSpriteSet: Blood
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/bloodglass.rsi
     state: icon_empty
@@ -304,6 +305,7 @@
   group: Biological
   desc: reagent-desc-fat
   flavor: terrible
+  puddleSpriteSet: Blood
   color: "#d8d8b0"
   physicalDesc: reagent-physical-desc-exotic-smelling
   footstepSound:
@@ -318,6 +320,7 @@
   desc: reagent-desc-vomit
   flavor: terrible
   color: "#87ab08"
+  puddleSpriteSet: Vomit
   physicalDesc: reagent-physical-desc-pungent
   slipData:
     requiredSlipSpeed: 4.0 #It's not as slippery as water
@@ -337,6 +340,7 @@
 
 - type: reagent
   id: GreyMatter
+  puddleSpriteSet: Blood
   name: reagent-name-grey-matter
   group: Biological
   desc: reagent-desc-grey-matter
@@ -405,3 +409,4 @@
         minScale: 1
         target: true
         guidebookText: entity-effect-guidebook-dna-hunt
+
