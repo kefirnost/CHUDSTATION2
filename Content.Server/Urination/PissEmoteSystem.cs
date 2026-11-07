@@ -67,6 +67,7 @@ public sealed partial class PissEmoteSystem : EntitySystem
             BreakOnMove = true,
             BreakOnDamage = true,
             CancelDuplicate = false,
+            Broadcast = true,
         };
 
         _doAfter.TryStartDoAfter(doAfterArgs);
