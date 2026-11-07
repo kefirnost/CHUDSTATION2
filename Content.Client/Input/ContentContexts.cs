@@ -116,6 +116,7 @@ namespace Content.Client.Input
                 aghost.AddFunction(keyFunction);
             }
             human.AddFunction(ContentKeyFunctions.ToggleKnockdown);
+            human.AddFunction(ContentKeyFunctions.Sprint);
             human.AddFunction(ContentKeyFunctions.OpenEmotesMenu);
 
             var ghost = contexts.New("ghost", "human");
