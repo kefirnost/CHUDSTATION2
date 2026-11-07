@@ -39,6 +39,7 @@ namespace Content.Shared.Movement.Systems
                 .Bind(EngineKeyFunctions.MoveRight, moveRightCmdHandler)
                 .Bind(EngineKeyFunctions.MoveDown, moveDownCmdHandler)
                 .Bind(EngineKeyFunctions.Walk, new WalkInputCmdHandler(this))
+                .Bind(ContentKeyFunctions.Sprint, new SprintInputCmdHandler(this))
                 .Bind(EngineKeyFunctions.CameraRotateLeft, new CameraRotateInputCmdHandler(this, Direction.East))
                 .Bind(EngineKeyFunctions.CameraRotateRight, new CameraRotateInputCmdHandler(this, Direction.West))
                 .Bind(EngineKeyFunctions.CameraReset, new CameraResetInputCmdHandler(this))
@@ -578,6 +579,26 @@ namespace Content.Shared.Movement.Systems
                 if (session?.AttachedEntity == null) return false;
 
                 _controller.HandleDirChange(session.AttachedEntity.Value, _dir, message.SubTick, message.State == BoundKeyState.Down);
+                return false;
+            }
+        }
+
+        private sealed class SprintInputCmdHandler : InputCmdHandler
+        {
+            private readonly SharedMoverController _controller;
+
+            public SprintInputCmdHandler(SharedMoverController controller)
+            {
+                _controller = controller;
+            }
+
+            public override bool HandleCmdMessage(IEntityManager entManager, ICommonSession? session, IFullInputCmdMessage message)
+            {
+                if (session?.AttachedEntity == null)
+                    return false;
+
+                var ev = new SprintInputEvent(message.State == BoundKeyState.Down);
+                _controller.RaiseLocalEvent(session.AttachedEntity.Value, ev);
                 return false;
             }
         }
