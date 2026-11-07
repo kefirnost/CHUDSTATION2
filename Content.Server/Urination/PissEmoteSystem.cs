@@ -12,7 +12,7 @@ namespace Content.Server.Urination;
 /// <summary>
 /// Handles the *piss emote. A thirsty mob groans instead of producing liquid.
 /// </summary>
-public sealed class PissEmoteSystem : EntitySystem
+public sealed partial class PissEmoteSystem : EntitySystem
 {
     private const string PissEmoteId = "Piss";
     private const string GroanEmoteId = "Groan";
