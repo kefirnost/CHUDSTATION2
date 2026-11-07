@@ -1,5 +1,6 @@
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
+using Content.Shared.Gravity;
 using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Events;
 using Robust.Shared.Audio.Systems;
@@ -16,6 +17,7 @@ public sealed partial class SprinterSystem : EntitySystem
     [Dependency] private MovementSpeedModifierSystem _speed = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private SharedGravitySystem _gravity = default!;
 
     private const float SprintSpeedMultiplier = 1.4f;
     private const float StaminaDrainPerSecond = 8f;
@@ -37,7 +39,7 @@ public sealed partial class SprinterSystem : EntitySystem
             if (!sprinter.Sprinting)
                 continue;
 
-            if (!mover.CanMove || stamina.Critical ||
+            if (!mover.CanMove || _gravity.IsWeightless(uid) || stamina.Critical ||
                 !_stamina.TryTakeStamina(uid, StaminaDrainPerSecond * frameTime, stamina))
             {
                 StopSprint(uid, sprinter);
@@ -54,7 +56,8 @@ public sealed partial class SprinterSystem : EntitySystem
         {
             if (_timing.CurTime < ent.Comp.NextSprintAllowed ||
                 !TryComp<StaminaComponent>(ent.Owner, out var stamina) || stamina.Critical ||
-                !TryComp<InputMoverComponent>(ent.Owner, out var mover) || !mover.CanMove)
+                !TryComp<InputMoverComponent>(ent.Owner, out var mover) || !mover.CanMove ||
+                _gravity.IsWeightless(ent.Owner))
                 return;
 
             ent.Comp.Sprinting = true;
