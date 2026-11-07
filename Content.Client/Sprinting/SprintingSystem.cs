@@ -35,9 +35,9 @@ public sealed partial class SprintingSystem : EntitySystem
 
             var now = _timing.CurTime;
             var starting = _sprinting.Add(uid);
-            var lastPuff = _lastPuff.GetValueOrDefault(uid, TimeSpan.MinValue);
+            var hasLastPuff = _lastPuff.TryGetValue(uid, out var lastPuff);
 
-            if (now - lastPuff < MinimumPuffInterval)
+            if (hasLastPuff && now - lastPuff < MinimumPuffInterval)
                 continue;
 
             if (starting)
@@ -47,7 +47,7 @@ public sealed partial class SprintingSystem : EntitySystem
                 continue;
             }
 
-            if (now - lastPuff < component.TimeBetweenSteps)
+            if (hasLastPuff && now - lastPuff < component.TimeBetweenSteps)
                 continue;
 
             Spawn(component.StepAnimation, Transform(uid).Coordinates);
