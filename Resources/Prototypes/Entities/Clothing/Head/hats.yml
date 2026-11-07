@@ -1584,3 +1584,15 @@
     - ClothMade
     - Recyclable
     - WhitelistChameleon
+
+
+- type: entity
+  parent: ClothingHeadBase
+  id: ClothingHeadHatPatrioticUshanka
+  name: Патриотичная ушанка
+  description: Ушанка с весьма выразительным дизайном.
+  components:
+  - type: Sprite
+    sprite: _chud/clothing/head/patriotic_ushanka.rsi
+  - type: Clothing
+    sprite: _chud/clothing/head/patriotic_ushanka.rsi
