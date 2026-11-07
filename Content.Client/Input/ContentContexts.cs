@@ -118,6 +118,7 @@ namespace Content.Client.Input
             human.AddFunction(ContentKeyFunctions.ToggleKnockdown);
             human.AddFunction(ContentKeyFunctions.Sprint);
             human.AddFunction(ContentKeyFunctions.OpenEmotesMenu);
+            human.AddFunction(ContentKeyFunctions.PissEmote);
 
             var ghost = contexts.New("ghost", "human");
             ghost.AddFunction(EngineKeyFunctions.MoveUp);
