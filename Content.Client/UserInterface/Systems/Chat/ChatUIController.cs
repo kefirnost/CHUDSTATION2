@@ -231,6 +231,9 @@ public sealed partial class ChatUIController : UIController
         _input.SetInputCommand(ContentKeyFunctions.CycleChatChannelBackward,
             InputCmdHandler.FromDelegate(_ => CycleChatChannel(false)));
 
+        _input.SetInputCommand(ContentKeyFunctions.PissEmote,
+            InputCmdHandler.FromDelegate(_ => _manager.SendMessage("piss", ChatSelectChannel.Emotes)));
+
         var gameplayStateLoad = UIManager.GetUIController<GameplayStateLoadController>();
         gameplayStateLoad.OnScreenLoad += OnScreenLoad;
         gameplayStateLoad.OnScreenUnload += OnScreenUnload;

@@ -87,3 +87,8 @@ chat-emote-msg-flap = flaps {POSS-ADJ($entity)} wings.
 chat-emote-msg-blink = blinks.
 chat-emote-msg-hiss = hisses!
 chat-emote-msg-caw = caws.
+
+# Piss emote
+chat-emote-name-piss = Piss
+chat-emote-name-groan = Groan
+chat-emote-msg-groan = groans.
