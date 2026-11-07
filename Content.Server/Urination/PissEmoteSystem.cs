@@ -92,15 +92,16 @@ public sealed partial class PissEmoteSystem : EntitySystem
             return;
 
         var user = args.User;
+        var succeeded = TryFillActiveContainer(user);
 
-        if (!TryFillActiveContainer(user))
+        if (!succeeded)
         {
             var piss = new Solution(PissReagentId, PissAmount);
-            _puddle.TrySpillAt(user, piss, out _);
+            succeeded = _puddle.TrySpillAt(user, piss, out _);
         }
 
         // Completing the action leaves the character severely thirsty, but not dehydrated to death.
-        if (TryComp<SatiationComponent>(user, out var satiation))
+        if (succeeded && TryComp<SatiationComponent>(user, out var satiation))
             _satiation.SetValue((user, satiation), SatiationSystem.Thirst, "Parched");
 
         args.Handled = true;
