@@ -20,6 +20,7 @@ public sealed partial class PissEmoteSystem : EntitySystem
     private const string GroanEmoteId = "Groan";
     private const string PissReagentId = "Piss";
     private const string ThirstyThreshold = "Thirsty";
+    private const string ParchedThreshold = "Parched";
     private const float ThirstThresholdTolerance = 0.001f;
     private const int PissAmount = 20;
     private static readonly TimeSpan PissDuration = TimeSpan.FromSeconds(6);
@@ -104,7 +105,7 @@ public sealed partial class PissEmoteSystem : EntitySystem
 
         // Completing the action leaves the character severely thirsty, but not dehydrated to death.
         if (succeeded && TryComp<SatiationComponent>(user, out var satiation))
-            _satiation.SetValue((user, satiation), SatiationSystem.Thirst, "Parched");
+            _satiation.SetValue((user, satiation), SatiationSystem.Thirst, ParchedThreshold);
 
         args.Handled = true;
     }
