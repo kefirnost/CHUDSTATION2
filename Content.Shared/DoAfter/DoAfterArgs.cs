@@ -47,6 +47,12 @@ public sealed partial class DoAfterArgs
     public bool Hidden;
 
     /// <summary>
+    ///     If not null, the progress bar will use this color.
+    /// </summary>
+    [DataField]
+    public Color? ColorOverride;
+
+    /// <summary>
     ///     String that will be added to the examine window of the entity.
     /// </summary>
     [DataField]
@@ -266,6 +272,7 @@ public sealed partial class DoAfterArgs
         Target = other.Target;
         Used = other.Used;
         Hidden = other.Hidden;
+        ColorOverride = other.ColorOverride;
         ExamineText = other.ExamineText;
         EventTarget = other.EventTarget;
         Broadcast = other.Broadcast;

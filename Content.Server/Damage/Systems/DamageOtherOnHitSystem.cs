@@ -48,7 +48,8 @@ public sealed partial class DamageOtherOnHitSystem : SharedDamageOtherOnHitSyste
         if (TryComp<PhysicsComponent>(uid, out var body) && body.LinearVelocity.LengthSquared() > 0f)
         {
             var direction = body.LinearVelocity.Normalized();
-            _sharedCameraRecoil.KickCamera(args.Target, direction);
+            _sharedCameraRecoil.KickCamera(args.Target, direction * 0.1f); // Goob
+            _shake.Screenshake(args.Target, HitShake, null); // Goob
         }
     }
 }

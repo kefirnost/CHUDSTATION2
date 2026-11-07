@@ -451,3 +451,5 @@ ui-options-admin-overlay-ghost-hide-distance = Расстояние от кур�
 
 ui-options-admin-strip-overlay-title = Оверлей обыска
 ui-options-admin-strip-overlay-setting = Показывать админ-вид обыска по умолчанию
+
+ui-options-inhand-interaction-particle-scale = Размер значка взаимодействия над головой

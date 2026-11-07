@@ -172,7 +172,7 @@ public sealed class DoAfterOverlay : Overlay
                 var xProgress = (EndX - StartX) * elapsedRatio + StartX;
                 var box = new Box2(new Vector2(StartX, 3f) / EyeManager.PixelsPerMeter, new Vector2(xProgress, 4f) / EyeManager.PixelsPerMeter);
                 box = box.Translated(position);
-                handle.DrawRect(box, color);
+                handle.DrawRect(box, ApplyOverrideAlpha(doAfter.Args.ColorOverride, color));
                 offset += _barTexture.Height / scale;
             }
         }
@@ -181,5 +181,12 @@ public sealed class DoAfterOverlay : Overlay
     public Color GetProgressColor(float progress, float alpha = 1f)
     {
         return _progressColor.GetProgressColor(progress).WithAlpha(alpha);
+    }
+
+    private static Color ApplyOverrideAlpha(Color? colorOverride, Color color)
+    {
+        return colorOverride is { } overrideColor
+            ? overrideColor.WithAlpha(overrideColor.A * color.A)
+            : color;
     }
 }
