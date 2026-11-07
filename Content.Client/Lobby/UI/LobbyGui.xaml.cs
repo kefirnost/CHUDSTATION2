@@ -17,7 +17,7 @@ namespace Content.Client.Lobby.UI
             RobustXamlLoader.Load(this);
             IoCManager.InjectDependencies(this);
             SetAnchorPreset(MainContainer, LayoutPreset.Wide);
-            SetAnchorPreset(Background, LayoutPreset.Wide);
+            SetAnchorPreset(BackgroundParallax, LayoutPreset.Wide);
 
             LobbySong.SetMarkup(Loc.GetString("lobby-state-song-no-song-text"));
 
