@@ -2,6 +2,7 @@ using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Movement.Components;
 using Content.Shared.Movement.Events;
+using Robust.Shared.Audio.Systems;
 
 namespace Content.Shared.Movement.Systems;
 
@@ -12,6 +13,7 @@ public sealed partial class SprinterSystem : EntitySystem
 {
     [Dependency] private SharedStaminaSystem _stamina = default!;
     [Dependency] private MovementSpeedModifierSystem _speed = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
 
     private const float SprintSpeedMultiplier = 1.4f;
     private const float StaminaDrainPerSecond = 8f;
@@ -54,6 +56,8 @@ public sealed partial class SprinterSystem : EntitySystem
             return;
 
         ent.Comp.Sprinting = args.Active;
+        if (args.Active)
+            _audio.PlayPredicted(ent.Comp.SprintStartupSound, ent.Owner, ent.Owner);
         Dirty(ent);
         _speed.RefreshMovementSpeedModifiers(ent.Owner);
     }
