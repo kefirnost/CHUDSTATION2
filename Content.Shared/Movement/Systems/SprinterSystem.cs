@@ -8,7 +8,7 @@ namespace Content.Shared.Movement.Systems;
 /// <summary>
 /// Applies a temporary speed boost while sprint is held and charges stamina over time.
 /// </summary>
-public sealed class SprinterSystem : EntitySystem
+public sealed partial class SprinterSystem : EntitySystem
 {
     [Dependency] private SharedStaminaSystem _stamina = default!;
     [Dependency] private MovementSpeedModifierSystem _speed = default!;
