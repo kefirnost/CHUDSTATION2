@@ -74,6 +74,7 @@
   - type: DamageOverlay
   - type: RadiationReceiver
   - type: Stamina
+  - type: Sprinter
   - type: StunVisuals
   - type: MobState
   - type: MobThresholds
