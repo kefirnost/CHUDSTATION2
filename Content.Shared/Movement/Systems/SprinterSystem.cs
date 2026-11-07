@@ -38,7 +38,7 @@ public sealed class SprinterSystem : EntitySystem
             {
                 sprinter.Sprinting = false;
                 Dirty(uid, sprinter);
-                _speed.RefreshMovementSpeedModifiers((uid, null));
+                _speed.RefreshMovementSpeedModifiers(uid);
             }
         }
     }
@@ -49,8 +49,8 @@ public sealed class SprinterSystem : EntitySystem
             return;
 
         if (args.Active &&
-            (!TryComp<StaminaComponent>(ent, out var stamina) || stamina.Critical ||
-             !TryComp<InputMoverComponent>(ent, out var mover) || !mover.CanMove))
+            (!TryComp<StaminaComponent>(ent.Owner, out var stamina) || stamina.Critical ||
+             !TryComp<InputMoverComponent>(ent.Owner, out var mover) || !mover.CanMove))
             return;
 
         ent.Comp.Sprinting = args.Active;
