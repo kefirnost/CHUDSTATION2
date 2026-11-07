@@ -9,10 +9,10 @@ namespace Content.Client.Sprinting;
 /// <summary>
 /// Displays the dust puffs produced by sprinting.
 /// </summary>
-public sealed class SprintingSystem : EntitySystem
+public sealed partial class SprintingSystem : EntitySystem
 {
-    [Dependency] private readonly AnimationPlayerSystem _animationPlayer = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private AnimationPlayerSystem _animationPlayer = default!;
+    [Dependency] private IGameTiming _timing = default!;
 
     private readonly HashSet<EntityUid> _sprinting = new();
     private readonly Dictionary<EntityUid, TimeSpan> _lastStep = new();
