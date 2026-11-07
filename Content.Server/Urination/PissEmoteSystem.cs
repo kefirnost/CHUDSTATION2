@@ -89,7 +89,7 @@ public sealed partial class PissEmoteSystem : EntitySystem
             hypotheticalValueDelta: ThirstThresholdTolerance);
     }
 
-    private void OnPissDoAfter(ref PissDoAfterEvent args)
+    private void OnPissDoAfter(PissDoAfterEvent args)
     {
         if (args.Cancelled || args.Handled)
             return;
