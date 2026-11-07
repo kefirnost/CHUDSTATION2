@@ -199,7 +199,7 @@ public sealed partial class EyeLerpingSystem : EntitySystem
 
             if (!NeedsLerp(mover))
             {
-                _eye.SetRotation(entity, lerpInfo.TargetRotation, eye);
+                _eye.SetRotation(entity, lerpInfo.TargetRotation + GetShakeRotation(entity), eye);
                 continue;
             }
 
@@ -211,7 +211,7 @@ public sealed partial class EyeLerpingSystem : EntitySystem
                 continue;
             }
 
-            _eye.SetRotation(entity, shortest * tickFraction + lerpInfo.LastRotation, eye);
+            _eye.SetRotation(entity, shortest * tickFraction + lerpInfo.LastRotation + GetShakeRotation(entity), eye);
         }
     }
 }
