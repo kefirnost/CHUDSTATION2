@@ -198,7 +198,7 @@ public sealed partial class StellarInteractionParticleSystem : EntitySystem
 
     private SpriteSpecifier? GetHandSprite(EntityUid performer)
     {
-        if (!TryComp<HumanoidAppearanceComponent>(performer, out var humanoid)
+        if (!TryComp<HumanoidProfileComponent>(performer, out var humanoid)
             || !_proto.TryIndex(humanoid.Species, out var species))
             return null;
 
