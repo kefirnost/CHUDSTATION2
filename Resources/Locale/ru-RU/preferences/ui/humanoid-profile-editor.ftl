@@ -77,3 +77,8 @@ humanoid-profile-editor-voice-masculine = Мужественный
 humanoid-profile-editor-voice-feminine = Женственный
 humanoid-profile-editor-voice-neutral = Нейтральный
 humanoid-profile-editor-voice-none = Безымянный голос
+
+humanoid-profile-editor-height-label = Рост:
+humanoid-profile-editor-width-label = Ширина:
+humanoid-profile-editor-randomize-height-button = Рост
+humanoid-profile-editor-randomize-width-button = Ширина

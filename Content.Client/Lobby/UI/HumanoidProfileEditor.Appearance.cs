@@ -17,6 +17,7 @@ public sealed partial class HumanoidProfileEditor
     public event Action<List<ProtoId<GuideEntryPrototype>>>? OnOpenGuidebook;
 
     private ColorSelectorSliders _rgbSkinColorSelector;
+    private bool _updatingHeightWidthControls;
     private List<SpeciesPrototype> _species = new();
     private List<EmoteSoundsPrototype> _voices = new();
     private static readonly ProtoId<GuideEntryPrototype> DefaultSpeciesGuidebook = "Species";
@@ -53,6 +54,46 @@ public sealed partial class HumanoidProfileEditor
     private void UpdateAgeEdit()
     {
         AgeEdit.Text = Profile?.Age.ToString() ?? "";
+    }
+
+    private void UpdateHeightWidthControls()
+    {
+        if (Profile == null)
+            return;
+
+        var species = _prototypeManager.Index<SpeciesPrototype>(Profile.Species);
+        _updatingHeightWidthControls = true;
+
+        HeightSlider.MinValue = species.MinHeight;
+        HeightSlider.MaxValue = species.MaxHeight;
+        HeightSlider.Value = Math.Clamp(Profile.Height, species.MinHeight, species.MaxHeight);
+        WidthSlider.MinValue = species.MinWidth;
+        WidthSlider.MaxValue = species.MaxWidth;
+        WidthSlider.Value = Math.Clamp(Profile.Width, species.MinWidth, species.MaxWidth);
+
+        HeightValueLabel.Text = $"{HeightSlider.Value:P0}";
+        WidthValueLabel.Text = $"{WidthSlider.Value:P0}";
+        _updatingHeightWidthControls = false;
+    }
+
+    private void OnHeightSliderChanged()
+    {
+        if (_updatingHeightWidthControls || Profile == null)
+            return;
+
+        Profile = Profile.WithHeight(HeightSlider.Value);
+        HeightValueLabel.Text = $"{HeightSlider.Value:P0}";
+        ReloadProfilePreview();
+    }
+
+    private void OnWidthSliderChanged()
+    {
+        if (_updatingHeightWidthControls || Profile == null)
+            return;
+
+        Profile = Profile.WithWidth(WidthSlider.Value);
+        WidthValueLabel.Text = $"{WidthSlider.Value:P0}";
+        ReloadProfilePreview();
     }
 
     private void UpdateSexControls()
@@ -211,6 +252,15 @@ public sealed partial class HumanoidProfileEditor
     private void SetSpecies(string newSpecies)
     {
         Profile = Profile?.WithSpecies(newSpecies);
+        if (Profile != null)
+        {
+            var species = _prototypeManager.Index<SpeciesPrototype>(newSpecies);
+            Profile = Profile
+                .WithHeight(Math.Clamp(Profile.Height, species.MinHeight, species.MaxHeight))
+                .WithWidth(Math.Clamp(Profile.Width, species.MinWidth, species.MaxWidth));
+        }
+
+        UpdateHeightWidthControls();
         OnSkinColorOnValueChanged(); // Species may have special color prefs, make sure to update it.
         _markingsModel.OrganData = _markingManager.GetMarkingData(newSpecies);
         _markingsModel.ValidateMarkings();

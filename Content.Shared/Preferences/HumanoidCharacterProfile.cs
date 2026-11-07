@@ -87,6 +87,14 @@ namespace Content.Shared.Preferences
         [DataField]
         public int Age { get; set; } = 18;
 
+        /// <summary>Character height multiplier.</summary>
+        [DataField]
+        public float Height { get; private set; } = 1f;
+
+        /// <summary>Character width multiplier.</summary>
+        [DataField]
+        public float Width { get; private set; } = 1f;
+
         [DataField]
         public Sex Sex { get; private set; } = Sex.Male;
 
@@ -144,7 +152,9 @@ namespace Content.Shared.Preferences
             PreferenceUnavailableMode preferenceUnavailable,
             HashSet<ProtoId<AntagPrototype>> antagPreferences,
             HashSet<ProtoId<TraitPrototype>> traitPreferences,
-            Dictionary<string, RoleLoadout> loadouts)
+            Dictionary<string, RoleLoadout> loadouts,
+            float height = 1f,
+            float width = 1f)
         {
             Name = name;
             FlavorText = flavortext;
@@ -160,6 +170,8 @@ namespace Content.Shared.Preferences
             _antagPreferences = antagPreferences;
             _traitPreferences = traitPreferences;
             _loadouts = loadouts;
+            Height = height;
+            Width = width;
 
             var hasHighPrority = false;
             foreach (var (key, value) in _jobPriorities)
@@ -191,7 +203,9 @@ namespace Content.Shared.Preferences
                 other.PreferenceUnavailable,
                 new HashSet<ProtoId<AntagPrototype>>(other.AntagPreferences),
                 new HashSet<ProtoId<TraitPrototype>>(other.TraitPreferences),
-                new Dictionary<string, RoleLoadout>(other.Loadouts))
+                new Dictionary<string, RoleLoadout>(other.Loadouts),
+                other.Height,
+                other.Width)
         {
         }
 
@@ -215,11 +229,15 @@ namespace Content.Shared.Preferences
             species ??= HumanoidCharacterProfile.DefaultSpecies;
             sex ??= Sex.Male;
 
+            var speciesPrototype = IoCManager.Resolve<IPrototypeManager>().Index(species.Value);
+
             return new()
             {
                 Species = species.Value,
                 Sex = sex.Value,
                 Appearance = HumanoidCharacterAppearance.DefaultWithSpecies(species.Value, sex.Value),
+                Height = speciesPrototype.DefaultHeight,
+                Width = speciesPrototype.DefaultWidth,
             };
         }
 
@@ -240,6 +258,8 @@ namespace Content.Shared.Preferences
             Eyes = 1 << 5,
             Skin = 1 << 6,
             Markings = 1 << 7,
+            Height = 1 << 8,
+            Width = 1 << 9,
         }
 
         /// <summary>
@@ -253,7 +273,9 @@ namespace Content.Shared.Preferences
             | RandomizeCfg.Gender
             | RandomizeCfg.Eyes
             | RandomizeCfg.Skin
-            | RandomizeCfg.Markings;
+            | RandomizeCfg.Markings
+            | RandomizeCfg.Height
+            | RandomizeCfg.Width;
 
         /// <summary>
         /// Picks a random species from roundstart species.
@@ -369,6 +391,14 @@ namespace Content.Shared.Preferences
             profile.Name = (randomizeCfg & RandomizeCfg.Name) != 0 ? RandomName(speciesProto, profile.Gender) : baseProfile.Name;
             profile.Age = (randomizeCfg & RandomizeCfg.Age) != 0 ? RandomAge(speciesProto) : baseProfile.Age;
 
+            var random = IoCManager.Resolve<IRobustRandom>();
+            profile.Height = (randomizeCfg & RandomizeCfg.Height) != 0
+                ? random.NextFloat(speciesProto.MinHeight, speciesProto.MaxHeight)
+                : baseProfile.Height;
+            profile.Width = (randomizeCfg & RandomizeCfg.Width) != 0
+                ? random.NextFloat(speciesProto.MinWidth, speciesProto.MaxWidth)
+                : baseProfile.Width;
+
             profile.Appearance = HumanoidCharacterAppearance.Random(speciesProto, profile.Sex, randomizeCfg, baseProfile.Appearance);
 
             return profile;
@@ -402,6 +432,16 @@ namespace Content.Shared.Preferences
         public HumanoidCharacterProfile WithAge(int age)
         {
             return new(this) { Age = age };
+        }
+
+        public HumanoidCharacterProfile WithHeight(float height)
+        {
+            return new(this) { Height = height };
+        }
+
+        public HumanoidCharacterProfile WithWidth(float width)
+        {
+            return new(this) { Width = width };
         }
 
         public HumanoidCharacterProfile WithSex(Sex sex)
@@ -615,6 +655,8 @@ namespace Content.Shared.Preferences
         {
             if (Name != other.Name) return false;
             if (Age != other.Age) return false;
+            if (Height != other.Height) return false;
+            if (Width != other.Width) return false;
             if (Sex != other.Sex) return false;
             if (Voice != other.Voice) return false;
             if (Gender != other.Gender) return false;
@@ -639,6 +681,9 @@ namespace Content.Shared.Preferences
                 Species = HumanoidCharacterProfile.DefaultSpecies;
                 speciesPrototype = prototypeManager.Index(Species);
             }
+
+            Height = Math.Clamp(Height, speciesPrototype.MinHeight, speciesPrototype.MaxHeight);
+            Width = Math.Clamp(Width, speciesPrototype.MinWidth, speciesPrototype.MaxWidth);
 
             var sex = Sex switch
             {
@@ -881,6 +926,8 @@ namespace Content.Shared.Preferences
             hashCode.Add(FlavorText);
             hashCode.Add(Species);
             hashCode.Add(Age);
+            hashCode.Add(Height);
+            hashCode.Add(Width);
             hashCode.Add((int)Sex);
             hashCode.Add(Voice);
             hashCode.Add((int)Gender);

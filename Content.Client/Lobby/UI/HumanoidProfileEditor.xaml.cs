@@ -185,6 +185,9 @@ namespace Content.Client.Lobby.UI
 
             #endregion Age
 
+            HeightSlider.OnValueChanged += _ => OnHeightSliderChanged();
+            WidthSlider.OnValueChanged += _ => OnWidthSliderChanged();
+
             #region Gender
 
             PronounsButton.AddItem(Loc.GetString("humanoid-profile-editor-pronouns-male-text"), (int)Gender.Male);
@@ -383,6 +386,7 @@ namespace Content.Client.Lobby.UI
             UpdateSkinColor();
             UpdateSpawnPriorityControls();
             UpdateAgeEdit();
+            UpdateHeightWidthControls();
             UpdateEyePickers();
             UpdateSaveButton();
             UpdateMarkings();

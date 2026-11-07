@@ -77,3 +77,8 @@ humanoid-profile-editor-voice-masculine = Masculine
 humanoid-profile-editor-voice-feminine = Feminine
 humanoid-profile-editor-voice-neutral = Neutral
 humanoid-profile-editor-voice-none = Unnamed Voice
+
+humanoid-profile-editor-height-label = Height:
+humanoid-profile-editor-width-label = Width:
+humanoid-profile-editor-randomize-height-button = Height
+humanoid-profile-editor-randomize-width-button = Width
