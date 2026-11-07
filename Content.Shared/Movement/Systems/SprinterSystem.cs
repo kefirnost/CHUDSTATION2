@@ -11,6 +11,7 @@ namespace Content.Shared.Movement.Systems;
 public sealed class SprinterSystem : EntitySystem
 {
     [Dependency] private SharedStaminaSystem _stamina = default!;
+    [Dependency] private MovementSpeedModifierSystem _speed = default!;
 
     private const float SprintSpeedMultiplier = 1.4f;
     private const float StaminaDrainPerSecond = 8f;
@@ -37,6 +38,7 @@ public sealed class SprinterSystem : EntitySystem
             {
                 sprinter.Sprinting = false;
                 Dirty(uid, sprinter);
+                _speed.RefreshMovementSpeedModifiers((uid, null));
             }
         }
     }
@@ -53,6 +55,7 @@ public sealed class SprinterSystem : EntitySystem
 
         ent.Comp.Sprinting = args.Active;
         Dirty(ent);
+        _speed.RefreshMovementSpeedModifiers(ent.Owner);
     }
 
     private void OnRefreshSpeed(Entity<SprinterComponent> ent, ref RefreshMovementSpeedModifiersEvent args)
