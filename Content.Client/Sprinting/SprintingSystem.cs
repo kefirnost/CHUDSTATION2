@@ -45,7 +45,6 @@ public sealed partial class SprintingSystem : EntitySystem
             _lastStep[uid] = _timing.CurTime;
         }
     }
-}
 
     public enum SprintVisualLayers : byte
     {
