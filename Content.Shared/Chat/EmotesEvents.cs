@@ -21,6 +21,11 @@ public sealed class BeforeEmoteEvent(EntityUid source, EmotePrototype emote)
     /// </summary>
     public EntityUid? Blocker = null;
 
+    /// <summary>
+    /// Whether the generic cancellation popup should be suppressed.
+    /// </summary>
+    public bool SuppressCancellationPopup;
+
     public SlotFlags TargetSlots => SlotFlags.WITHOUT_POCKET;
 }
 

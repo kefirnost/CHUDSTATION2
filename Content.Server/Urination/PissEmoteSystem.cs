@@ -45,7 +45,9 @@ public sealed partial class PissEmoteSystem : EntitySystem
             return;
 
         // Hide the literal "*piss" text. The action below replaces it with the result.
+        // This is an intentional cancellation, not a failed emote, so suppress the generic popup.
         args.Cancel();
+        args.SuppressCancellationPopup = true;
 
         var user = args.Source;
         if (TryComp<SatiationComponent>(user, out var satiation) && !CanPiss(user, satiation))
