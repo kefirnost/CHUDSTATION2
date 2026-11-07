@@ -86,3 +86,8 @@ chat-emote-msg-flap = машет { POSS-ADJ($entity) } крыльями.
 chat-emote-msg-blink = моргает.
 chat-emote-msg-hiss = шипит!
 chat-emote-msg-caw = каркает.
+
+# Piss emote
+chat-emote-name-piss = Ссанина
+chat-emote-name-groan = Стонать
+chat-emote-msg-groan = стонет.
