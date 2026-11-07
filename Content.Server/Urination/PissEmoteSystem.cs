@@ -3,9 +3,11 @@ using Content.Server.Fluids.EntitySystems;
 using Content.Shared.Chat;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.EntitySystems;
+using Content.Shared.Urination;
 
 namespace Content.Server.Urination;
 
@@ -18,19 +20,23 @@ public sealed partial class PissEmoteSystem : EntitySystem
     private const string GroanEmoteId = "Groan";
     private const string PissReagentId = "Piss";
     private const string ThirstyThreshold = "Thirsty";
+    private const float ThirstThresholdTolerance = 0.001f;
     private const int PissAmount = 20;
+    private static readonly TimeSpan PissDuration = TimeSpan.FromSeconds(6);
 
     [Dependency] private ChatSystem _chat = default!;
     [Dependency] private PuddleSystem _puddle = default!;
     [Dependency] private SharedHandsSystem _hands = default!;
     [Dependency] private SharedSolutionContainerSystem _solutions = default!;
     [Dependency] private SatiationSystem _satiation = default!;
+    [Dependency] private SharedDoAfterSystem _doAfter = default!;
 
     public override void Initialize()
     {
         base.Initialize();
 
         SubscribeLocalEvent<BeforeEmoteEvent>(OnBeforeEmote);
+        SubscribeLocalEvent<PissDoAfterEvent>(OnPissDoAfter);
     }
 
     private void OnBeforeEmote(ref BeforeEmoteEvent args)
@@ -42,18 +48,62 @@ public sealed partial class PissEmoteSystem : EntitySystem
         args.Cancel();
 
         var user = args.Source;
-        if (!TryComp<SatiationComponent>(user, out var satiation) ||
-            !_satiation.IsValueInRange((user, satiation), SatiationSystem.Thirst, above: ThirstyThreshold))
+        if (TryComp<SatiationComponent>(user, out var satiation) && !CanPiss(user, satiation))
         {
             _chat.TryEmoteWithChat(user, GroanEmoteId);
             return;
         }
 
-        if (TryFillActiveContainer(user))
+        var doAfterArgs = new DoAfterArgs(
+            EntityManager,
+            user,
+            PissDuration,
+            new PissDoAfterEvent(),
+            user)
+        {
+            BreakOnMove = true,
+            BreakOnDamage = true,
+            CancelDuplicate = false,
+        };
+
+        _doAfter.TryStartDoAfter(doAfterArgs);
+    }
+
+    /// <summary>
+    /// Missing thirst data does not prevent an entity from using the emote. The small delta makes
+    /// the strict IsValueInRange lower bound inclusive at the Thirsty threshold.
+    /// </summary>
+    private bool CanPiss(EntityUid user, SatiationComponent satiation)
+    {
+        var entity = (user, satiation);
+        if (_satiation.GetValueOrNull(entity, SatiationSystem.Thirst) is null)
+            return true;
+
+        return _satiation.IsValueInRange(
+            entity,
+            SatiationSystem.Thirst,
+            above: ThirstyThreshold,
+            hypotheticalValueDelta: ThirstThresholdTolerance);
+    }
+
+    private void OnPissDoAfter(ref PissDoAfterEvent args)
+    {
+        if (args.Cancelled || args.Handled)
             return;
 
-        var piss = new Solution(PissReagentId, PissAmount);
-        _puddle.TrySpillAt(user, piss, out _);
+        var user = args.User;
+
+        if (!TryFillActiveContainer(user))
+        {
+            var piss = new Solution(PissReagentId, PissAmount);
+            _puddle.TrySpillAt(user, piss, out _);
+        }
+
+        // Completing the action leaves the character severely thirsty, but not dehydrated to death.
+        if (TryComp<SatiationComponent>(user, out var satiation))
+            _satiation.SetValue((user, satiation), SatiationSystem.Thirst, "Parched");
+
+        args.Handled = true;
     }
 
     /// <summary>
