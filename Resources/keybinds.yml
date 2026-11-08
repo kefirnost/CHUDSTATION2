@@ -550,6 +550,9 @@ binds:
 - function: OpenAbilitiesMenu
   type: State
   key: K
+- function: PissEmote
+  type: State
+  key: N
 - function: Hotbar0
   type: State
   key: Num0

@@ -410,3 +410,12 @@
         target: true
         guidebookText: entity-effect-guidebook-dna-hunt
 
+
+- type: reagent
+  id: Piss
+  name: reagent-name-piss
+  group: Biological
+  desc: reagent-desc-piss
+  flavor: terrible
+  physicalDesc: reagent-physical-desc-pungent
+  color: "#D9C65A"

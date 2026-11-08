@@ -221,30 +221,33 @@ public abstract partial class SharedChatSystem
     private bool TryInvokeEmoteEvent(EntityUid uid, EmotePrototype proto)
     {
         var beforeEv = new BeforeEmoteEvent(uid, proto);
-        RaiseLocalEvent(uid, ref beforeEv);
+        RaiseLocalEvent(uid, ref beforeEv, true);
 
         if (beforeEv.Cancelled)
         {
-            if (beforeEv.Blocker != null)
+            if (!beforeEv.SuppressCancellationPopup)
             {
-                _popup.PopupEntity(
-                    Loc.GetString(
-                        "chat-system-emote-cancelled-blocked",
-                        ("emote", Loc.GetString(proto.Name).ToLower()),
-                        ("blocker", beforeEv.Blocker.Value)
-                    ),
-                    uid,
-                    uid
-                );
-            }
-            else
-            {
-                _popup.PopupEntity(
-                    Loc.GetString("chat-system-emote-cancelled-generic",
-                        ("emote", Loc.GetString(proto.Name).ToLower())),
-                    uid,
-                    uid
-                );
+                if (beforeEv.Blocker != null)
+                {
+                    _popup.PopupEntity(
+                        Loc.GetString(
+                            "chat-system-emote-cancelled-blocked",
+                            ("emote", Loc.GetString(proto.Name).ToLower()),
+                            ("blocker", beforeEv.Blocker.Value)
+                        ),
+                        uid,
+                        uid
+                    );
+                }
+                else
+                {
+                    _popup.PopupEntity(
+                        Loc.GetString("chat-system-emote-cancelled-generic",
+                            ("emote", Loc.GetString(proto.Name).ToLower())),
+                        uid,
+                        uid
+                    );
+                }
             }
 
             return false;

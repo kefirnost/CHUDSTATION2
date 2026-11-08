@@ -91,6 +91,37 @@
     - sighed
 
 - type: emote
+  id: Piss
+  name: chat-emote-name-piss
+  category: General
+  chatTriggers:
+    - piss
+
+- type: emote
+  id: Groan
+  name: chat-emote-name-groan
+  category: General
+  chatMessages: ["chat-emote-msg-groan"]
+  chatTriggers:
+    - groan
+    - groans
+    - groaned
+    - groaning
+    - стонет
+
+- type: emote
+  id: PissFloor
+  name: chat-emote-name-piss-floor
+  category: General
+  chatMessages: ["chat-emote-msg-piss-floor"]
+
+- type: emote
+  id: PissContainer
+  name: chat-emote-name-piss-container
+  category: General
+  chatMessages: ["chat-emote-msg-piss-container"]
+
+- type: emote
   id: Whistle
   name: chat-emote-name-whistle
   category: Vocal
