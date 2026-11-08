@@ -38,7 +38,6 @@ public sealed partial class OperatedComponent : Component
     {
         ActiveTransition = transition;
         Surgeon = surgeon;
-        CurrentStep = 0;
     }
 
     public void Reset()
