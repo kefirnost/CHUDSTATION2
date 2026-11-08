@@ -1,6 +1,7 @@
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Systems;
+using Content.Shared.Buckle.Components;
 using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Surgery.Components;
@@ -35,7 +36,7 @@ public sealed class SurgerySystem : EntitySystem
 
     private void AddSurgeryVerbs(Entity<OperatedComponent> patient, GetVerbsEvent<InteractionVerb> args)
     {
-        if (!args.CanAccess || !args.CanInteract || patient.Comp.IsOperating ||
+        if (!args.CanAccess || !args.CanInteract || patient.Comp.IsOperating || !TryGetOperatingTable(patient.Owner, out _) ||
             patient.Comp.GraphId is not { } graphId ||
             !_prototypes.TryIndex(graphId, out SurgeryGraphPrototype? graph))
             return;
@@ -90,7 +91,10 @@ public sealed class SurgerySystem : EntitySystem
         if (step.Tags.Count > 0 && !step.Tags.Any(tag => _tag.HasTag(item, tag)))
             return false;
 
-        var duration = TimeSpan.FromSeconds(Math.Max(0.1f, step.Duration));
+        if (!TryGetOperatingTable(patient, out var tableModifier))
+            return false;
+
+        var duration = TimeSpan.FromSeconds(Math.Max(0.1f, step.Duration / tableModifier));
         var args = new DoAfterArgs(EntityManager, user, duration,
             new SurgeryStepDoAfterEvent(transitionId, stepIndex), patient, used: item)
         {
@@ -141,6 +145,17 @@ public sealed class SurgerySystem : EntitySystem
 
         patient.Comp.Reset();
         Dirty(patient.Owner, patient.Comp);
+    }
+
+    private bool TryGetOperatingTable(EntityUid patient, out float modifier)
+    {
+        modifier = 1f;
+        if (!TryComp<BuckleComponent>(patient, out var buckle) || buckle.BuckledTo is not { } table ||
+            !TryComp<OperatingTableComponent>(table, out var operatingTable))
+            return false;
+
+        modifier = Math.Max(0.1f, operatingTable.Modifier);
+        return true;
     }
 
     private void ExecuteStep(Entity<OperatedComponent> patient, SurgeryStep step, EntityUid? used)
