@@ -82,6 +82,9 @@ public sealed class SurgerySystem : EntitySystem
         if (operated.ActiveTransition != null && operated.ActiveTransition != transitionId)
             return false;
 
+        if (stepIndex != operated.CurrentStep || operated.CompletedSteps.Contains($"{transitionId}:{stepIndex}"))
+            return false;
+
         var step = transition.Steps[stepIndex];
         var item = _hands.GetActiveItemOrSelf(user);
         if (step.Tools.Count > 0 && !step.Tools.Any(tool => _tools.HasQuality(item, tool)))
@@ -136,6 +139,7 @@ public sealed class SurgerySystem : EntitySystem
         {
             patient.Comp.CurrentNode = transition.Target;
             patient.Comp.CompletedSteps.Clear();
+            patient.Comp.CurrentStep = 0;
         }
 
         patient.Comp.Reset();
