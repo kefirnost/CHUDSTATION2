@@ -26,7 +26,7 @@ public sealed partial class FartEmoteSystem : EntitySystem
         new SoundPathSpecifier("/Audio/Effects/Emotes/parp1.ogg");
 
     private static readonly SoundSpecifier BibleFartSound =
-        new SoundPathSpecifier("/Audio/Effects/explosion1.ogg", AudioParams.Default.WithVolume(6f));
+        new SoundPathSpecifier("/Audio/Effects/explosion1.ogg", AudioParams.Default.AddVolume(6f));
 
     [Dependency] private ChatSystem _chat = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
