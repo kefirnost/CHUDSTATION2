@@ -6,6 +6,7 @@ using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Surgery.Components;
 using Content.Shared.Tools.Systems;
+using Content.Shared.Verbs;
 using Content.Shared.Tag;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
@@ -30,6 +31,37 @@ public sealed class SurgerySystem : EntitySystem
     {
         base.Initialize();
         SubscribeLocalEvent<OperatedComponent, SurgeryStepDoAfterEvent>(OnSurgeryStepFinished);
+        SubscribeLocalEvent<OperatedComponent, GetVerbsEvent<InteractionVerb>>(AddSurgeryVerbs);
+    }
+
+    private void AddSurgeryVerbs(Entity<OperatedComponent> patient, GetVerbsEvent<InteractionVerb> args)
+    {
+        if (!args.CanAccess || !args.CanInteract || patient.Comp.IsOperating ||
+            patient.Comp.GraphId is not { } graphId ||
+            !_prototypes.TryIndex(graphId, out SurgeryGraphPrototype? graph))
+            return;
+
+        var node = graph.Nodes.FirstOrDefault(n => n.Id == patient.Comp.CurrentNode);
+        if (node == null)
+            return;
+
+        foreach (var transition in node.Transitions)
+        {
+            for (var i = 0; i < transition.Steps.Count; i++)
+            {
+                var transitionId = transition.Id;
+                var stepIndex = i;
+                var step = transition.Steps[i];
+
+                InteractionVerb verb = new()
+                {
+                    Text = $"{Loc.GetString("surgery-verb-prefix")}: {Loc.GetString(transition.Label)} ({i + 1}/{transition.Steps.Count})",
+                    Act = () => TryStartStep(args.User, patient.Owner, transitionId, stepIndex),
+                    Impact = LogImpact.Medium
+                };
+                args.Verbs.Add(verb);
+            }
+        }
     }
 
     /// <summary>
