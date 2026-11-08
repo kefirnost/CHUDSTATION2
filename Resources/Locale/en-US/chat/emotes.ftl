@@ -99,3 +99,12 @@ chat-emote-name-piss-floor = Piss on the floor
 chat-emote-msg-piss-floor = pisses on the floor.
 chat-emote-name-piss-container = Piss into a container
 chat-emote-msg-piss-container = pisses into the container in their hand.
+
+# Fart emote
+chat-emote-name-fart = Fart
+chat-emote-msg-fart-kitchen = farts; the place now smells like a kitchen.
+chat-emote-msg-fart = farts.
+chat-emote-msg-fart-gas = releases gas.
+chat-emote-msg-fart-wet = lets out a wet fart.
+chat-emote-msg-fart-whisper = lets out a little toot.
+chat-emote-msg-fart-face = farts in { $target }'s face.
