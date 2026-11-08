@@ -10,6 +10,7 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Stunnable;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
+using Robust.Shared.Map.Components;
 
 namespace Content.Server.Urination;
 
@@ -95,13 +96,13 @@ public sealed class FartEmoteSystem : EntitySystem
             return false;
 
         var query = EntityQueryEnumerator<BibleComponent, TransformComponent>();
-        while (query.MoveNext(out _, out _, out var xform))
+        while (query.MoveNext(out var bibleUid, out _, out var xform))
         {
             // Ignore bibles held in hands, bags, lockers, or other containers.
             if (xform.ParentUid != xform.GridUid && xform.ParentUid != xform.MapUid)
                 continue;
 
-            var bibleTile = _atmosphere.GetTileMixture((xform.Owner, xform), excite: false);
+            var bibleTile = _atmosphere.GetTileMixture((bibleUid, xform), excite: false);
             if (ReferenceEquals(userTile, bibleTile))
                 return true;
         }
