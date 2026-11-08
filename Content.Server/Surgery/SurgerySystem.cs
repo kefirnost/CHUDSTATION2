@@ -172,7 +172,7 @@ public sealed class SurgerySystem : EntitySystem
                 RemoveRequiredOrgan(patient.Owner, step.RequiredOrgan);
                 break;
             case SurgeryActionType.InsertOrgan:
-                InsertOrgan(patient.Owner, used);
+                InsertOrgan(patient.Owner, used, step.RequiredOrgan);
                 break;
         }
     }
@@ -192,10 +192,14 @@ public sealed class SurgerySystem : EntitySystem
         }
     }
 
-    private void InsertOrgan(EntityUid patient, EntityUid? organ)
+    private void InsertOrgan(EntityUid patient, EntityUid? organ, ProtoId<OrganCategoryPrototype>? category)
     {
-        if (organ == null || !HasComp<OrganComponent>(organ.Value) ||
-            !TryComp<BodyComponent>(patient, out var body) || body.Organs == null)
+        if (organ == null || category == null || !TryComp<OrganComponent>(organ.Value, out var organComponent) ||
+            organComponent.Category != category || !TryComp<BodyComponent>(patient, out var body) || body.Organs == null)
+            return;
+
+        if (body.Organs.ContainedEntities.Any(existing =>
+                TryComp<OrganComponent>(existing, out var existingOrgan) && existingOrgan.Category == category))
             return;
 
         _containers.Insert(organ.Value, body.Organs, force: true);
