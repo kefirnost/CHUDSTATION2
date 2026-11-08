@@ -29,6 +29,7 @@ public sealed class FartEmoteSystem : EntitySystem
     [Dependency] private ChatSystem _chat = default!;
     [Dependency] private ExplosionSystem _explosion = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private SharedTransformSystem _transform = default!;
 
     public override void Initialize()
     {
@@ -47,14 +48,14 @@ public sealed class FartEmoteSystem : EntitySystem
 
         var user = args.Source;
         var userXform = Transform(user);
-        var userTile = _atmosphere.GetTileMixture((user, userXform), excite: true);
+        var userTile = _transform.GetGridTilePositionOrDefault((user, userXform));
 
         // Ammonia uses the existing miasma gas overlay, but this amount stays visually subtle.
         _atmosphere.AdjustTileMixture((user, userXform), Gas.Ammonia, FartGasMoles, excite: true);
         _audio.PlayPvs(FartSound, user);
 
         // A Bible left directly on the floor turns the fart into the repository's standard Smite blast.
-        if (HasFloorBibleOnTile(userTile))
+        if (HasFloorBibleOnTile(user, userXform, userTile))
         {
             _chat.TryEmoteWithChat(user, FartOutputEmoteId);
             _explosion.QueueExplosion(
@@ -71,7 +72,7 @@ public sealed class FartEmoteSystem : EntitySystem
         }
 
         // A knocked-down mob on this tile gets the dedicated face emote.
-        if (TryFindProneMobOnTile(user, userTile, out var target))
+        if (TryFindProneMobOnTile(user, userXform, userTile, out var target))
         {
             var targetIdentity = Identity.Entity(target, EntityManager);
             var message = Loc.GetString("chat-emote-msg-fart-face", ("target", targetIdentity));
@@ -88,11 +89,8 @@ public sealed class FartEmoteSystem : EntitySystem
         _chat.TryEmoteWithChat(user, FartOutputEmoteId);
     }
 
-    private bool HasFloorBibleOnTile(GasMixture? userTile)
+    private bool HasFloorBibleOnTile(EntityUid user, TransformComponent userXform, Vector2i userTile)
     {
-        if (userTile == null)
-            return false;
-
         var query = EntityQueryEnumerator<BibleComponent, TransformComponent>();
         while (query.MoveNext(out var bibleUid, out _, out var xform))
         {
@@ -100,19 +98,20 @@ public sealed class FartEmoteSystem : EntitySystem
             if (xform.ParentUid != xform.GridUid && xform.ParentUid != xform.MapUid)
                 continue;
 
-            var bibleTile = _atmosphere.GetTileMixture((bibleUid, xform), excite: false);
-            if (ReferenceEquals(userTile, bibleTile))
+            if (xform.MapUid != userXform.MapUid || xform.GridUid != userXform.GridUid)
+                continue;
+
+            var bibleTile = _transform.GetGridTilePositionOrDefault((bibleUid, xform));
+            if (userTile == bibleTile)
                 return true;
         }
 
         return false;
     }
 
-    private bool TryFindProneMobOnTile(EntityUid user, GasMixture? userTile, out EntityUid target)
+    private bool TryFindProneMobOnTile(EntityUid user, TransformComponent userXform, Vector2i userTile, out EntityUid target)
     {
         target = default;
-        if (userTile == null)
-            return false;
 
         var query = EntityQueryEnumerator<KnockedDownComponent, MobStateComponent, TransformComponent>();
         while (query.MoveNext(out var uid, out _, out _, out var xform))
@@ -120,8 +119,11 @@ public sealed class FartEmoteSystem : EntitySystem
             if (uid == user)
                 continue;
 
-            var targetTile = _atmosphere.GetTileMixture((uid, xform), excite: false);
-            if (!ReferenceEquals(userTile, targetTile))
+            if (xform.MapUid != userXform.MapUid || xform.GridUid != userXform.GridUid)
+                continue;
+
+            var targetTile = _transform.GetGridTilePositionOrDefault((uid, xform));
+            if (userTile != targetTile)
                 continue;
 
             target = uid;
