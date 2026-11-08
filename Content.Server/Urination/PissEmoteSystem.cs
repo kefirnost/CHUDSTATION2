@@ -18,6 +18,8 @@ public sealed partial class PissEmoteSystem : EntitySystem
 {
     private const string PissEmoteId = "Piss";
     private const string GroanEmoteId = "Groan";
+    private const string PissFloorEmoteId = "PissFloor";
+    private const string PissContainerEmoteId = "PissContainer";
     private const string PissReagentId = "Piss";
     private const string ThirstyThreshold = "Thirsty";
     private const string ParchedThreshold = "Parched";
@@ -96,7 +98,8 @@ public sealed partial class PissEmoteSystem : EntitySystem
             return;
 
         var user = args.User;
-        var succeeded = TryFillActiveContainer(user);
+        var filledContainer = TryFillActiveContainer(user);
+        var succeeded = filledContainer;
 
         if (!succeeded)
         {
@@ -105,8 +108,13 @@ public sealed partial class PissEmoteSystem : EntitySystem
         }
 
         // Completing the action leaves the character severely thirsty, but not dehydrated to death.
-        if (succeeded && TryComp<SatiationComponent>(user, out var satiation))
-            _satiation.SetValue((user, satiation), SatiationSystem.Thirst, ParchedThreshold);
+        if (succeeded)
+        {
+            if (TryComp<SatiationComponent>(user, out var satiation))
+                _satiation.SetValue((user, satiation), SatiationSystem.Thirst, ParchedThreshold);
+
+            _chat.TryEmoteWithChat(user, filledContainer ? PissContainerEmoteId : PissFloorEmoteId);
+        }
 
         args.Handled = true;
     }
