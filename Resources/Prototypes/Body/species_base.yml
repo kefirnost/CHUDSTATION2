@@ -171,6 +171,8 @@
   id: BaseSpeciesMobOrganicNoCrawl
   save: false
   components:
+  - type: Operated
+    graphId: BaseSurgery
   - type: Satiation
     satiations:
       Hunger:
