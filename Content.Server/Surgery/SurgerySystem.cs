@@ -4,6 +4,7 @@ using Content.Shared.Body.Systems;
 using Content.Shared.Buckle.Components;
 using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Surgery;
 using Content.Shared.Surgery.Components;
 using Content.Shared.Tools.Systems;
 using Content.Shared.Verbs;
@@ -55,7 +56,6 @@ public sealed class SurgerySystem : EntitySystem
                 {
                     Text = $"{Loc.GetString("surgery-verb-prefix")}: {Loc.GetString(transition.Label)} ({i + 1}/{transition.Steps.Count})",
                     Act = () => TryStartStep(args.User, patient.Owner, transitionId, stepIndex),
-                    Impact = LogImpact.Medium
                 };
                 args.Verbs.Add(verb);
             }
