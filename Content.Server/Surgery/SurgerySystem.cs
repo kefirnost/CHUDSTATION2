@@ -1,6 +1,7 @@
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Systems;
+using Content.Shared.Body.Systems;
 using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Surgery.Components;
@@ -66,9 +67,12 @@ public sealed class SurgerySystem : EntitySystem
             NeedHand = true
         };
 
+        if (!_doAfter.TryStartDoAfter(args))
+            return false;
+
         operated.Begin(transitionId, user);
         Dirty(patient, operated);
-        return _doAfter.TryStartDoAfter(args);
+        return true;
     }
 
     private void OnSurgeryStepFinished(Entity<OperatedComponent> patient, ref SurgeryStepDoAfterEvent args)
@@ -77,7 +81,7 @@ public sealed class SurgerySystem : EntitySystem
             !_prototypes.TryIndex(graphId, out SurgeryGraphPrototype? graph))
         {
             patient.Comp.Reset();
-            Dirty(patient);
+            Dirty(patient.Owner, patient.Comp);
             return;
         }
 
@@ -86,7 +90,7 @@ public sealed class SurgerySystem : EntitySystem
         if (transition == null || args.StepIndex < 0 || args.StepIndex >= transition.Steps.Count)
         {
             patient.Comp.Reset();
-            Dirty(patient);
+            Dirty(patient.Owner, patient.Comp);
             return;
         }
 
