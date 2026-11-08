@@ -70,7 +70,7 @@ public sealed class FartEmoteSystem : EntitySystem
             return;
         }
 
-        // A knocked-down living mob on this tile gets the dedicated face emote.
+        // A knocked-down mob on this tile gets the dedicated face emote.
         if (TryFindProneMobOnTile(user, userTile, out var target))
         {
             var targetIdentity = Identity.Entity(target, EntityManager);
