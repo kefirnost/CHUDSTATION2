@@ -17,6 +17,9 @@
   extendedAccess:
   - Chemistry
   special:
+  - !type:AddComponentSpecial
+    components:
+    - type: SurgicalSkill
   - !type:GiveItemOnHolidaySpecial
     holiday: DoctorDay
     prototype: WehMedipen
