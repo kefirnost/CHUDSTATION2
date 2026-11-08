@@ -44,6 +44,5 @@ public sealed partial class OperatedComponent : Component
     {
         ActiveTransition = null;
         Surgeon = null;
-        CurrentStep = 0;
     }
 }
