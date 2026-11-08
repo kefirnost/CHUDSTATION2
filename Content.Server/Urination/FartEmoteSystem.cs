@@ -1,5 +1,7 @@
+using Content.Server.Atmos.EntitySystems;
 using Content.Server.Chat.Systems;
 using Content.Server.Polymorph.Systems;
+using Content.Shared.Atmos;
 using Content.Shared.Bible.Components;
 using Content.Shared.Chat;
 using Content.Shared.IdentityManagement;
@@ -33,6 +35,7 @@ public sealed partial class FartEmoteSystem : EntitySystem
     private static readonly EntProtoId BibleFlashEffect = "HolyLightEffect";
 
     [Dependency] private ChatSystem _chat = default!;
+    [Dependency] private AtmosphereSystem _atmosphere = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
     [Dependency] private PolymorphSystem _polymorph = default!;
@@ -70,12 +73,16 @@ public sealed partial class FartEmoteSystem : EntitySystem
         if (TryFindBibleOnTile(userXform, userTile))
         {
             _audio.PlayPvs(BibleFartSound, user);
-            SpawnAttachedTo(BibleFlashEffect, user.ToCoordinates());
+            SpawnAttachedTo(BibleFlashEffect, userXform.Coordinates);
             _polymorph.PolymorphEntity(user, CluwnePolymorph);
             return;
         }
 
         _audio.PlayPvs(FartSound, user);
+
+        // Release invisible ammonia (the station's miasma-like gas) into the surrounding atmosphere.
+        var air = _atmosphere.GetContainingMixture((user, userXform));
+        air?.AdjustMoles(Gas.Ammonia, 15f);
 
         // A knocked-down mob on this tile gets the dedicated face emote.
         if (TryFindProneMobOnTile(user, userXform, userTile, out var target))
