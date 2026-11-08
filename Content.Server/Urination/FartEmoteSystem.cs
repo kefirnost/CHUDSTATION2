@@ -55,7 +55,7 @@ public sealed class FartEmoteSystem : EntitySystem
         _audio.PlayPvs(FartSound, user);
 
         // A Bible left directly on the floor turns the fart into the repository's standard Smite blast.
-        if (HasFloorBibleOnTile(user, userXform, userTile))
+        if (HasFloorBibleOnTile(userXform, userTile))
         {
             _chat.TryEmoteWithChat(user, FartOutputEmoteId);
             _explosion.QueueExplosion(
@@ -89,7 +89,7 @@ public sealed class FartEmoteSystem : EntitySystem
         _chat.TryEmoteWithChat(user, FartOutputEmoteId);
     }
 
-    private bool HasFloorBibleOnTile(EntityUid user, TransformComponent userXform, Vector2i userTile)
+    private bool HasFloorBibleOnTile(TransformComponent userXform, Vector2i userTile)
     {
         var query = EntityQueryEnumerator<BibleComponent, TransformComponent>();
         while (query.MoveNext(out var bibleUid, out _, out var xform))
