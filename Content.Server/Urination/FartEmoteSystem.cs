@@ -17,6 +17,9 @@ public sealed partial class FartEmoteSystem : EntitySystem
     private const string FartEmoteId = "Fart";
     private const string FartOutputEmoteId = "FartOutput";
 
+    // Each entity has its own randomized 2–5 second cooldown.
+    private readonly Dictionary<EntityUid, DateTime> _cooldowns = new();
+
     private static readonly SoundSpecifier FartSound =
         new SoundPathSpecifier("/Audio/Effects/Emotes/parp1.ogg");
 
@@ -35,11 +38,21 @@ public sealed partial class FartEmoteSystem : EntitySystem
         if (args.Cancelled || args.Emote.ID != FartEmoteId)
             return;
 
+        var user = args.Source;
+        var now = DateTime.UtcNow;
+        if (_cooldowns.TryGetValue(user, out var cooldownEnd) && now < cooldownEnd)
+        {
+            args.Cancel();
+            args.SuppressCancellationPopup = true;
+            return;
+        }
+
+        _cooldowns[user] = now.AddSeconds(Random.Shared.Next(2, 6));
+
         // Keep the emote, sound, and contextual chat; gameplay area effects are disabled.
         args.Cancel();
         args.SuppressCancellationPopup = true;
 
-        var user = args.Source;
         var userXform = Transform(user);
         var userTile = _transform.GetGridTilePositionOrDefault((user, userXform));
 
