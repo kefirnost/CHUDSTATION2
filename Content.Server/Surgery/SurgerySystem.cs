@@ -94,7 +94,8 @@ public sealed class SurgerySystem : EntitySystem
         if (!TryGetOperatingTable(patient, out var tableModifier))
             return false;
 
-        var duration = TimeSpan.FromSeconds(Math.Max(0.1f, step.Duration / tableModifier));
+        var skillModifier = TryComp<SurgicalSkillComponent>(user, out var skill) ? skill.Modifier : 1f;
+        var duration = TimeSpan.FromSeconds(Math.Max(0.1f, step.Duration * skillModifier / tableModifier));
         var args = new DoAfterArgs(EntityManager, user, duration,
             new SurgeryStepDoAfterEvent(transitionId, stepIndex), patient, used: item)
         {
