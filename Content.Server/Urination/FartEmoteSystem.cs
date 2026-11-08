@@ -1,8 +1,4 @@
-using Content.Server.Atmos.EntitySystems;
 using Content.Server.Chat.Systems;
-using Content.Server.Explosion.EntitySystems;
-using Content.Shared.Atmos;
-using Content.Shared.Bible.Components;
 using Content.Shared.Chat;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Mobs.Components;
@@ -14,20 +10,17 @@ using Robust.Shared.Map.Components;
 namespace Content.Server.Urination;
 
 /// <summary>
-/// Handles the Fart emote: a small ammonia release, a sound, and contextual chat.
+/// Handles the Fart emote with a sound and contextual chat.
 /// </summary>
-public sealed class FartEmoteSystem : EntitySystem
+public sealed partial class FartEmoteSystem : EntitySystem
 {
     private const string FartEmoteId = "Fart";
     private const string FartOutputEmoteId = "FartOutput";
-    private const float FartGasMoles = 0.1f;
 
     private static readonly SoundSpecifier FartSound =
         new SoundPathSpecifier("/Audio/Effects/Emotes/parp1.ogg");
 
-    [Dependency] private AtmosphereSystem _atmosphere = default!;
     [Dependency] private ChatSystem _chat = default!;
-    [Dependency] private ExplosionSystem _explosion = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
 
@@ -42,7 +35,7 @@ public sealed class FartEmoteSystem : EntitySystem
         if (args.Cancelled || args.Emote.ID != FartEmoteId)
             return;
 
-        // Replace the literal *fart emote with its gameplay effect and contextual message.
+        // Keep the emote, sound, and contextual chat; gameplay area effects are disabled.
         args.Cancel();
         args.SuppressCancellationPopup = true;
 
@@ -50,26 +43,7 @@ public sealed class FartEmoteSystem : EntitySystem
         var userXform = Transform(user);
         var userTile = _transform.GetGridTilePositionOrDefault((user, userXform));
 
-        // Ammonia uses the existing miasma gas overlay, but this amount stays visually subtle.
-        _atmosphere.AdjustTileMixture((user, userXform), Gas.Ammonia, FartGasMoles, excite: true);
         _audio.PlayPvs(FartSound, user);
-
-        // A Bible left directly on the floor turns the fart into the repository's standard Smite blast.
-        if (HasFloorBibleOnTile(userXform, userTile))
-        {
-            _chat.TryEmoteWithChat(user, FartOutputEmoteId);
-            _explosion.QueueExplosion(
-                user,
-                "Default",
-                totalIntensity: 800f,
-                slope: 800f,
-                maxTileIntensity: 800f,
-                tileBreakScale: 1f,
-                maxTileBreak: 0,
-                canCreateVacuum: false,
-                user: user);
-            return;
-        }
 
         // A knocked-down mob on this tile gets the dedicated face emote.
         if (TryFindProneMobOnTile(user, userXform, userTile, out var target))
@@ -87,26 +61,6 @@ public sealed class FartEmoteSystem : EntitySystem
         }
 
         _chat.TryEmoteWithChat(user, FartOutputEmoteId);
-    }
-
-    private bool HasFloorBibleOnTile(TransformComponent userXform, Vector2i userTile)
-    {
-        var query = EntityQueryEnumerator<BibleComponent, TransformComponent>();
-        while (query.MoveNext(out var bibleUid, out _, out var xform))
-        {
-            // Ignore bibles held in hands, bags, lockers, or other containers.
-            if (xform.ParentUid != xform.GridUid && xform.ParentUid != xform.MapUid)
-                continue;
-
-            if (xform.MapUid != userXform.MapUid || xform.GridUid != userXform.GridUid)
-                continue;
-
-            var bibleTile = _transform.GetGridTilePositionOrDefault((bibleUid, xform));
-            if (userTile == bibleTile)
-                return true;
-        }
-
-        return false;
     }
 
     private bool TryFindProneMobOnTile(EntityUid user, TransformComponent userXform, Vector2i userTile, out EntityUid target)
