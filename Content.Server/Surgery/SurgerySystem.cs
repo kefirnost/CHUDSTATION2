@@ -1,7 +1,6 @@
 using Content.Shared.Body;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Systems;
-using Content.Shared.Body.Systems;
 using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Surgery.Components;
@@ -51,8 +50,6 @@ public sealed class SurgerySystem : EntitySystem
             {
                 var transitionId = transition.Id;
                 var stepIndex = i;
-                var step = transition.Steps[i];
-
                 InteractionVerb verb = new()
                 {
                     Text = $"{Loc.GetString("surgery-verb-prefix")}: {Loc.GetString(transition.Label)} ({i + 1}/{transition.Steps.Count})",
@@ -143,7 +140,7 @@ public sealed class SurgerySystem : EntitySystem
         }
 
         patient.Comp.Reset();
-        Dirty(patient);
+        Dirty(patient.Owner, patient.Comp);
     }
 
     private void ExecuteStep(Entity<OperatedComponent> patient, SurgeryStep step, EntityUid? used)
