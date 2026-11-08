@@ -98,6 +98,25 @@
     - piss
 
 - type: emote
+  id: Fart
+  name: chat-emote-name-fart
+  category: General
+  chatTriggers:
+    - fart
+    - пердит
+
+- type: emote
+  id: FartOutput
+  name: chat-emote-name-fart
+  category: General
+  chatMessages:
+    - chat-emote-msg-fart-kitchen
+    - chat-emote-msg-fart
+    - chat-emote-msg-fart-gas
+    - chat-emote-msg-fart-wet
+    - chat-emote-msg-fart-whisper
+
+- type: emote
   id: Groan
   name: chat-emote-name-groan
   category: General
