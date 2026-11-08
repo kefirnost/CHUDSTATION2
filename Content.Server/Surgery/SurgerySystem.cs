@@ -5,6 +5,7 @@ using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Surgery.Components;
 using Content.Shared.Tools.Systems;
+using Content.Shared.Tag;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 
@@ -22,6 +23,7 @@ public sealed class SurgerySystem : EntitySystem
     [Dependency] private readonly SharedToolSystem _tools = default!;
     [Dependency] private readonly SharedContainerSystem _containers = default!;
     [Dependency] private readonly BloodstreamSystem _bloodstream = default!;
+    [Dependency] private readonly TagSystem _tag = default!;
 
     public override void Initialize()
     {
@@ -52,7 +54,7 @@ public sealed class SurgerySystem : EntitySystem
         if (step.Tools.Count > 0 && !step.Tools.Any(tool => _tools.HasQuality(item, tool)))
             return false;
 
-        if (step.Tags.Count > 0 && !step.Tags.Any(tag => HasComp<TagComponent>(item) && _tag.HasTag(item, tag)))
+        if (step.Tags.Count > 0 && !step.Tags.Any(tag => _tag.HasTag(item, tag)))
             return false;
 
         var duration = TimeSpan.FromSeconds(Math.Max(0.1f, step.Duration));
@@ -94,7 +96,7 @@ public sealed class SurgerySystem : EntitySystem
         patient.Comp.CompletedSteps.Add($"{args.TransitionId}:{args.StepIndex}");
         patient.Comp.CurrentStep = args.StepIndex + 1;
 
-        if (transition.Steps.All((_, index) => patient.Comp.CompletedSteps.Contains($"{args.TransitionId}:{index}")))
+        if (Enumerable.Range(0, transition.Steps.Count).All(index => patient.Comp.CompletedSteps.Contains($"{args.TransitionId}:{index}")))
         {
             patient.Comp.CurrentNode = transition.Target;
             patient.Comp.CompletedSteps.Clear();
