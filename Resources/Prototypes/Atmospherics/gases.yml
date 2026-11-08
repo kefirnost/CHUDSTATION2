@@ -83,11 +83,7 @@
   molarHeatCapacity: 20
   heatCapacityRatio: 1.4
   molarMass: 44
-  gasOverlaySprite:
-    sprite: /Textures/Effects/atmospherics.rsi
-    state: miasma
-  gasMolesVisible: 2
-  gasVisibilityFactor: 3.5
+  # Invisible in the gas overlay; the gas still spreads through atmospherics.
   color: '#56941E'
   reagent: Ammonia
   pricePerMole: 0.15
