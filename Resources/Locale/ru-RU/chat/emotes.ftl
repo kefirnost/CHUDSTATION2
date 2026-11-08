@@ -91,3 +91,10 @@ chat-emote-msg-caw = каркает.
 chat-emote-name-piss = Ссанина
 chat-emote-name-groan = Стонать
 chat-emote-msg-groan = стонет.
+
+
+# Piss completion emotes
+chat-emote-name-piss-floor = Ссать на пол
+chat-emote-msg-piss-floor = ссыт на пол.
+chat-emote-name-piss-container = Ссать в ёмкость
+chat-emote-msg-piss-container = ссыт в ёмкость в своей руке.
