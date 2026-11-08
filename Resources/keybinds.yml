@@ -302,6 +302,7 @@ binds:
 - function: FlipObject
   type: State
   key: F
+  mod1: Control
 - function: TextCursorLeft
   type: State
   key: Left
@@ -553,6 +554,9 @@ binds:
 - function: PissEmote
   type: State
   key: N
+- function: FartEmote
+  type: State
+  key: F
 - function: Hotbar0
   type: State
   key: Num0
