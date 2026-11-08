@@ -1,12 +1,10 @@
 using Content.Server.Chat.Systems;
 using Content.Server.Polymorph.Systems;
-using Content.Server.Stunnable;
+using Content.Shared.Bible.Components;
 using Content.Shared.Chat;
-using Content.Shared.Bible.Components;
-using Content.Shared.Polymorph;
-using Content.Shared.Bible.Components;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Mobs.Components;
+using Content.Shared.Polymorph;
 using Content.Shared.Stunnable;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
@@ -29,18 +27,15 @@ public sealed partial class FartEmoteSystem : EntitySystem
     private static readonly SoundSpecifier FartSound =
         new SoundPathSpecifier("/Audio/Effects/Emotes/parp1.ogg");
     private static readonly SoundSpecifier BibleFartSound =
-        new SoundPathSpecifier("/Audio/Effects/explosion1.ogg");
+        new SoundPathSpecifier("/Audio/Effects/explosion1.ogg", AudioParams.Default.AddVolume(4f));
+
     private static readonly ProtoId<PolymorphPrototype> CluwnePolymorph = "WizardForcedCluwne";
     private static readonly EntProtoId BibleFlashEffect = "HolyLightEffect";
-
-    private static readonly SoundSpecifier BibleFartSound =
-        new SoundPathSpecifier("/Audio/Effects/explosion1.ogg", AudioParams.Default.AddVolume(6f));
 
     [Dependency] private ChatSystem _chat = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
     [Dependency] private PolymorphSystem _polymorph = default!;
-    [Dependency] private StunSystem _stun = default!;
 
     public override void Initialize()
     {
@@ -71,6 +66,7 @@ public sealed partial class FartEmoteSystem : EntitySystem
         var userXform = Transform(user);
         var userTile = _transform.GetGridTilePositionOrDefault((user, userXform));
 
+        // A Bible on the same tile causes a harmless flash, loud sound, and Cluwne transformation.
         if (TryFindBibleOnTile(userXform, userTile))
         {
             _audio.PlayPvs(BibleFartSound, user);
@@ -80,15 +76,6 @@ public sealed partial class FartEmoteSystem : EntitySystem
         }
 
         _audio.PlayPvs(FartSound, user);
-
-        // A Bible on the same tile triggers a harmless holy flash and a brief stun.
-        if (TryFindBibleOnTile(userXform, userTile))
-        {
-            _audio.PlayPvs(BibleFartSound, user);
-            SpawnAtPosition("HolyLightEffect", userXform.Coordinates);
-            _stun.TryAddStunDuration(user, TimeSpan.FromSeconds(2), visualized: true);
-            return;
-        }
 
         // A knocked-down mob on this tile gets the dedicated face emote.
         if (TryFindProneMobOnTile(user, userXform, userTile, out var target))
@@ -108,7 +95,6 @@ public sealed partial class FartEmoteSystem : EntitySystem
         _chat.TryEmoteWithChat(user, FartOutputEmoteId);
     }
 
-
     private bool TryFindBibleOnTile(TransformComponent userXform, Vector2i userTile)
     {
         var query = EntityQueryEnumerator<BibleComponent, TransformComponent>();
@@ -118,21 +104,6 @@ public sealed partial class FartEmoteSystem : EntitySystem
                 continue;
 
             if (_transform.GetGridTilePositionOrDefault((uid, bibleXform)) == userTile)
-                return true;
-        }
-
-        return false;
-    }
-
-    private bool TryFindBibleOnTile(TransformComponent userXform, Vector2i userTile)
-    {
-        var query = EntityQueryEnumerator<BibleComponent, TransformComponent>();
-        while (query.MoveNext(out _, out _, out var bibleXform))
-        {
-            if (bibleXform.MapUid != userXform.MapUid || bibleXform.GridUid != userXform.GridUid)
-                continue;
-
-            if (_transform.GetGridTilePositionOrDefault((bibleXform.Owner, bibleXform)) == userTile)
                 return true;
         }
 
