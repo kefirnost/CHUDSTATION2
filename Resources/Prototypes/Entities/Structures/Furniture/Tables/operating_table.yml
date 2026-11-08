@@ -12,3 +12,5 @@
     sprite: Structures/Furniture/Tables/optable.rsi
     state: operating_table
   - type: AmbientMusicMarkerMedical
+  - type: OperatingTable
+    modifier: 1.5
