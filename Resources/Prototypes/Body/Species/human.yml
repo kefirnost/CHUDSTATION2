@@ -86,6 +86,8 @@
       Kidneys: OrganHumanKidneys
   - type: HumanoidProfile
     species: Human
+  - type: Operated
+    graphId: BaseSurgery
 
 - type: entity
   parent:
