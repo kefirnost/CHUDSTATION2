@@ -1,5 +1,7 @@
 using Content.Server.Chat.Systems;
+using Content.Server.Stunnable;
 using Content.Shared.Chat;
+using Content.Shared.Bible.Components;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Stunnable;
@@ -23,9 +25,13 @@ public sealed partial class FartEmoteSystem : EntitySystem
     private static readonly SoundSpecifier FartSound =
         new SoundPathSpecifier("/Audio/Effects/Emotes/parp1.ogg");
 
+    private static readonly SoundSpecifier BibleFartSound =
+        new SoundPathSpecifier("/Audio/Effects/explosion1.ogg", AudioParams.Default.WithVolume(6f));
+
     [Dependency] private ChatSystem _chat = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private StunSystem _stun = default!;
 
     public override void Initialize()
     {
@@ -58,6 +64,15 @@ public sealed partial class FartEmoteSystem : EntitySystem
 
         _audio.PlayPvs(FartSound, user);
 
+        // A Bible on the same tile triggers a harmless holy flash and a brief stun.
+        if (TryFindBibleOnTile(userXform, userTile))
+        {
+            _audio.PlayPvs(BibleFartSound, user);
+            SpawnAtPosition("HolyLightEffect", userXform.Coordinates);
+            _stun.TryAddStunDuration(user, TimeSpan.FromSeconds(2), visualized: true);
+            return;
+        }
+
         // A knocked-down mob on this tile gets the dedicated face emote.
         if (TryFindProneMobOnTile(user, userXform, userTile, out var target))
         {
@@ -74,6 +89,22 @@ public sealed partial class FartEmoteSystem : EntitySystem
         }
 
         _chat.TryEmoteWithChat(user, FartOutputEmoteId);
+    }
+
+
+    private bool TryFindBibleOnTile(TransformComponent userXform, Vector2i userTile)
+    {
+        var query = EntityQueryEnumerator<BibleComponent, TransformComponent>();
+        while (query.MoveNext(out var uid, out _, out var bibleXform))
+        {
+            if (bibleXform.MapUid != userXform.MapUid || bibleXform.GridUid != userXform.GridUid)
+                continue;
+
+            if (_transform.GetGridTilePositionOrDefault((uid, bibleXform)) == userTile)
+                return true;
+        }
+
+        return false;
     }
 
     private bool TryFindProneMobOnTile(EntityUid user, TransformComponent userXform, Vector2i userTile, out EntityUid target)
