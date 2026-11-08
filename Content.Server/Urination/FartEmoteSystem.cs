@@ -6,7 +6,6 @@ using Content.Shared.Bible.Components;
 using Content.Shared.Chat;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Mobs.Components;
-using Content.Shared.Mobs.Systems;
 using Content.Shared.Stunnable;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
@@ -29,7 +28,6 @@ public sealed class FartEmoteSystem : EntitySystem
     [Dependency] private AtmosphereSystem _atmosphere = default!;
     [Dependency] private ChatSystem _chat = default!;
     [Dependency] private ExplosionSystem _explosion = default!;
-    [Dependency] private MobStateSystem _mobState = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
 
     public override void Initialize()
@@ -119,7 +117,7 @@ public sealed class FartEmoteSystem : EntitySystem
         var query = EntityQueryEnumerator<KnockedDownComponent, MobStateComponent, TransformComponent>();
         while (query.MoveNext(out var uid, out _, out _, out var xform))
         {
-            if (uid == user || !_mobState.IsAlive(uid))
+            if (uid == user)
                 continue;
 
             var targetTile = _atmosphere.GetTileMixture((uid, xform), excite: false);
