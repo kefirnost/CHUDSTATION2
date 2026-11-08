@@ -103,11 +103,6 @@
                             <OptionButton Name="PronounsButton" />
                         </BoxContainer>
                         <BoxContainer Orientation="Horizontal">
-                            <Label Text="{Loc 'humanoid-profile-editor-clothing'}" />
-                            <Control HorizontalExpand="True" />
-                            <Button Name="ShowClothes" Pressed="True" ToggleMode="True" Text="{Loc 'humanoid-profile-editor-clothing-show'}" />
-                        </BoxContainer>
-                        <BoxContainer Orientation="Horizontal">
                             <Label Text="{Loc 'humanoid-profile-editor-spawn-priority-label'}" />
                             <Control HorizontalExpand="True" />
                             <OptionButton Name="SpawnPriorityButton" />
