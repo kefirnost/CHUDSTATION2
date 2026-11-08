@@ -163,10 +163,10 @@ public sealed class SurgerySystem : EntitySystem
         switch (step.Action)
         {
             case SurgeryActionType.Cut:
-                _bloodstream.TryModifyBleedAmount(patient.Owner, 2f);
+                _bloodstream.TryModifyBleedAmount(patient, 2f);
                 break;
             case SurgeryActionType.ClampBleeding:
-                _bloodstream.TryModifyBleedAmount(patient.Owner, -2f);
+                _bloodstream.TryModifyBleedAmount(patient, -2f);
                 break;
             case SurgeryActionType.RemoveOrgan:
                 RemoveRequiredOrgan(patient.Owner, step.RequiredOrgan);
