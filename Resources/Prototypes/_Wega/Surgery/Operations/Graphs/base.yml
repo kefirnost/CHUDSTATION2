@@ -1,0 +1,25 @@
+- type: surgeryGraph
+  id: BaseSurgery
+  nodes:
+  - id: Default
+    transitions:
+    - id: MakeIncision
+      target: Incised
+      label: surgery-transition-incision
+      steps:
+      - action: Cut
+        tags:
+        - SurgeryTool
+        duration: 3
+        successChance: 0.95
+  - id: Incised
+    transitions:
+    - id: CloseIncision
+      target: Default
+      label: surgery-transition-close
+      steps:
+      - action: ClampBleeding
+        tags:
+        - SurgeryTool
+        duration: 2
+        successChance: 0.95
