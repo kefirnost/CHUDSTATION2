@@ -8,7 +8,6 @@
   color: '#2887E8'
   reagent: Oxygen
   pricePerMole: 0
-  isOxidizer: true
 
 - type: gas
   id: Nitrogen
@@ -83,7 +82,11 @@
   molarHeatCapacity: 20
   heatCapacityRatio: 1.4
   molarMass: 44
-  # Invisible in the gas overlay; the gas still spreads through atmospherics.
+  gasOverlaySprite:
+    sprite: /Textures/Effects/atmospherics.rsi
+    state: miasma
+  gasMolesVisible: 2
+  gasVisibilityFactor: 3.5
   color: '#56941E'
   reagent: Ammonia
   pricePerMole: 0.15
