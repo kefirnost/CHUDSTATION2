@@ -1,3 +1,4 @@
+using Content.Shared.Surgery;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
