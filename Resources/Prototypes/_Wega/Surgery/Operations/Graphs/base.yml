@@ -14,6 +14,16 @@
         successChance: 0.95
   - id: Incised
     transitions:
+    - id: RemoveHeart
+      target: HeartRemoved
+      label: surgery-transition-remove-heart
+      steps:
+      - action: RemoveOrgan
+        requiredOrgan: Heart
+        tags:
+        - SurgeryTool
+        duration: 4
+        successChance: 0.9
     - id: CloseIncision
       target: Default
       label: surgery-transition-close
@@ -23,3 +33,13 @@
         - SurgeryTool
         duration: 2
         successChance: 0.95
+  - id: HeartRemoved
+    transitions:
+    - id: InsertHeart
+      target: Default
+      label: surgery-transition-insert-heart
+      steps:
+      - action: InsertOrgan
+        requiredOrgan: Heart
+        duration: 4
+        successChance: 0.9
