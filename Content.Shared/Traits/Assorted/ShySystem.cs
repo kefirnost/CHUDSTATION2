@@ -1,6 +1,7 @@
 using Content.Shared.CombatMode;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Weapons.Melee;
+using Robust.Shared.Network;
 
 namespace Content.Shared.Traits.Assorted;
 
