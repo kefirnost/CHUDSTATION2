@@ -1,13 +1,13 @@
 # If you add a new trait, make sure to add the corresponding component to the whitelist in \Resources\Prototypes\Entities\Mobs\Player\clone.yml so it gets copied to clones correctly!
 
-# Free
+# Accents (free; choose one)
 
 - type: trait
   id: Accentless
   name: trait-accentless-name
   description: trait-accentless-desc
-  category: SpeechTraits
-  cost: 2
+  category: Accents
+  cost: 0
   components:
   - type: Accentless
     removes:
@@ -16,14 +16,13 @@
     - type: ReplacementAccent
       accent: scottish
 
-# 1 Cost
 
 - type: trait
   id: SouthernAccent
   name: trait-southern-name
   description: trait-southern-desc
-  category: SpeechTraits
-  cost: 1
+  category: Accents
+  cost: 0
   components:
   - type: SouthernAccent
 
@@ -31,8 +30,8 @@
   id: GermanAccent
   name: trait-german-name
   description: trait-german-desc
-  category: SpeechTraits
-  cost: 1
+  category: Accents
+  cost: 0
   components:
   - type: GermanAccent
 
@@ -40,8 +39,8 @@
   id: FrenchAccent
   name: trait-french-name
   description: trait-french-desc
-  category: SpeechTraits
-  cost: 1
+  category: Accents
+  cost: 0
   components:
   - type: FrenchAccent
 
@@ -49,8 +48,8 @@
   id: SpanishAccent
   name: trait-spanish-name
   description: trait-spanish-desc
-  category: SpeechTraits
-  cost: 1
+  category: Accents
+  cost: 0
   components:
   - type: SpanishAccent
 
@@ -58,8 +57,8 @@
   id: Liar
   name: trait-liar-name
   description: trait-liar-desc
-  category: SpeechTraits
-  cost: 1
+  category: Accents
+  cost: 0
   components:
   - type: ReplacementAccent
     accent: liar
@@ -68,13 +67,13 @@
   id: ScottishAccent
   name: trait-scottish-name
   description: trait-scottish-desc
-  category: SpeechTraits
-  cost: 1
+  category: Accents
+  cost: 0
   components:
   - type: ReplacementAccent
     accent: scottish
 
-# 2 Cost
+# Speech traits
 
 - type: trait
   id: SocialAnxiety
