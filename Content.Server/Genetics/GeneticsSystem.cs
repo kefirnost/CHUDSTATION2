@@ -23,6 +23,9 @@ public sealed class GeneticsSystem : EntitySystem
     private const float ResearchPointInterval = 20f;
     private const int PotentialGeneCount = 2;
 
+    private readonly List<string> _roundPotentialGenes = new();
+    private bool _roundGenesGenerated;
+
     [Dependency] private UserInterfaceSystem _uiSystem = default!;
     [Dependency] private PowerReceiverSystem _powerReceiverSystem = default!;
     [Dependency] private AccessReaderSystem _accessReader = default!;
@@ -89,7 +92,7 @@ public sealed class GeneticsSystem : EntitySystem
     private void OnResearchGene(EntityUid uid, GeneticsConsoleComponent component, GeneticsResearchGeneMessage args)
     {
         if (!CanUseConsole(uid, args.Actor) ||
-            !TryGetLivingSubject(uid, out var patient, out var subject) ||
+            !TryGetLivingSubject(uid, out _, out var subject) ||
             !subject.PotentialGenes.Contains(args.GeneId) ||
             component.ResearchedGenes.Contains(args.GeneId) ||
             !ProtoMan.TryIndex<GeneticsGenePrototype>(args.GeneId, out var gene))
@@ -233,6 +236,17 @@ public sealed class GeneticsSystem : EntitySystem
         if (subject.PotentialGenes.Count > 0)
             return subject;
 
+        GenerateRoundPotentialGenes();
+        subject.PotentialGenes = new List<string>(_roundPotentialGenes);
+        return subject;
+    }
+
+    private void GenerateRoundPotentialGenes()
+    {
+        if (_roundGenesGenerated)
+            return;
+
+        _roundGenesGenerated = true;
         var available = ProtoMan.EnumeratePrototypes<GeneticsGenePrototype>()
             .Select(gene => gene.ID)
             .ToList();
@@ -241,11 +255,9 @@ public sealed class GeneticsSystem : EntitySystem
         for (var i = 0; i < count; i++)
         {
             var selected = _random.Pick(available);
-            subject.PotentialGenes.Add(selected);
+            _roundPotentialGenes.Add(selected);
             available.Remove(selected);
         }
-
-        return subject;
     }
 
     private void UpdateInterface(EntityUid uid, GeneticsConsoleComponent component)
