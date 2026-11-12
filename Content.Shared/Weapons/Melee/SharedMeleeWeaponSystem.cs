@@ -374,17 +374,39 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
     }
 
     /// <summary>
+    /// Performs the regular shove/disarm attack for an automatic gameplay reaction.
+    /// Uses the same validation, cooldown, chance, and effects as a normal shove, but does not require combat mode.
+    /// </summary>
+    public bool AttemptShove(EntityUid user, EntityUid target)
+    {
+        if (!TryGetWeapon(user, out var weaponUid, out var weapon) ||
+            !TryComp(target, out TransformComponent? targetXform))
+        {
+            return false;
+        }
+
+        var attack = new DisarmAttackEvent(GetNetEntity(target), GetNetCoordinates(targetXform.Coordinates));
+        return AttemptAttack(user, weaponUid, weapon, attack, null, ignoreCombatMode: true);
+    }
+
+    /// <summary>
     /// Called when a windup is finished and an attack is tried.
     /// </summary>
     /// <returns>True if attack successful</returns>
-    private bool AttemptAttack(EntityUid user, EntityUid weaponUid, MeleeWeaponComponent weapon, AttackEvent attack, ICommonSession? session)
+    private bool AttemptAttack(
+        EntityUid user,
+        EntityUid weaponUid,
+        MeleeWeaponComponent weapon,
+        AttackEvent attack,
+        ICommonSession? session,
+        bool ignoreCombatMode = false)
     {
         var curTime = Timing.CurTime;
 
         if (weapon.NextAttack > curTime)
             return false;
 
-        if (!CombatMode.IsInCombatMode(user))
+        if (!ignoreCombatMode && !CombatMode.IsInCombatMode(user))
             return false;
 
         EntityUid? target = null;
