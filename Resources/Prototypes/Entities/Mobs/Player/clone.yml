@@ -23,6 +23,9 @@
   - PermanentBlindness
   - Snoring
   - Unrevivable
+  - BonusMeleeDamage
+  - FastLegs
+  - Vitality
 
 - type: cloningSettings
   parent: [TraitsMental, TraitsPhysical]
