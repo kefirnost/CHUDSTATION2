@@ -1,0 +1,54 @@
+<controls:FancyWindow xmlns="https://spacestation14.io"
+                         xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+                         Title="{Loc 'genetics-console-title'}"
+                         MinSize="640 430"
+                         SetSize="760 560">
+    <BoxContainer Orientation="Vertical"
+                  HorizontalExpand="True"
+                  VerticalExpand="True"
+                  Margin="10">
+        <Label Name="ConsoleStatusLabel" />
+        <BoxContainer Orientation="Horizontal"
+                      HorizontalExpand="True"
+                      VerticalExpand="True">
+            <PanelContainer MinWidth="220"
+                            VerticalExpand="True"
+                            StyleClasses="PanelDeep">
+                <ScrollContainer HScrollEnabled="False"
+                                HorizontalExpand="True"
+                                VerticalExpand="True">
+                    <BoxContainer Name="GeneList"
+                                  Orientation="Vertical"
+                                  VerticalExpand="True"
+                                  Margin="6" />
+                </ScrollContainer>
+            </PanelContainer>
+            <BoxContainer Orientation="Vertical"
+                          HorizontalExpand="True"
+                          VerticalExpand="True"
+                          Margin="10 0 0 0">
+                <Label Name="GeneNameLabel" />
+                <RichTextLabel Name="GeneDescriptionLabel"
+                               HorizontalExpand="True" />
+                <Label Name="SequenceProgressLabel" />
+                <Label Text="{Loc 'genetics-console-sequence-hint'}" />
+                <LineEdit Name="SequenceInput"
+                          HorizontalExpand="True" />
+                <BoxContainer Orientation="Horizontal">
+                    <Button Name="ResearchButton"
+                            Text="{Loc 'genetics-console-research-button'}" />
+                    <Button Name="SequenceButton"
+                            Text="{Loc 'genetics-console-sequence-button'}" />
+                </BoxContainer>
+                <BoxContainer Orientation="Horizontal">
+                    <Button Name="ActivateButton"
+                            Text="{Loc 'genetics-console-activate-button'}" />
+                    <Button Name="DeactivateButton"
+                            Text="{Loc 'genetics-console-deactivate-button'}" />
+                </BoxContainer>
+                <Control VerticalExpand="True" />
+                <Label Name="GeneStatusLabel" />
+            </BoxContainer>
+        </BoxContainer>
+    </BoxContainer>
+</controls:FancyWindow>

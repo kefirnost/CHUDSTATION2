@@ -1,0 +1,21 @@
+genetics-console-title = Генетическая консоль GeneTek
+genetics-console-no-subject = В сканере нет живого пациента. Материалы исследований: {$materials}
+genetics-console-subject-status = Пациент: {$name} | Материалы исследований: {$materials} | Стабильность: {$stability}%
+genetics-console-unknown-gene = Неизвестный образец гена {$index}
+genetics-console-unknown-description = Изучите образец, чтобы определить ген.
+genetics-console-sequence-progress = Правильные пары: {$correct}/{$total} ({$progress})
+genetics-console-sequence-hint = Введите последовательность из 8 оснований (A, T, C, G).
+genetics-console-sequence-complete = Последовательность собрана
+genetics-console-sequence-incomplete = Последовательность не собрана
+genetics-console-gene-active = Ген активен
+genetics-console-research-button = Исследовать
+genetics-console-sequence-button = Проверить последовательность
+genetics-console-activate-button = Активировать
+genetics-console-deactivate-button = Деактивировать
+
+gene-pressure-adaptation-name = Адаптация к давлению
+gene-pressure-adaptation-desc = Улучшает устойчивость организма к перепадам давления.
+gene-stable-footing-name = Устойчивая походка
+gene-stable-footing-desc = Улучшает сцепление с полом и ускорение.
+gene-quick-step-name = Быстрый шаг
+gene-quick-step-desc = Немного повышает скорость ходьбы и бега.

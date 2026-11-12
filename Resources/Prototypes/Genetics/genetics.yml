@@ -1,0 +1,83 @@
+- type: entity
+  id: GeneTekConsole
+  parent: MedicalScanner
+  name: GeneTek genetics console
+  description: A medical scanner fitted with a gene sequencing and mutation research terminal.
+  components:
+  - type: GeneticsConsole
+  - type: Machine
+    board: GeneTekMachineCircuitboard
+  - type: AccessReader
+    access: [[Research]]
+  - type: ActivatableUIRequiresAccess
+  - type: ActivatableUIRequiresPower
+  - type: ActivatableUI
+    singleUser: true
+    key: enum.GeneticsConsoleUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.GeneticsConsoleUiKey.Key:
+        type: GeneticsConsoleBoundUserInterface
+
+- type: entity
+  id: GeneTekMachineCircuitboard
+  parent: BaseMachineCircuitboard
+  name: GeneTek machine board
+  description: A machine printed circuit board for a GeneTek genetics console.
+  components:
+  - type: Sprite
+    state: medical
+  - type: MachineBoard
+    prototype: GeneTekConsole
+    stackRequirements:
+      Manipulator: 4
+      Cable: 5
+      Glass: 3
+
+- type: entity
+  id: GeneticsStableFootingEffect
+  parent: MobStatusEffectBase
+  name: stable footing
+  components:
+  - type: FrictionStatusEffect
+    frictionModifier: 1.15
+    accelerationModifier: 1.15
+
+- type: entity
+  parent: StatusEffectSpeed
+  id: GeneticsQuickStepEffect
+  name: quick step
+  components:
+  - type: MovementModStatusEffect
+    walkSpeedModifier: 1.1
+    sprintSpeedModifier: 1.1
+
+- type: geneticsGene
+  id: GenePressureAdaptation
+  name: gene-pressure-adaptation-name
+  description: gene-pressure-adaptation-desc
+  effect: StatusEffectPressureImmunity
+  sequence: ATCGGCTA
+  exclusiveGroup: environment
+  researchCost: 20
+  stabilityCost: 15
+
+- type: geneticsGene
+  id: GeneStableFooting
+  name: gene-stable-footing-name
+  description: gene-stable-footing-desc
+  effect: GeneticsStableFootingEffect
+  sequence: CGATATGC
+  exclusiveGroup: mobility
+  researchCost: 20
+  stabilityCost: 10
+
+- type: geneticsGene
+  id: GeneQuickStep
+  name: gene-quick-step-name
+  description: gene-quick-step-desc
+  effect: GeneticsQuickStepEffect
+  sequence: GCTATACG
+  exclusiveGroup: mobility
+  researchCost: 25
+  stabilityCost: 15

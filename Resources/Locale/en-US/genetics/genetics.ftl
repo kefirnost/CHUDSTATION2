@@ -1,0 +1,21 @@
+genetics-console-title = GeneTek genetics console
+genetics-console-no-subject = No living subject in scanner. Research materials: {$materials}
+genetics-console-subject-status = Subject: {$name} | Research materials: {$materials} | Stability: {$stability}%
+genetics-console-unknown-gene = Unknown gene sample {$index}
+genetics-console-unknown-description = Research this sample to identify the gene.
+genetics-console-sequence-progress = Correct pairs: {$correct}/{$total} ({$progress})
+genetics-console-sequence-hint = Enter the eight-base sequence (A, T, C, G).
+genetics-console-sequence-complete = Sequence complete
+genetics-console-sequence-incomplete = Sequence incomplete
+genetics-console-gene-active = Gene is active
+genetics-console-research-button = Research
+genetics-console-sequence-button = Check sequence
+genetics-console-activate-button = Activate
+genetics-console-deactivate-button = Deactivate
+
+gene-pressure-adaptation-name = Pressure adaptation
+gene-pressure-adaptation-desc = Improves the subject's tolerance to pressure changes.
+gene-stable-footing-name = Stable footing
+gene-stable-footing-desc = Improves traction and acceleration on the floor.
+gene-quick-step-name = Quick step
+gene-quick-step-desc = Slightly improves walking and running speed.
