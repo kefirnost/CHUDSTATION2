@@ -3,13 +3,13 @@ using Content.Shared.FixedPoint;
 namespace Content.Shared.Traits.Assorted;
 
 /// <summary>
-/// Increases the damage threshold required to enter the dead state.
+/// Applies a signed modifier to the damage threshold required to enter the dead state.
 /// </summary>
 [RegisterComponent]
 public sealed partial class VitalityComponent : Component
 {
     /// <summary>
-    /// Additional damage the owner can take before reaching the death threshold.
+    /// Change applied to the death threshold. Positive values increase it; negative values reduce it.
     /// </summary>
     [DataField]
     public FixedPoint2 DeathThresholdBonus = FixedPoint2.New(10);
