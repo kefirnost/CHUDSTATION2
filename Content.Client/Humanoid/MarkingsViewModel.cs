@@ -53,6 +53,25 @@ public sealed partial class MarkingsViewModel
         }
     }
 
+    private bool _allowThreeHairStyles;
+
+    /// <summary>
+    /// Allows selecting up to three markings on the hair layer when the Hairy trait is selected.
+    /// </summary>
+    public bool AllowThreeHairStyles
+    {
+        get => _allowThreeHairStyles;
+        set
+        {
+            if (_allowThreeHairStyles == value)
+                return;
+
+            _allowThreeHairStyles = value;
+            ValidateMarkings();
+            EnforcementsChanged?.Invoke();
+        }
+    }
+
     private bool AnyEnforcementsLifted => !_enforceLimits || !_enforceGroupAndSexRestrictions;
 
     /// <summary>
@@ -288,7 +307,11 @@ public sealed partial class MarkingsViewModel
             return true;
         }
 
-        if (limits.Limit == 1 && layerMarkings.Count == 1)
+        var maxCount = layer == HumanoidVisualLayers.Hair && AllowThreeHairStyles
+            ? Math.Max(limits.Limit, 3)
+            : limits.Limit;
+
+        if (maxCount == 1 && layerMarkings.Count == 1)
         {
             layerMarkings.Clear();
             layerMarkings.Add(newMarking);
@@ -296,7 +319,7 @@ public sealed partial class MarkingsViewModel
             return true;
         }
 
-        if (layerMarkings.Count < limits.Limit)
+        if (layerMarkings.Count < maxCount)
         {
             layerMarkings.Add(newMarking);
             MarkingsChanged?.Invoke(organ, layer);
@@ -411,7 +434,7 @@ public sealed partial class MarkingsViewModel
             _marking.EnsureValidColors(actualMarkings);
             _marking.EnsureValidGroupAndSex(actualMarkings, organData.Group, organProfileData.Sex);
             _marking.EnsureValidLayers(actualMarkings, organData.Layers);
-            _marking.EnsureValidLimits(actualMarkings, organData.Group, organData.Layers, organProfileData.SkinColor, organProfileData.EyeColor);
+            _marking.EnsureValidLimits(actualMarkings, organData.Group, organData.Layers, organProfileData.SkinColor, organProfileData.EyeColor, AllowThreeHairStyles ? 3 : null);
 
             _markings[organ] = actualMarkings;
         }
@@ -446,7 +469,9 @@ public sealed partial class MarkingsViewModel
             return;
 
         isRequired = limits.Required;
-        count = limits.Limit;
+        count = layer == HumanoidVisualLayers.Hair && AllowThreeHairStyles
+            ? Math.Max(limits.Limit, 3)
+            : limits.Limit;
 
         if (!_markings.TryGetValue(organ, out var organMarkings))
             return;
