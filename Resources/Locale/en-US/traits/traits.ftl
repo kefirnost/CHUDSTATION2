@@ -79,3 +79,14 @@ trait-fast-legs-desc = Your walking and sprinting speed is increased by 20%.
 
 trait-vitality-name = Vitality
 trait-vitality-desc = The damage threshold for entering the dead state is increased by 10.
+
+trait-fragile-name = Fragile
+trait-fragile-desc = You are more fragile: the damage threshold for entering the dead state is reduced by 10.
+
+trait-hairy-name = Hairy
+trait-hairy-desc = Allows you to select up to three hairstyles at once in the character editor.
+
+trait-shy-name = Shy
+trait-shy-desc = When someone successfully hugs or pets you, you almost instantly push them away.
+
+trait-fast-legs-desc = Your walking and sprinting speed is increased by 10%.
