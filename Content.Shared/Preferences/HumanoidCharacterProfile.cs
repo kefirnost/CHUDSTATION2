@@ -584,47 +584,28 @@ namespace Content.Shared.Preferences
             };
         }
 
-        public HumanoidCharacterProfile WithTraitPreference(ProtoId<TraitPrototype> traitId, IPrototypeManager protoManager)
+        public HumanoidCharacterProfile WithTraitPreference(
+            ProtoId<TraitPrototype> traitId,
+            IPrototypeManager protoManager,
+            int maxTraitPoints = 1)
         {
-            // null category is assumed to be default.
-            if (!protoManager.TryIndex(traitId, out var traitProto))
-                return new(this);
-
-            var category = traitProto.Category;
-
-            // Category not found so dump it.
-            TraitCategoryPrototype? traitCategory = null;
-
-            if (category != null && !protoManager.Resolve(category, out traitCategory))
+            if (!protoManager.TryIndex(traitId, out _))
                 return new(this);
 
             var list = new HashSet<ProtoId<TraitPrototype>>(_traitPreferences) { traitId };
+            var expectedCount = 0;
 
-            if (traitCategory == null || traitCategory.MaxTraitPoints < 0)
+            foreach (var id in list)
             {
-                return new(this)
-                {
-                    _traitPreferences = list,
-                };
+                if (protoManager.TryIndex<TraitPrototype>(id, out _))
+                    expectedCount++;
             }
 
-            var count = 0;
-            foreach (var trait in list)
-            {
-                // If trait not found or another category don't count its points.
-                if (!protoManager.TryIndex<TraitPrototype>(trait, out var otherProto) ||
-                    otherProto.Category != traitCategory)
-                {
-                    continue;
-                }
-
-                count += otherProto.Cost;
-            }
-
-            if (count > traitCategory.MaxTraitPoints && traitProto.Cost != 0)
-            {
+            // Reject a new selection if it would make the profile invalid.
+            // The same validation is repeated on the server before the profile is accepted.
+            var validTraits = GetValidTraits(list, protoManager, maxTraitPoints);
+            if (validTraits.Count != expectedCount)
                 return new(this);
-            }
 
             return new(this)
             {
@@ -756,7 +737,15 @@ namespace Content.Shared.Preferences
                 flavortext = FormattedMessage.RemoveMarkupOrThrow(FlavorText);
             }
 
-            var appearance = HumanoidCharacterAppearance.EnsureValid(Appearance, Species, Sex);
+            var traits = GetValidTraits(
+                TraitPreferences.Where(prototypeManager.HasIndex),
+                prototypeManager,
+                configManager.GetCVar(CCVars.TraitPointsBudget));
+            var appearance = HumanoidCharacterAppearance.EnsureValid(
+                Appearance,
+                Species,
+                Sex,
+                traits.Contains("Hairy"));
 
             var prefsUnavailableMode = PreferenceUnavailable switch
             {
@@ -798,9 +787,7 @@ namespace Content.Shared.Preferences
                 .Where(id => prototypeManager.TryIndex(id, out var antag) && antag.SetPreference)
                 .ToList();
 
-            var traits = TraitPreferences
-                         .Where(prototypeManager.HasIndex)
-                         .ToList();
+
 
             Name = name;
             FlavorText = flavortext;
@@ -824,7 +811,7 @@ namespace Content.Shared.Preferences
             _antagPreferences.UnionWith(antags);
 
             _traitPreferences.Clear();
-            _traitPreferences.UnionWith(GetValidTraits(traits, prototypeManager));
+            _traitPreferences.UnionWith(traits);
 
             // Checks prototypes exist for all loadouts and dump / set to default if not.
             var toRemove = new ValueList<string>();
@@ -852,37 +839,74 @@ namespace Content.Shared.Preferences
         /// <summary>
         /// Takes in an IEnumerable of traits and returns a List of the valid traits.
         /// </summary>
-        public List<ProtoId<TraitPrototype>> GetValidTraits(IEnumerable<ProtoId<TraitPrototype>> traits, IPrototypeManager protoManager)
+        public List<ProtoId<TraitPrototype>> GetValidTraits(
+            IEnumerable<ProtoId<TraitPrototype>> traits,
+            IPrototypeManager protoManager,
+            int maxTraitPoints = 1)
         {
-            // Track points count for each group.
-            var groups = new Dictionary<string, int>();
+            // Sort before validating so the same profile always keeps the same traits,
+            // regardless of HashSet enumeration order. Refund traits are considered first.
+            var candidates = new List<(ProtoId<TraitPrototype> Id, TraitPrototype Prototype)>();
+            foreach (var trait in traits.Distinct())
+            {
+                if (protoManager.TryIndex<TraitPrototype>(trait, out var prototype))
+                    candidates.Add((trait, prototype));
+            }
+
+            candidates.Sort((left, right) =>
+            {
+                var costComparison = left.Prototype.Cost.CompareTo(right.Prototype.Cost);
+                return costComparison != 0
+                    ? costComparison
+                    : string.CompareOrdinal(left.Prototype.ID, right.Prototype.ID);
+            });
+
+            var pointBudget = Math.Max(0, maxTraitPoints);
+            long pointsSpent = 0;
+            var categoryPoints = new Dictionary<string, long>();
+            var categoryCounts = new Dictionary<string, int>();
             var result = new List<ProtoId<TraitPrototype>>();
 
-            foreach (var trait in traits)
+            foreach (var (trait, traitProto) in candidates)
             {
-                if (!protoManager.TryIndex(trait, out var traitProto))
+                if (pointsSpent + traitProto.Cost > pointBudget)
                     continue;
 
-                // Always valid.
-                if (traitProto.Category == null)
+                TraitCategoryPrototype? category = null;
+                if (traitProto.Category != null &&
+                    !protoManager.Resolve(traitProto.Category, out category))
                 {
-                    result.Add(trait);
                     continue;
                 }
 
-                // No category so dump it.
-                if (!protoManager.Resolve(traitProto.Category, out var category))
-                    continue;
+                var categoryPointTotal = 0L;
+                var categoryTraitCount = 0;
+                if (category != null)
+                {
+                    categoryPoints.TryGetValue(category.ID, out categoryPointTotal);
+                    categoryCounts.TryGetValue(category.ID, out categoryTraitCount);
 
-                var existing = groups.GetOrNew(category.ID);
-                existing += traitProto.Cost;
+                    if (category.MaxTraitPoints is >= 0 &&
+                        categoryPointTotal + traitProto.Cost > category.MaxTraitPoints.Value)
+                    {
+                        continue;
+                    }
 
-                // Too expensive.
-                if (existing > category.MaxTraitPoints)
-                    continue;
+                    if (category.MaxTraits is >= 0 &&
+                        categoryTraitCount >= category.MaxTraits.Value)
+                    {
+                        continue;
+                    }
+                }
 
-                groups[category.ID] = existing;
+                pointsSpent += traitProto.Cost;
                 result.Add(trait);
+
+                if (category == null)
+                    continue;
+
+                categoryPoints[category.ID] = categoryPointTotal + traitProto.Cost;
+                categoryCounts[category.ID] = categoryTraitCount + 1;
             }
 
             return result;

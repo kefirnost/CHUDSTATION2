@@ -65,8 +65,11 @@ humanoid-profile-editor-flavortext-tab = Description
 # Traits
 humanoid-profile-editor-traits-tab = Traits
 humanoid-profile-editor-no-traits = No traits available
+humanoid-profile-editor-trait-icon-placeholder = ICON
 
-humanoid-profile-editor-trait-count-hint = Points available: [{$current}/{$max}]
+humanoid-profile-editor-trait-count-hint = Points spent: [{$current}/{$max}]
+humanoid-profile-editor-trait-points-available = Remaining trait points: [{$points}]
+humanoid-profile-editor-trait-category-count-hint = Traits selected: [{$current}/{$max}]
 
 trait-category-disabilities = Disabilities
 trait-category-speech = Speech traits

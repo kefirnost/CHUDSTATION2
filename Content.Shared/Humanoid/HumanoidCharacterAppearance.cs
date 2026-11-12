@@ -164,7 +164,7 @@ public sealed partial class HumanoidCharacterAppearance : IEquatable<HumanoidCha
         return new(color.RByte, color.GByte, color.BByte);
     }
 
-    public static HumanoidCharacterAppearance EnsureValid(HumanoidCharacterAppearance appearance, ProtoId<SpeciesPrototype> species, Sex sex)
+    public static HumanoidCharacterAppearance EnsureValid(HumanoidCharacterAppearance appearance, ProtoId<SpeciesPrototype> species, Sex sex, bool allowThreeHairStyles = false)
     {
         var proto = IoCManager.Resolve<IPrototypeManager>();
         var markingManager = IoCManager.Resolve<MarkingManager>();
@@ -198,7 +198,7 @@ public sealed partial class HumanoidCharacterAppearance : IEquatable<HumanoidCha
                 markingManager.EnsureValidColors(actualMarkings);
                 markingManager.EnsureValidGroupAndSex(actualMarkings, organData.Value.Group, sex);
                 markingManager.EnsureValidLayers(actualMarkings, organData.Value.Layers);
-                markingManager.EnsureValidLimits(actualMarkings, organData.Value.Group, organData.Value.Layers, skinColor, eyeColor);
+                markingManager.EnsureValidLimits(actualMarkings, organData.Value.Group, organData.Value.Layers, skinColor, eyeColor, allowThreeHairStyles ? 3 : null);
 
                 validatedMarkings[organ] = actualMarkings;
             }

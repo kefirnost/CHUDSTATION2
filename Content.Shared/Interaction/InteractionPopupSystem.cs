@@ -102,7 +102,7 @@ public sealed partial class InteractionPopupSystem : EntitySystem
             if (component.InteractSuccessSpawn != null)
                 Spawn(component.InteractSuccessSpawn, _transform.GetMapCoordinates(uid));
 
-            var ev = new InteractionSuccessEvent(user);
+            var ev = new InteractionSuccessEvent(user, args is InteractHandEvent);
             RaiseLocalEvent(target, ref ev);
         }
         else

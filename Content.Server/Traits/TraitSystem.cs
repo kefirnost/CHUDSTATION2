@@ -1,9 +1,11 @@
+using Content.Shared.CCVar;
 using Content.Shared.GameTicking;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Roles;
 using Content.Shared.Traits;
 using Content.Shared.Whitelist;
+using Robust.Shared.Configuration;
 
 namespace Content.Server.Traits;
 
@@ -11,6 +13,7 @@ public sealed partial class TraitSystem : EntitySystem
 {
     [Dependency] private SharedHandsSystem _sharedHandsSystem = default!;
     [Dependency] private EntityWhitelistSystem _whitelistSystem = default!;
+    [Dependency] private IConfigurationManager _cfg = default!;
 
     public override void Initialize()
     {
@@ -30,7 +33,13 @@ public sealed partial class TraitSystem : EntitySystem
             return;
         }
 
-        foreach (var traitId in args.Profile.TraitPreferences)
+        // Validate again at spawn so stale or externally supplied profiles cannot bypass trait limits.
+        var validTraits = args.Profile.GetValidTraits(
+            args.Profile.TraitPreferences,
+            ProtoMan,
+            _cfg.GetCVar(CCVars.TraitPointsBudget));
+
+        foreach (var traitId in validTraits)
         {
             if (!ProtoMan.TryIndex<TraitPrototype>(traitId, out var traitPrototype))
             {

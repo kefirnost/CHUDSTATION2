@@ -1,9 +1,20 @@
+- type: trait
+  id: Fragile
+  name: trait-fragile-name
+  description: trait-fragile-desc
+  category: Disabilities
+  cost: -1
+  components:
+  - type: Vitality
+    deathThresholdBonus: -10
+
 # If you add a new trait, make sure to add the corresponding component to the whitelist in \Resources\Prototypes\Entities\Mobs\Player\clone.yml so it gets copied to clones correctly!
 
 - type: trait
   id: Blindness
   name: trait-blindness-name
   description: trait-blindness-desc
+  cost: -3
   traitGear: WhiteCane
   category: Disabilities
   whitelist:
@@ -16,6 +27,7 @@
   id: PoorVision
   name: trait-poor-vision-name
   description: trait-poor-vision-desc
+  cost: -1
   traitGear: ClothingEyesGlasses
   category: Disabilities
   whitelist:
@@ -41,6 +53,7 @@
   id: Unrevivable
   name: trait-unrevivable-name
   description: trait-unrevivable-desc
+  cost: -3
   category: Disabilities
   components:
     - type: Unrevivable
@@ -59,6 +72,7 @@
   name: trait-muted-name
   description: trait-muted-desc
   category: Disabilities
+  cost: 1
   blacklist:
     components:
       - BorgChassis
@@ -94,6 +108,7 @@
   id: Hemophilia
   name: trait-hemophilia-name
   description: trait-hemophilia-desc
+  cost: -1
   category: Disabilities
   specials:
   - !type:ApplyStatusEffectSpecial
@@ -104,6 +119,7 @@
   id: ImpairedMobility
   name: trait-impaired-mobility-name
   description: trait-impaired-mobility-desc
+  cost: -1
   traitGear: OffsetCane
   category: Disabilities
   components:

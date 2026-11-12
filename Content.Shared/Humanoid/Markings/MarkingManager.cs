@@ -221,7 +221,7 @@ public sealed partial class MarkingManager
     /// <summary>
     /// Ensures the list of <see cref="markingSets"/> is valid per the limits of the <see cref="group"/>
     /// </summary>
-    public void EnsureValidLimits(Dictionary<HumanoidVisualLayers, List<Marking>> markingSets, ProtoId<MarkingsGroupPrototype> group, HashSet<HumanoidVisualLayers> layers, Color? skinColor, Color? eyeColor)
+    public void EnsureValidLimits(Dictionary<HumanoidVisualLayers, List<Marking>> markingSets, ProtoId<MarkingsGroupPrototype> group, HashSet<HumanoidVisualLayers> layers, Color? skinColor, Color? eyeColor, int? hairLimitOverride = null)
     {
         var groupProto = _prototype.Index(group);
         var counts = new Dictionary<HumanoidVisualLayers, int>();
@@ -240,7 +240,10 @@ public sealed partial class MarkingManager
                     continue;
 
                 var count = counts.GetValueOrDefault(marking.BodyPart);
-                if (count >= limit.Limit)
+                var maxCount = marking.BodyPart == HumanoidVisualLayers.Hair && hairLimitOverride.HasValue
+                    ? Math.Max(limit.Limit, hairLimitOverride.Value)
+                    : limit.Limit;
+                if (count >= maxCount)
                 {
                     markings.RemoveAt(i);
                     continue;
