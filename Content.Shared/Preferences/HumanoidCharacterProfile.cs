@@ -737,7 +737,15 @@ namespace Content.Shared.Preferences
                 flavortext = FormattedMessage.RemoveMarkupOrThrow(FlavorText);
             }
 
-            var appearance = HumanoidCharacterAppearance.EnsureValid(Appearance, Species, Sex);
+            var traits = GetValidTraits(
+                TraitPreferences.Where(prototypeManager.HasIndex),
+                prototypeManager,
+                configManager.GetCVar(CCVars.TraitPointsBudget));
+            var appearance = HumanoidCharacterAppearance.EnsureValid(
+                Appearance,
+                Species,
+                Sex,
+                traits.Contains("Hairy"));
 
             var prefsUnavailableMode = PreferenceUnavailable switch
             {
@@ -779,9 +787,7 @@ namespace Content.Shared.Preferences
                 .Where(id => prototypeManager.TryIndex(id, out var antag) && antag.SetPreference)
                 .ToList();
 
-            var traits = TraitPreferences
-                         .Where(prototypeManager.HasIndex)
-                         .ToList();
+
 
             Name = name;
             FlavorText = flavortext;
@@ -805,7 +811,7 @@ namespace Content.Shared.Preferences
             _antagPreferences.UnionWith(antags);
 
             _traitPreferences.Clear();
-            _traitPreferences.UnionWith(GetValidTraits(traits, prototypeManager, configManager.GetCVar(CCVars.TraitPointsBudget)));
+            _traitPreferences.UnionWith(traits);
 
             // Checks prototypes exist for all loadouts and dump / set to default if not.
             var toRemove = new ValueList<string>();
