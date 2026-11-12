@@ -117,6 +117,7 @@ public sealed partial class HumanoidProfileEditor
 
                     SetDirty();
                     RefreshTraits();
+                    UpdateMarkings();
                 };
 
                 selectors.Add(selector);
