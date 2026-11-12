@@ -195,6 +195,11 @@
   result: ChemMasterMachineCircuitboard
 
 - type: latheRecipe
+  parent: [ BaseCircuitboardRecipe, BaseMedicalMachineRecipeCategory ]
+  id: GeneTekMachineCircuitboard
+  result: GeneTekMachineCircuitboard
+
+- type: latheRecipe
   parent: [ BaseGoldCircuitboardRecipe, BaseMedicalMachineRecipeCategory ]
   id: ChemDispenserMachineCircuitboard
   result: ChemDispenserMachineCircuitboard
