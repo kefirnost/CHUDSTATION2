@@ -66,7 +66,9 @@ humanoid-profile-editor-flavortext-tab = Описание
 humanoid-profile-editor-traits-tab = Черты персонажа
 humanoid-profile-editor-no-traits = Нет доступных черт
 
-humanoid-profile-editor-trait-count-hint = Доступно очков: [{ $current }/{ $max }]
+humanoid-profile-editor-trait-count-hint = Потрачено очков: [{ $current }/{ $max }]
+humanoid-profile-editor-trait-points-available = Осталось очков трейтов: [{ $points }]
+humanoid-profile-editor-trait-category-count-hint = Выбрано трейтов: [{ $current }/{ $max }]
 
 trait-category-disabilities = Ограничения
 trait-category-speech = Черты речи
