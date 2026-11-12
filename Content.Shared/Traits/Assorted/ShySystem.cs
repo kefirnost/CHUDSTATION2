@@ -1,20 +1,17 @@
-using System.Numerics;
+using Content.Shared.CombatMode;
 using Content.Shared.Interaction.Events;
-using Robust.Shared.Map;
-using Robust.Shared.Network;
-using Robust.Shared.Physics.Components;
-using Robust.Shared.Physics.Systems;
+using Content.Shared.Weapons.Melee;
 
 namespace Content.Shared.Traits.Assorted;
 
 /// <summary>
-/// Pushes away an entity that successfully hugs or pets a shy character.
+/// Uses the regular melee disarm/shove action to push away someone who successfully hugs or pets a shy character.
 /// </summary>
 public sealed partial class ShySystem : EntitySystem
 {
     [Dependency] private INetManager _net = default!;
-    [Dependency] private SharedPhysicsSystem _physics = default!;
-    [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private SharedCombatModeSystem _combatMode = default!;
+    [Dependency] private SharedMeleeWeaponSystem _melee = default!;
 
     public override void Initialize()
     {
@@ -24,27 +21,30 @@ public sealed partial class ShySystem : EntitySystem
 
     private void OnInteractionSuccess(Entity<ShyComponent> ent, ref InteractionSuccessEvent args)
     {
-        // InteractionSuccessEvent is also raised for predicted client interactions.
         if (!_net.IsServer ||
             !args.IsHandInteraction ||
             args.User == ent.Owner ||
-            !TryComp<PhysicsComponent>(args.User, out var physics) ||
-            physics.Mass <= 0)
+            !TryComp<CombatModeComponent>(ent.Owner, out var combatMode) ||
+            combatMode.CanDisarm != true ||
+            !_melee.TryGetWeapon(ent.Owner, out var weaponUid, out var weapon))
         {
             return;
         }
 
-        var shyPosition = _transform.GetMapCoordinates(ent.Owner);
-        var userPosition = _transform.GetMapCoordinates(args.User);
+        // The standard shove is only accepted while combat mode is enabled.
+        // Temporarily enable it for the reaction, then restore the character's previous mode.
+        var wasInCombatMode = combatMode.IsInCombatMode;
+        if (!wasInCombatMode)
+            _combatMode.SetInCombatMode(ent.Owner, true, combatMode);
 
-        if (shyPosition.MapId != userPosition.MapId)
-            return;
-
-        var direction = userPosition.Position - shyPosition.Position;
-        if (direction.LengthSquared() < 0.0001f)
-            return;
-
-        direction = Vector2.Normalize(direction);
-        _physics.ApplyLinearImpulse(args.User, direction * (physics.Mass * ent.Comp.PushImpulse), body: physics);
+        try
+        {
+            _melee.AttemptDisarmAttack(ent.Owner, weaponUid, weapon, args.User);
+        }
+        finally
+        {
+            if (!wasInCombatMode)
+                _combatMode.SetInCombatMode(ent.Owner, false, combatMode);
+        }
     }
 }
