@@ -111,7 +111,7 @@ public sealed partial class GeneticsConsoleWindow : FancyWindow
                 ? Loc.GetString("genetics-console-sequence-complete")
                 : Loc.GetString("genetics-console-sequence-incomplete");
 
-        ResearchButton.Text = Loc.GetString("genetics-console-research-button", ("cost", gene.ResearchCost));
+        ResearchButton.Text = Loc.GetString("genetics-console-research-button-cost", ("cost", gene.ResearchCost));
 
         var canOperate = state.HasSubject && state.SubjectAlive;
         ResearchButton.Disabled = !canOperate || gene.Researched || state.ResearchMaterials < gene.ResearchCost;
