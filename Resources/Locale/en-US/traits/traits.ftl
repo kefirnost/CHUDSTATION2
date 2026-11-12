@@ -75,7 +75,7 @@ trait-athletic-name = Athletic
 trait-athletic-desc = Your unarmed strikes deal 2 additional blunt damage.
 
 trait-fast-legs-name = Fast Legs
-trait-fast-legs-desc = Your walking and sprinting speed is increased by 20%.
+trait-fast-legs-desc = Your walking and sprinting speed is increased by 10%.
 
 trait-vitality-name = Vitality
 trait-vitality-desc = The damage threshold for entering the dead state is increased by 10.
@@ -89,4 +89,4 @@ trait-hairy-desc = Allows you to select up to three hairstyles at once in the ch
 trait-shy-name = Shy
 trait-shy-desc = When someone successfully hugs or pets you, you almost instantly push them away.
 
-trait-fast-legs-desc = Your walking and sprinting speed is increased by 10%.
+
