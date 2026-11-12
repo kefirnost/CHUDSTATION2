@@ -26,6 +26,7 @@ public sealed partial class ShySystem : EntitySystem
     {
         // InteractionSuccessEvent is also raised for predicted client interactions.
         if (!_net.IsServer ||
+            !args.IsHandInteraction ||
             args.User == ent.Owner ||
             !TryComp<PhysicsComponent>(args.User, out var physics) ||
             physics.Mass <= 0)
