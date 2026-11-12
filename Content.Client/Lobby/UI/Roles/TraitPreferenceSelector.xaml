@@ -4,48 +4,48 @@
                     StyleClasses="BackgroundPanel"
                     HorizontalExpand="True"
                     Margin="0 4">
-    <BoxContainer Orientation="Horizontal"
-                  HorizontalExpand="True"
-                  SeparationOverride="12"
-                  Margin="8">
-        <PanelContainer Name="IconPanel"
-                        StyleClasses="BackgroundPanelDark"
-                        SetSize="104 104">
-            <BoxContainer Orientation="Vertical"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center">
-                <TextureRect Name="Icon"
-                             SetSize="88 88"
-                             CanShrink="True"
-                             Stretch="KeepAspectCentered"
-                             Visible="False" />
-                <Label Name="IconPlaceholder"
-                       Text="ICON"
-                       StyleClasses="LabelSubText"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center" />
-            </BoxContainer>
-        </PanelContainer>
-</Control>
-        <BoxContainer Orientation="Vertical"
+        <BoxContainer Orientation="Horizontal"
                       HorizontalExpand="True"
-                      VerticalExpand="True"
-                      SeparationOverride="4"
-                      Margin="0 4">
-            <BoxContainer Orientation="Horizontal"
+                      SeparationOverride="12"
+                      Margin="8">
+            <PanelContainer Name="IconPanel"
+                            StyleClasses="BackgroundPanelDark"
+                            SetSize="104 104">
+                <BoxContainer Orientation="Vertical"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center">
+                    <TextureRect Name="Icon"
+                                 SetSize="88 88"
+                                 CanShrink="True"
+                                 Stretch="KeepAspectCentered"
+                                 Visible="False" />
+                    <Label Name="IconPlaceholder"
+                           Text="ICON"
+                           StyleClasses="LabelSubText"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                </BoxContainer>
+            </PanelContainer>
+            <BoxContainer Orientation="Vertical"
                           HorizontalExpand="True"
-                          SeparationOverride="8">
-                <Label Name="TitleLabel"
-                       HorizontalExpand="True"
-                       VerticalAlignment="Center"
-                       StyleClasses="LabelHeadingBigger" />
-                <CheckBox Name="Checkbox"
-                          Access="Public"
-                          VerticalAlignment="Center" />
-            </BoxContainer>
-            <RichTextLabel Name="DescriptionLabel"
+                          VerticalExpand="True"
+                          SeparationOverride="4"
+                          Margin="0 4">
+                <BoxContainer Orientation="Horizontal"
+                              HorizontalExpand="True"
+                              SeparationOverride="8">
+                    <Label Name="TitleLabel"
                            HorizontalExpand="True"
-                           VerticalExpand="True" />
+                           VerticalAlignment="Center"
+                           StyleClasses="LabelHeadingBigger" />
+                    <CheckBox Name="Checkbox"
+                              Access="Public"
+                              VerticalAlignment="Center" />
+                </BoxContainer>
+                <RichTextLabel Name="DescriptionLabel"
+                               HorizontalExpand="True"
+                               VerticalExpand="True" />
+            </BoxContainer>
         </BoxContainer>
-    </BoxContainer>
-</PanelContainer>
+    </PanelContainer>
+</Control>
