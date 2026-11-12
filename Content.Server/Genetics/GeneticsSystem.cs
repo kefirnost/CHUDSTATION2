@@ -19,7 +19,7 @@ namespace Content.Server.Genetics;
 /// Implements GeneTek research and sequencing while reusing the patient container
 /// provided by MedicalScannerComponent.
 /// </summary>
-public sealed class GeneticsSystem : EntitySystem
+public sealed partial class GeneticsSystem : EntitySystem
 {
     private const float ResearchPointInterval = 20f;
     private const int PotentialGeneCount = 2;
