@@ -57,6 +57,7 @@ public sealed class GeneticsConsoleGeneState
     public readonly string SequenceProgress;
     public readonly int CorrectPairCount;
     public readonly int TotalPairCount;
+    public readonly int ResearchCost;
 
     public GeneticsConsoleGeneState(
         string id,
@@ -67,7 +68,8 @@ public sealed class GeneticsConsoleGeneState
         bool sequenceComplete,
         string sequenceProgress,
         int correctPairCount,
-        int totalPairCount)
+        int totalPairCount,
+        int researchCost)
     {
         Id = id;
         Name = name;
@@ -78,6 +80,7 @@ public sealed class GeneticsConsoleGeneState
         SequenceProgress = sequenceProgress;
         CorrectPairCount = correctPairCount;
         TotalPairCount = totalPairCount;
+        ResearchCost = researchCost;
     }
 }
 

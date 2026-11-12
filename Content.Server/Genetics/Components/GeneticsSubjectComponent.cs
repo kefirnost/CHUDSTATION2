@@ -1,8 +1,8 @@
 namespace Content.Server.Genetics.Components;
 
 /// <summary>
-/// Per-subject genetics progress. Potential genes and correctly sequenced pairs
-/// belong to the patient, rather than to the console.
+/// Per-subject genetics progress. Potential genes, sequence attempts, and mutation
+/// rewards belong to the patient, rather than to the console.
 /// </summary>
 [RegisterComponent]
 public sealed partial class GeneticsSubjectComponent : Component
@@ -15,6 +15,9 @@ public sealed partial class GeneticsSubjectComponent : Component
 
     [DataField]
     public Dictionary<string, List<int>> CorrectPairs = new();
+
+    [DataField]
+    public List<string> RewardedGenes = new();
 
     [DataField]
     public int Stability = 100;

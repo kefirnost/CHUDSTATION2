@@ -23,9 +23,14 @@ public sealed class GeneticsSystem : EntitySystem
 {
     private const float ResearchPointInterval = 20f;
     private const int PotentialGeneCount = 2;
+    private const int StartingResearchMaterials = 40;
+    private const int ActivationResearchReward = 40;
 
-    private readonly List<string> _roundPotentialGenes = new();
-    private bool _roundGenesGenerated;
+    // Research and decoded sequences belong to the round, not to an individual console.
+    private readonly HashSet<string> _researchedGenes = new();
+    private readonly HashSet<string> _sequencedGenes = new();
+    private int _researchMaterials = StartingResearchMaterials;
+    private float _researchPointTimer;
 
     [Dependency] private UserInterfaceSystem _uiSystem = default!;
     [Dependency] private PowerReceiverSystem _powerReceiverSystem = default!;
@@ -50,22 +55,26 @@ public sealed class GeneticsSystem : EntitySystem
     {
         base.Update(frameTime);
 
+        // A powered GeneTek network produces one shared research point per interval.
+        // Multiple consoles do not multiply the station's passive research income.
+        var poweredConsoles = new List<EntityUid>();
         var consoles = EntityQueryEnumerator<GeneticsConsoleComponent>();
-        while (consoles.MoveNext(out var uid, out var console))
+        while (consoles.MoveNext(out var uid, out _))
         {
-            if (!_powerReceiverSystem.IsPowered(uid))
-                continue;
+            if (_powerReceiverSystem.IsPowered(uid))
+                poweredConsoles.Add(uid);
+        }
 
-            console.PointTimer += frameTime;
-            if (console.PointTimer < ResearchPointInterval)
-                continue;
-
-            var gained = (int) (console.PointTimer / ResearchPointInterval);
-            console.PointTimer %= ResearchPointInterval;
-            console.ResearchMaterials += gained;
-
-            if (_uiSystem.IsUiOpen(uid, GeneticsConsoleUiKey.Key))
-                UpdateInterface(uid, console);
+        if (poweredConsoles.Count > 0)
+        {
+            _researchPointTimer += frameTime;
+            if (_researchPointTimer >= ResearchPointInterval)
+            {
+                var gained = (int) (_researchPointTimer / ResearchPointInterval);
+                _researchPointTimer %= ResearchPointInterval;
+                _researchMaterials += gained;
+                UpdateAllInterfaces();
+            }
         }
 
         // Active mutations are temporary across death; a subject keeps its potential genes.
@@ -88,8 +97,10 @@ public sealed class GeneticsSystem : EntitySystem
 
     private void OnRoundStarting(RoundStartingEvent args)
     {
-        _roundPotentialGenes.Clear();
-        _roundGenesGenerated = false;
+        _researchMaterials = StartingResearchMaterials;
+        _researchPointTimer = 0;
+        _researchedGenes.Clear();
+        _sequencedGenes.Clear();
     }
 
     private void OnUiOpened(EntityUid uid, GeneticsConsoleComponent component, AfterActivatableUIOpenEvent args)
@@ -102,25 +113,32 @@ public sealed class GeneticsSystem : EntitySystem
         if (!CanUseConsole(uid, args.Actor) ||
             !TryGetLivingSubject(uid, out _, out var subject) ||
             !subject.PotentialGenes.Contains(args.GeneId) ||
-            component.ResearchedGenes.Contains(args.GeneId) ||
+            _researchedGenes.Contains(args.GeneId) ||
             !ProtoMan.TryIndex<GeneticsGenePrototype>(args.GeneId, out var gene))
             return;
 
-        if (component.ResearchMaterials < gene.ResearchCost)
+        if (_researchMaterials < gene.ResearchCost)
             return;
 
-        component.ResearchMaterials -= gene.ResearchCost;
-        component.ResearchedGenes.Add(args.GeneId);
-        UpdateInterface(uid, component);
+        _researchMaterials -= gene.ResearchCost;
+        _researchedGenes.Add(args.GeneId);
+        UpdateAllInterfaces();
     }
 
     private void OnSequenceGene(EntityUid uid, GeneticsConsoleComponent component, GeneticsSequenceGeneMessage args)
     {
         if (!CanUseConsole(uid, args.Actor) ||
-            !TryGetLivingSubject(uid, out var patient, out var subject) ||
+            !TryGetLivingSubject(uid, out _, out var subject) ||
             !subject.PotentialGenes.Contains(args.GeneId) ||
             !ProtoMan.TryIndex<GeneticsGenePrototype>(args.GeneId, out var gene))
             return;
+
+        // Once a mutation has been decoded, every GeneTek console can autocomplete it.
+        if (_sequencedGenes.Contains(args.GeneId))
+        {
+            UpdateInterface(uid, component);
+            return;
+        }
 
         var expected = gene.Sequence.ToUpperInvariant();
         var submitted = new string(args.Sequence.Where(c => !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
@@ -146,7 +164,16 @@ public sealed class GeneticsSystem : EntitySystem
 
         correctPairs.Sort();
         subject.CorrectPairs[args.GeneId] = correctPairs;
-        UpdateInterface(uid, component);
+
+        if (correctPairs.Count >= expected.Length / 2)
+        {
+            _sequencedGenes.Add(args.GeneId);
+            UpdateAllInterfaces();
+        }
+        else
+        {
+            UpdateInterface(uid, component);
+        }
     }
 
     private void OnSetGeneActive(EntityUid uid, GeneticsConsoleComponent component, GeneticsSetGeneActiveMessage args)
@@ -159,35 +186,21 @@ public sealed class GeneticsSystem : EntitySystem
 
         if (!args.Active)
         {
-            if (_statusEffects.TryRemoveStatusEffect(patient, gene.Effect))
-                subject.ActiveGenes.Remove(args.GeneId);
-
+            _statusEffects.TryRemoveStatusEffect(patient, gene.Effect);
+            subject.ActiveGenes.Remove(args.GeneId);
             UpdateInterface(uid, component);
             return;
         }
 
-        if (!IsSequenceComplete(subject, gene) ||
-            subject.ActiveGenes.Contains(args.GeneId) ||
-            subject.Stability < gene.StabilityCost)
+        if (!IsSequenceComplete(subject, gene) || subject.ActiveGenes.Contains(args.GeneId))
         {
             UpdateInterface(uid, component);
             return;
         }
 
-        // Mutually exclusive genes replace one another before the new effect is applied.
-        if (!string.IsNullOrWhiteSpace(gene.ExclusiveGroup))
-        {
-            foreach (var activeId in subject.ActiveGenes.ToArray())
-            {
-                if (!ProtoMan.TryIndex<GeneticsGenePrototype>(activeId, out var activeGene) ||
-                    activeGene.ExclusiveGroup != gene.ExclusiveGroup)
-                    continue;
-
-                _statusEffects.TryRemoveStatusEffect(patient, activeGene.Effect);
-                subject.ActiveGenes.Remove(activeId);
-            }
-        }
-
+        // Potential mutations do not replace one another, even when they share an
+        // exclusive group. Exclusivity and stability penalties are for mutations
+        // introduced from outside the organism's potential (for example, injectors).
         if (!_statusEffects.TrySetStatusEffectDuration(patient, gene.Effect))
         {
             UpdateInterface(uid, component);
@@ -195,7 +208,16 @@ public sealed class GeneticsSystem : EntitySystem
         }
 
         subject.ActiveGenes.Add(args.GeneId);
-        subject.Stability = Math.Max(0, subject.Stability - gene.StabilityCost);
+
+        // Recover research materials once per subject and potential mutation.
+        if (!subject.RewardedGenes.Contains(args.GeneId))
+        {
+            subject.RewardedGenes.Add(args.GeneId);
+            _researchMaterials += ActivationResearchReward;
+            UpdateAllInterfaces();
+            return;
+        }
+
         UpdateInterface(uid, component);
     }
 
@@ -207,7 +229,8 @@ public sealed class GeneticsSystem : EntitySystem
         clone.CorrectPairs = ent.Comp.CorrectPairs.ToDictionary(
             pair => pair.Key,
             pair => new List<int>(pair.Value));
-        // Active effects are intentionally not copied; the clone must be sequenced/activated anew.
+        clone.RewardedGenes = new List<string>(ent.Comp.RewardedGenes);
+        // Active effects are intentionally not copied; the clone must activate them anew.
         clone.ActiveGenes.Clear();
     }
 
@@ -244,17 +267,8 @@ public sealed class GeneticsSystem : EntitySystem
         if (subject.PotentialGenes.Count > 0)
             return subject;
 
-        GenerateRoundPotentialGenes();
-        subject.PotentialGenes = new List<string>(_roundPotentialGenes);
-        return subject;
-    }
-
-    private void GenerateRoundPotentialGenes()
-    {
-        if (_roundGenesGenerated)
-            return;
-
-        _roundGenesGenerated = true;
+        // Each organism receives its own potential gene pool. The component survives
+        // death and is copied by the cloning event, so a new body keeps that potential.
         var available = ProtoMan.EnumeratePrototypes<GeneticsGenePrototype>()
             .Select(gene => gene.ID)
             .ToList();
@@ -263,8 +277,31 @@ public sealed class GeneticsSystem : EntitySystem
         for (var i = 0; i < count; i++)
         {
             var selected = _random.Pick(available);
-            _roundPotentialGenes.Add(selected);
+            subject.PotentialGenes.Add(selected);
             available.Remove(selected);
+        }
+
+        return subject;
+    }
+
+    private bool IsSequenceComplete(GeneticsSubjectComponent subject, GeneticsGenePrototype gene)
+    {
+        if (_sequencedGenes.Contains(gene.ID))
+            return true;
+
+        var requiredPairs = gene.Sequence.Length / 2;
+        return requiredPairs > 0 &&
+               subject.CorrectPairs.TryGetValue(gene.ID, out var correctPairs) &&
+               correctPairs.Count >= requiredPairs;
+    }
+
+    private void UpdateAllInterfaces()
+    {
+        var consoles = EntityQueryEnumerator<GeneticsConsoleComponent>();
+        while (consoles.MoveNext(out var uid, out var component))
+        {
+            if (_uiSystem.IsUiOpen(uid, GeneticsConsoleUiKey.Key))
+                UpdateInterface(uid, component);
         }
     }
 
@@ -284,7 +321,7 @@ public sealed class GeneticsSystem : EntitySystem
             scanner.BodyContainer.ContainedEntity is not { } patient)
         {
             return new GeneticsConsoleBoundUserInterfaceState(
-                component.ResearchMaterials, false, string.Empty, false, 100, new List<GeneticsConsoleGeneState>());
+                _researchMaterials, false, string.Empty, false, 100, new List<GeneticsConsoleGeneState>());
         }
 
         var subject = EnsureSubject(patient);
@@ -297,12 +334,14 @@ public sealed class GeneticsSystem : EntitySystem
             if (!ProtoMan.TryIndex<GeneticsGenePrototype>(geneId, out var gene))
                 continue;
 
-            var researched = component.ResearchedGenes.Contains(geneId);
+            var researched = _researchedGenes.Contains(geneId);
             var correctPairs = subject.CorrectPairs.GetValueOrDefault(geneId) ?? new List<int>();
             var totalPairs = gene.Sequence.Length / 2;
+            var sequenceKnown = _sequencedGenes.Contains(geneId);
+            var correctPairCount = sequenceKnown ? totalPairs : correctPairs.Count;
             var progress = string.Join(" ", Enumerable.Range(0, totalPairs)
-                .Select(pair => correctPairs.Contains(pair) ? "✓" : "□"));
-            var complete = totalPairs > 0 && correctPairs.Count >= totalPairs;
+                .Select(pair => sequenceKnown || correctPairs.Contains(pair) ? "✓" : "□"));
+            var complete = totalPairs > 0 && correctPairCount >= totalPairs;
 
             genes.Add(new GeneticsConsoleGeneState(
                 geneId,
@@ -312,12 +351,13 @@ public sealed class GeneticsSystem : EntitySystem
                 subject.ActiveGenes.Contains(geneId),
                 complete,
                 progress,
-                correctPairs.Count,
-                totalPairs));
+                correctPairCount,
+                totalPairs,
+                gene.ResearchCost));
         }
 
         return new GeneticsConsoleBoundUserInterfaceState(
-            component.ResearchMaterials,
+            _researchMaterials,
             true,
             MetaData(patient).EntityName,
             alive,

@@ -4,7 +4,7 @@ using Robust.Shared.Utility;
 namespace Content.Shared.Genetics;
 
 /// <summary>
-/// Describes a discoverable gene and the harmless status effect it provides.
+/// Describes a discoverable gene and the status effect it provides.
 /// </summary>
 [Prototype]
 public sealed partial class GeneticsGenePrototype : IPrototype
@@ -28,7 +28,8 @@ public sealed partial class GeneticsGenePrototype : IPrototype
     public string Sequence = string.Empty;
 
     /// <summary>
-    /// Genes in the same group cannot be active at the same time.
+    /// Mutations introduced from outside an organism's potential can use this group
+    /// to replace another mutation from the same group.
     /// </summary>
     [DataField]
     public string? ExclusiveGroup;
@@ -36,6 +37,10 @@ public sealed partial class GeneticsGenePrototype : IPrototype
     [DataField]
     public int ResearchCost = 20;
 
+    /// <summary>
+    /// Stability change for mutations introduced from outside the organism's potential.
+    /// Potential mutations do not change stability.
+    /// </summary>
     [DataField]
     public int StabilityCost = 10;
 }
