@@ -8,5 +8,10 @@
   maxTraitPoints: 2
 
 - type: traitCategory
+  id: Accents
+  name: trait-category-accents
+  maxTraits: 1
+
+- type: traitCategory
   id: Quirks
   name: trait-category-quirks
