@@ -1,0 +1,11 @@
+- type: species
+  id: Golem
+  name: species-name-golem
+  roundStart: true
+  prototype: MobGolem
+  dollPrototype: AppearanceGolem
+  defaultSkinTone: "#8a8175"
+  skinColoration: TintedHues
+  maleFirstNames: NamesFirst
+  femaleFirstNames: NamesFirst
+  lastNames: NamesLast
