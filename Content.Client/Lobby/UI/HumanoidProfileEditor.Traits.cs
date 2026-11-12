@@ -95,7 +95,7 @@ public sealed partial class HumanoidProfileEditor
             foreach (var traitProto in categoryTraits)
             {
                 var trait = _prototypeManager.Index<TraitPrototype>(traitProto);
-                var selector = new TraitPreferenceSelector(trait);
+                var selector = new TraitPreferenceSelector(trait, _sprite);
                 selector.Preference = Profile?.TraitPreferences.Contains(trait.ID) == true;
 
                 if (selector.Preference)
