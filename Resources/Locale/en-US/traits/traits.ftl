@@ -68,3 +68,14 @@ trait-impaired-mobility-desc = You have difficulty moving without a mobility aid
 
 trait-blink-dyspraxia-name = Blink Dyspraxia
 trait-blink-dyspraxia-desc = Your eyelids lack coordination. Blinking requires conscious effort, and sometimes your eyes just refuse to sync up.
+
+trait-category-accents = Accents
+
+trait-athletic-name = Athletic
+trait-athletic-desc = Your unarmed strikes deal 2 additional blunt damage.
+
+trait-fast-legs-name = Fast Legs
+trait-fast-legs-desc = Your walking and sprinting speed is increased by 20%.
+
+trait-vitality-name = Vitality
+trait-vitality-desc = The damage threshold for entering the dead state is increased by 10.
