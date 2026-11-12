@@ -12,6 +12,7 @@ public sealed partial class HumanoidProfileEditor
         _markingsModel.OrganData = _markingManager.GetMarkingData(Profile.Species);
         _markingsModel.OrganProfileData = _markingManager.GetProfileData(Profile.Species, Profile.Sex, Profile.Appearance.SkinColor, Profile.Appearance.EyeColor);
         _markingsModel.Markings = Profile.Appearance.Markings;
+        _markingsModel.AllowThreeHairStyles = Profile.TraitPreferences.Contains("Hairy");
     }
 
     private void OnMarkingChange()
