@@ -35,6 +35,38 @@
       Glass: 3
 
 - type: entity
+  id: GeneTekDnaActivator
+  parent: BaseItem
+  name: DNA activator
+  description: A single-use cartridge that activates a subject's potential mutation.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Medical/implanter.rsi
+    state: implanter0
+  - type: Item
+    sprite: Objects/Specific/Medical/implanter.rsi
+    heldPrefix: implanter
+    size: Small
+  - type: GeneticsGeneTool
+    kind: Activator
+
+- type: entity
+  id: GeneTekDnaInjector
+  parent: BaseItem
+  name: DNA injector
+  description: A single-use cartridge that introduces a researched mutation into a subject.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Medical/implanter.rsi
+    state: implanter1
+  - type: Item
+    sprite: Objects/Specific/Medical/implanter.rsi
+    heldPrefix: implanter
+    size: Small
+  - type: GeneticsGeneTool
+    kind: Injector
+
+- type: entity
   id: GeneticsStableFootingEffect
   parent: MobStatusEffectBase
   name: stable footing
@@ -61,6 +93,7 @@
   exclusiveGroup: environment
   researchCost: 20
   stabilityCost: 15
+  reclaimReward: 15
 
 - type: geneticsGene
   id: GeneStableFooting
@@ -71,6 +104,7 @@
   exclusiveGroup: mobility
   researchCost: 20
   stabilityCost: 10
+  reclaimReward: 10
 
 - type: geneticsGene
   id: GeneQuickStep
@@ -81,3 +115,33 @@
   exclusiveGroup: mobility
   researchCost: 25
   stabilityCost: 15
+  reclaimReward: 15
+
+- type: geneticsUpgrade
+  id: GeneTekMutationStorage
+  name: genetics-upgrade-mutation-storage-name
+  description: genetics-upgrade-mutation-storage-desc
+  researchCost: 100
+  requiredGenesResearched: 1
+
+- type: geneticsUpgrade
+  id: GeneTekDnaInjectors
+  name: genetics-upgrade-dna-injectors-name
+  description: genetics-upgrade-dna-injectors-desc
+  researchCost: 120
+  requiredGenesResearched: 2
+
+- type: geneticsUpgrade
+  id: GeneTekDnaReclaimer
+  name: genetics-upgrade-dna-reclaimer-name
+  description: genetics-upgrade-dna-reclaimer-desc
+  researchCost: 100
+  requiredGenesResearched: 1
+
+- type: geneticsUpgrade
+  id: GeneTekExpandedMutationStorage
+  name: genetics-upgrade-expanded-storage-name
+  description: genetics-upgrade-expanded-storage-desc
+  researchCost: 120
+  prerequisites:
+  - GeneTekMutationStorage

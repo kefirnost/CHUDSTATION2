@@ -13,6 +13,12 @@ public sealed partial class GeneticsConsoleWindow : FancyWindow
     public Action<string>? OnResearchPressed;
     public Action<string, string>? OnSequencePressed;
     public Action<string, bool>? OnActivationPressed;
+    public Action<string>? OnResearchUpgradePressed;
+    public Action<string>? OnActivatorPressed;
+    public Action<string>? OnInjectorPressed;
+    public Action<string>? OnStorePressed;
+    public Action<string>? OnReclaimPressed;
+    public Action<string, GeneticsChromosomeType>? OnSplicePressed;
 
     private GeneticsConsoleGeneState? _selectedGene;
     private GeneticsConsoleBoundUserInterfaceState? _lastState;
@@ -44,6 +50,48 @@ public sealed partial class GeneticsConsoleWindow : FancyWindow
             if (_selectedGene != null)
                 OnActivationPressed?.Invoke(_selectedGene.Id, false);
         };
+
+        ActivatorButton.OnPressed += _ =>
+        {
+            if (_selectedGene != null)
+                OnActivatorPressed?.Invoke(_selectedGene.Id);
+        };
+
+        InjectorButton.OnPressed += _ =>
+        {
+            if (_selectedGene != null)
+                OnInjectorPressed?.Invoke(_selectedGene.Id);
+        };
+
+        StoreButton.OnPressed += _ =>
+        {
+            if (_selectedGene != null)
+                OnStorePressed?.Invoke(_selectedGene.Id);
+        };
+
+        ReclaimButton.OnPressed += _ =>
+        {
+            if (_selectedGene != null)
+                OnReclaimPressed?.Invoke(_selectedGene.Id);
+        };
+
+        SpliceStabilizerButton.OnPressed += _ =>
+        {
+            if (_selectedGene != null)
+                OnSplicePressed?.Invoke(_selectedGene.Id, GeneticsChromosomeType.Stabilizer);
+        };
+
+        SpliceSynchronizerButton.OnPressed += _ =>
+        {
+            if (_selectedGene != null)
+                OnSplicePressed?.Invoke(_selectedGene.Id, GeneticsChromosomeType.Synchronizer);
+        };
+
+        SpliceWeakenerButton.OnPressed += _ =>
+        {
+            if (_selectedGene != null)
+                OnSplicePressed?.Invoke(_selectedGene.Id, GeneticsChromosomeType.Weakener);
+        };
     }
 
     public void Populate(GeneticsConsoleBoundUserInterfaceState state)
@@ -58,8 +106,9 @@ public sealed partial class GeneticsConsoleWindow : FancyWindow
             : Loc.GetString("genetics-console-no-subject",
                 ("materials", state.ResearchMaterials));
 
-        GeneList.Children.Clear();
+        StorageStatusLabel.Text = state.StorageStatus;
 
+        GeneList.Children.Clear();
         foreach (var gene in state.Genes)
         {
             var button = new Button
@@ -73,6 +122,26 @@ public sealed partial class GeneticsConsoleWindow : FancyWindow
 
             button.OnPressed += _ => SelectGene(gene);
             GeneList.AddChild(button);
+        }
+
+        UpgradeList.Children.Clear();
+        foreach (var upgrade in state.Upgrades)
+        {
+            var button = new Button
+            {
+                Text = upgrade.Researched
+                    ? $"{upgrade.Name}  ✓"
+                    : $"{upgrade.Name} ({upgrade.ResearchCost})",
+                HorizontalExpand = true,
+                Disabled = upgrade.Researched || !upgrade.Available,
+            };
+
+            button.OnPressed += _ =>
+            {
+                if (!upgrade.Researched && upgrade.Available)
+                    OnResearchUpgradePressed?.Invoke(upgrade.Id);
+            };
+            UpgradeList.AddChild(button);
         }
 
         var selected = state.Genes.FirstOrDefault(gene => gene.Id == _selectedGene?.Id)
@@ -95,6 +164,13 @@ public sealed partial class GeneticsConsoleWindow : FancyWindow
             SequenceButton.Disabled = true;
             ActivateButton.Disabled = true;
             DeactivateButton.Disabled = true;
+            ActivatorButton.Disabled = true;
+            InjectorButton.Disabled = true;
+            StoreButton.Disabled = true;
+            ReclaimButton.Disabled = true;
+            SpliceStabilizerButton.Disabled = true;
+            SpliceSynchronizerButton.Disabled = true;
+            SpliceWeakenerButton.Disabled = true;
             return;
         }
 
@@ -105,18 +181,30 @@ public sealed partial class GeneticsConsoleWindow : FancyWindow
             ("correct", gene.CorrectPairCount),
             ("total", gene.TotalPairCount));
 
-        GeneStatusLabel.Text = gene.Active
+        var status = gene.Active
             ? Loc.GetString("genetics-console-gene-active")
             : gene.SequenceComplete
                 ? Loc.GetString("genetics-console-sequence-complete")
                 : Loc.GetString("genetics-console-sequence-incomplete");
 
+        if (!string.IsNullOrEmpty(gene.SplicedChromosome))
+            status += " | " + Loc.GetString("genetics-console-spliced-chromosome",
+                ("chromosome", Loc.GetString($"genetics-chromosome-{gene.SplicedChromosome.ToLowerInvariant()}")));
+
+        GeneStatusLabel.Text = status;
         ResearchButton.Text = Loc.GetString("genetics-console-research-button-cost", ("cost", gene.ResearchCost));
 
         var canOperate = state.HasSubject && state.SubjectAlive;
         ResearchButton.Disabled = !canOperate || gene.Researched || state.ResearchMaterials < gene.ResearchCost;
-        SequenceButton.Disabled = !canOperate || gene.SequenceComplete;
-        ActivateButton.Disabled = !canOperate || !gene.SequenceComplete || gene.Active;
+        SequenceButton.Disabled = !canOperate || !gene.Researched || gene.SequenceComplete;
+        ActivateButton.Disabled = !canOperate || !gene.Researched || !gene.SequenceComplete || gene.Active;
         DeactivateButton.Disabled = !canOperate || !gene.Active;
+        ActivatorButton.Disabled = !canOperate || !gene.CanCreateActivator;
+        InjectorButton.Disabled = !gene.CanCreateInjector;
+        StoreButton.Disabled = !gene.CanStore;
+        ReclaimButton.Disabled = !gene.CanReclaim;
+        SpliceStabilizerButton.Disabled = !gene.CanSpliceStabilizer;
+        SpliceSynchronizerButton.Disabled = !gene.CanSpliceSynchronizer;
+        SpliceWeakenerButton.Disabled = !gene.CanSpliceWeakener;
     }
 }

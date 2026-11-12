@@ -46,6 +46,74 @@ public sealed class GeneticsSetGeneActiveMessage : BoundUserInterfaceMessage
 }
 
 [Serializable, NetSerializable]
+public sealed class GeneticsResearchUpgradeMessage : BoundUserInterfaceMessage
+{
+    public readonly string UpgradeId;
+
+    public GeneticsResearchUpgradeMessage(string upgradeId)
+    {
+        UpgradeId = upgradeId;
+    }
+}
+
+[Serializable, NetSerializable]
+public sealed class GeneticsCreateActivatorMessage : BoundUserInterfaceMessage
+{
+    public readonly string GeneId;
+
+    public GeneticsCreateActivatorMessage(string geneId)
+    {
+        GeneId = geneId;
+    }
+}
+
+[Serializable, NetSerializable]
+public sealed class GeneticsCreateInjectorMessage : BoundUserInterfaceMessage
+{
+    public readonly string GeneId;
+
+    public GeneticsCreateInjectorMessage(string geneId)
+    {
+        GeneId = geneId;
+    }
+}
+
+[Serializable, NetSerializable]
+public sealed class GeneticsStoreGeneMessage : BoundUserInterfaceMessage
+{
+    public readonly string GeneId;
+
+    public GeneticsStoreGeneMessage(string geneId)
+    {
+        GeneId = geneId;
+    }
+}
+
+[Serializable, NetSerializable]
+public sealed class GeneticsReclaimGeneMessage : BoundUserInterfaceMessage
+{
+    public readonly string GeneId;
+
+    public GeneticsReclaimGeneMessage(string geneId)
+    {
+        GeneId = geneId;
+    }
+}
+
+[Serializable, NetSerializable]
+public sealed class GeneticsSpliceChromosomeMessage : BoundUserInterfaceMessage
+{
+    public readonly string GeneId;
+    public readonly GeneticsChromosomeType Chromosome;
+
+    public GeneticsSpliceChromosomeMessage(string geneId, GeneticsChromosomeType chromosome)
+    {
+        GeneId = geneId;
+        Chromosome = chromosome;
+    }
+}
+
+[Serializable, NetSerializable]
 public sealed class GeneticsConsoleGeneState
 {
     public readonly string Id;
@@ -58,6 +126,14 @@ public sealed class GeneticsConsoleGeneState
     public readonly int CorrectPairCount;
     public readonly int TotalPairCount;
     public readonly int ResearchCost;
+    public readonly bool CanCreateActivator;
+    public readonly bool CanCreateInjector;
+    public readonly bool CanStore;
+    public readonly bool CanReclaim;
+    public readonly bool CanSpliceStabilizer;
+    public readonly bool CanSpliceSynchronizer;
+    public readonly bool CanSpliceWeakener;
+    public readonly string SplicedChromosome;
 
     public GeneticsConsoleGeneState(
         string id,
@@ -69,7 +145,15 @@ public sealed class GeneticsConsoleGeneState
         string sequenceProgress,
         int correctPairCount,
         int totalPairCount,
-        int researchCost)
+        int researchCost,
+        bool canCreateActivator,
+        bool canCreateInjector,
+        bool canStore,
+        bool canReclaim,
+        bool canSpliceStabilizer,
+        bool canSpliceSynchronizer,
+        bool canSpliceWeakener,
+        string splicedChromosome)
     {
         Id = id;
         Name = name;
@@ -81,6 +165,41 @@ public sealed class GeneticsConsoleGeneState
         CorrectPairCount = correctPairCount;
         TotalPairCount = totalPairCount;
         ResearchCost = researchCost;
+        CanCreateActivator = canCreateActivator;
+        CanCreateInjector = canCreateInjector;
+        CanStore = canStore;
+        CanReclaim = canReclaim;
+        CanSpliceStabilizer = canSpliceStabilizer;
+        CanSpliceSynchronizer = canSpliceSynchronizer;
+        CanSpliceWeakener = canSpliceWeakener;
+        SplicedChromosome = splicedChromosome;
+    }
+}
+
+[Serializable, NetSerializable]
+public sealed class GeneticsConsoleUpgradeState
+{
+    public readonly string Id;
+    public readonly string Name;
+    public readonly string Description;
+    public readonly int ResearchCost;
+    public readonly bool Researched;
+    public readonly bool Available;
+
+    public GeneticsConsoleUpgradeState(
+        string id,
+        string name,
+        string description,
+        int researchCost,
+        bool researched,
+        bool available)
+    {
+        Id = id;
+        Name = name;
+        Description = description;
+        ResearchCost = researchCost;
+        Researched = researched;
+        Available = available;
     }
 }
 
@@ -93,6 +212,8 @@ public sealed class GeneticsConsoleBoundUserInterfaceState : BoundUserInterfaceS
     public readonly bool SubjectAlive;
     public readonly int Stability;
     public readonly List<GeneticsConsoleGeneState> Genes;
+    public readonly List<GeneticsConsoleUpgradeState> Upgrades;
+    public readonly string StorageStatus;
 
     public GeneticsConsoleBoundUserInterfaceState(
         int researchMaterials,
@@ -100,7 +221,9 @@ public sealed class GeneticsConsoleBoundUserInterfaceState : BoundUserInterfaceS
         string subjectName,
         bool subjectAlive,
         int stability,
-        List<GeneticsConsoleGeneState> genes)
+        List<GeneticsConsoleGeneState> genes,
+        List<GeneticsConsoleUpgradeState> upgrades,
+        string storageStatus)
     {
         ResearchMaterials = researchMaterials;
         HasSubject = hasSubject;
@@ -108,5 +231,7 @@ public sealed class GeneticsConsoleBoundUserInterfaceState : BoundUserInterfaceS
         SubjectAlive = subjectAlive;
         Stability = stability;
         Genes = genes;
+        Upgrades = upgrades;
+        StorageStatus = storageStatus;
     }
 }

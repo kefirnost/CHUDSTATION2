@@ -38,9 +38,15 @@ public sealed partial class GeneticsGenePrototype : IPrototype
     public int ResearchCost = 20;
 
     /// <summary>
-    /// Stability change for mutations introduced from outside the organism's potential.
+    /// Stability loss for mutations introduced from outside an organism's potential.
     /// Potential mutations do not change stability.
     /// </summary>
     [DataField]
     public int StabilityCost = 10;
+
+    /// <summary>
+    /// Research materials returned when this mutation is reclaimed.
+    /// </summary>
+    [DataField]
+    public int ReclaimReward = 10;
 }

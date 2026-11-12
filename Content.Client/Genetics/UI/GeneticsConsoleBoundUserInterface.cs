@@ -26,6 +26,14 @@ public sealed class GeneticsConsoleBoundUserInterface : BoundUserInterface
             SendMessage(new GeneticsSequenceGeneMessage(id, sequence));
         _window.OnActivationPressed += (id, active) =>
             SendMessage(new GeneticsSetGeneActiveMessage(id, active));
+        _window.OnResearchUpgradePressed += id =>
+            SendMessage(new GeneticsResearchUpgradeMessage(id));
+        _window.OnActivatorPressed += id => SendMessage(new GeneticsCreateActivatorMessage(id));
+        _window.OnInjectorPressed += id => SendMessage(new GeneticsCreateInjectorMessage(id));
+        _window.OnStorePressed += id => SendMessage(new GeneticsStoreGeneMessage(id));
+        _window.OnReclaimPressed += id => SendMessage(new GeneticsReclaimGeneMessage(id));
+        _window.OnSplicePressed += (id, chromosome) =>
+            SendMessage(new GeneticsSpliceChromosomeMessage(id, chromosome));
     }
 
     protected override void UpdateState(BoundUserInterfaceState state)
