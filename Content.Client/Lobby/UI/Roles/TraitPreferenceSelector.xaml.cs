@@ -26,6 +26,7 @@ public sealed partial class TraitPreferenceSelector : Control
         RobustXamlLoader.Load(this);
 
         Cost = trait.Cost;
+        IconPlaceholder.Text = Loc.GetString("humanoid-profile-editor-trait-icon-placeholder");
         var costText = trait.Cost.ToString("+0;-0;0", CultureInfo.InvariantCulture);
         TitleLabel.Text = $"{Loc.GetString(trait.Name)} ({costText})";
 
