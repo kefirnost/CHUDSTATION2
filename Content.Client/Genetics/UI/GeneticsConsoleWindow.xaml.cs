@@ -88,7 +88,7 @@ public sealed partial class GeneticsConsoleWindow : FancyWindow
         if (gene == null || state == null)
         {
             GeneNameLabel.Text = string.Empty;
-            GeneDescriptionLabel.SetMarkup(string.Empty);
+            GeneDescriptionLabel.Text = string.Empty;
             SequenceProgressLabel.Text = string.Empty;
             GeneStatusLabel.Text = string.Empty;
             ResearchButton.Disabled = true;
@@ -99,7 +99,7 @@ public sealed partial class GeneticsConsoleWindow : FancyWindow
         }
 
         GeneNameLabel.Text = gene.Name;
-        GeneDescriptionLabel.SetMarkup(gene.Description);
+        GeneDescriptionLabel.Text = gene.Description;
         SequenceProgressLabel.Text = Loc.GetString("genetics-console-sequence-progress",
             ("progress", gene.SequenceProgress),
             ("correct", gene.CorrectPairCount),
