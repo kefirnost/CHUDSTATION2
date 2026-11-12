@@ -54,3 +54,19 @@
   cost: 2
   components:
   - type: Vitality
+
+- type: trait
+  id: Hairy
+  name: trait-hairy-name
+  description: trait-hairy-desc
+  category: Quirks
+  cost: 1
+
+- type: trait
+  id: Shy
+  name: trait-shy-name
+  description: trait-shy-desc
+  category: Quirks
+  cost: 1
+  components:
+  - type: Shy
