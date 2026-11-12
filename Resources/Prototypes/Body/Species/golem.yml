@@ -1,0 +1,183 @@
+- type: markingsGroup
+  parent: None
+  id: Golem
+  onlyGroupWhitelisted: true
+  limits:
+    enum.HumanoidVisualLayers.Hair:
+      limit: 0
+      required: false
+    enum.HumanoidVisualLayers.FacialHair:
+      limit: 0
+      required: false
+    enum.HumanoidVisualLayers.Chest:
+      limit: 0
+      required: false
+    enum.HumanoidVisualLayers.Head:
+      limit: 0
+      required: false
+    enum.HumanoidVisualLayers.LArm:
+      limit: 0
+      required: false
+    enum.HumanoidVisualLayers.RArm:
+      limit: 0
+      required: false
+    enum.HumanoidVisualLayers.LLeg:
+      limit: 0
+      required: false
+    enum.HumanoidVisualLayers.RLeg:
+      limit: 0
+      required: false
+
+- type: entity
+  parent: BaseSpeciesAppearance
+  id: AppearanceGolem
+  categories: [ HideSpawnMenu ]
+  name: golem appearance
+  components:
+  - type: InitialBody
+    organs:
+      Torso: OrganGolemTorso
+      Head: OrganGolemHead
+      ArmLeft: OrganGolemArmLeft
+      ArmRight: OrganGolemArmRight
+      HandLeft: OrganGolemHandLeft
+      HandRight: OrganGolemHandRight
+      LegLeft: OrganGolemLegLeft
+      LegRight: OrganGolemLegRight
+      FootLeft: OrganGolemFootLeft
+      FootRight: OrganGolemFootRight
+  - type: HumanoidProfile
+    species: Golem
+
+- type: entity
+  parent:
+  - AppearanceGolem
+  - BaseSpeciesMobNoCrawl
+  id: MobGolem
+  name: golem
+  components:
+  - type: Damageable
+    damageModifierSet: Golem
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      100: Dead
+  - type: TransferMindOnGib
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
+      behaviors:
+      - !type:SpawnEntitiesBehavior
+        offset: 0.5
+        spawn:
+          AnomalyCoreGravity:
+            min: 1
+            max: 1
+          GolemStone:
+            min: 3
+            max: 5
+      - !type:GibBehavior
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 2.0
+    baseSprintSpeed: 2.0
+  - type: Speech
+    speechVerb: Skeleton
+  - type: Vocal
+    emoteSounds: MaleHuman
+  - type: ZombieImmune
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.35
+        density: 300
+        restitution: 0.0
+        mask:
+        - MobMask
+        layer:
+        - MobLayer
+
+- type: entity
+  parent: BaseItem
+  id: GolemStone
+  name: stone fragment
+  description: A fragment of the stone that made up a golem.
+  components:
+  - type: Sprite
+    sprite: Objects/Materials/ore.rsi
+    state: spacequartz
+  - type: Item
+    size: Small
+    sprite: Objects/Materials/ore.rsi
+  - type: Physics
+    bodyType: Dynamic
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.2
+        density: 20
+        mask:
+        - ItemMask
+        restitution: 0.3
+        friction: 0.2
+
+- type: entity
+  id: OrganGolemExternal
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: _chud/Mobs/Species/Golem/parts.rsi
+  - type: VisualOrgan
+    data:
+      sprite: _chud/Mobs/Species/Golem/parts.rsi
+  - type: VisualOrganMarkings
+    markingData:
+      group: Golem
+
+- type: entity
+  parent: [ OrganBaseTorso, OrganGolemExternal ]
+  id: OrganGolemTorso
+
+- type: entity
+  parent: [ OrganBaseHead, OrganGolemExternal ]
+  id: OrganGolemHead
+  components:
+  - type: Sprite
+    state: head
+
+- type: entity
+  parent: [ OrganBaseArmLeft, OrganGolemExternal ]
+  id: OrganGolemArmLeft
+
+- type: entity
+  parent: [ OrganBaseArmRight, OrganGolemExternal ]
+  id: OrganGolemArmRight
+
+- type: entity
+  parent: [ OrganBaseHandLeft, OrganGolemExternal ]
+  id: OrganGolemHandLeft
+
+- type: entity
+  parent: [ OrganBaseHandRight, OrganGolemExternal ]
+  id: OrganGolemHandRight
+
+- type: entity
+  parent: [ OrganBaseLegLeft, OrganGolemExternal ]
+  id: OrganGolemLegLeft
+
+- type: entity
+  parent: [ OrganBaseLegRight, OrganGolemExternal ]
+  id: OrganGolemLegRight
+
+- type: entity
+  parent: [ OrganBaseFootLeft, OrganGolemExternal ]
+  id: OrganGolemFootLeft
+
+- type: entity
+  parent: [ OrganBaseFootRight, OrganGolemExternal ]
+  id: OrganGolemFootRight
