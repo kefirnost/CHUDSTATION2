@@ -68,3 +68,14 @@ trait-impaired-mobility-desc = Вам тяжело передвигаться б
 
 trait-blink-dyspraxia-name = Асинхронное моргание
 trait-blink-dyspraxia-desc = Вашим векам не хватает гармонии. Чтобы моргнуть, требуется сознательное усилие, а порой глаза просто отказываются действовать синхронно.
+
+trait-category-accents = Акценты
+
+trait-athletic-name = Атлетичный
+trait-athletic-desc = Ваши удары без оружия наносят на 2 единицы дополнительного урона.
+
+trait-fast-legs-name = Быстрые ноги
+trait-fast-legs-desc = Ваша скорость ходьбы и бега увеличена на 20%.
+
+trait-vitality-name = Живучесть
+trait-vitality-desc = Порог получения смертельного состояния увеличен на 10 единиц урона.
