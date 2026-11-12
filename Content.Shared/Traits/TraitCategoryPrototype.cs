@@ -25,4 +25,11 @@ public sealed partial class TraitCategoryPrototype : IPrototype
     /// </summary>
     [DataField]
     public int? MaxTraitPoints;
+
+    /// <summary>
+    ///     The maximum number of traits that can be selected in this category.
+    ///     Null or a negative value means unlimited.
+    /// </summary>
+    [DataField]
+    public int? MaxTraits;
 }
