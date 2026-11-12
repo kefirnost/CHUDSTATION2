@@ -24,3 +24,33 @@
   category: Quirks
   components:
   - type: Snoring
+
+- type: trait
+  id: Athletic
+  name: trait-athletic-name
+  description: trait-athletic-desc
+  category: Quirks
+  cost: 2
+  components:
+  - type: BonusMeleeDamage
+    bonusDamage:
+      types:
+        Blunt: 2
+
+- type: trait
+  id: FastLegs
+  name: trait-fast-legs-name
+  description: trait-fast-legs-desc
+  category: Quirks
+  cost: 2
+  components:
+  - type: FastLegs
+
+- type: trait
+  id: Vitality
+  name: trait-vitality-name
+  description: trait-vitality-desc
+  category: Quirks
+  cost: 2
+  components:
+  - type: Vitality
