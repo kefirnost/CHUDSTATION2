@@ -138,6 +138,7 @@
   - type: VisualOrganMarkings
     markingData:
       group: Golem
+  - type: GibbableOrgan
 
 - type: entity
   parent: [ OrganBaseTorso, OrganGolemExternal ]
