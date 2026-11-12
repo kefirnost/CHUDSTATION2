@@ -10,5 +10,5 @@ public sealed partial class FastLegsComponent : Component
     /// Multiplier applied to both walking and sprinting speed.
     /// </summary>
     [DataField]
-    public float SpeedModifier = 1.2f;
+    public float SpeedModifier = 1.1f;
 }
