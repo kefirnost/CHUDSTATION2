@@ -61,13 +61,13 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      100: Dead
+      200: Dead
   - type: TransferMindOnGib
   - type: Destructible
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 100
+        damage: 200
       behaviors:
       - !type:SpawnEntitiesBehavior
         offset: 0.5
