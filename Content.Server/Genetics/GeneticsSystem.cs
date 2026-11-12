@@ -6,6 +6,7 @@ using Content.Shared.Access.Components;
 using Content.Shared.Access.Systems;
 using Content.Shared.Cloning.Events;
 using Content.Shared.Genetics;
+using Content.Shared.GameTicking.Events;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.StatusEffectNew;
 using Content.Shared.UserInterface;
@@ -42,6 +43,7 @@ public sealed class GeneticsSystem : EntitySystem
         SubscribeLocalEvent<GeneticsConsoleComponent, GeneticsSequenceGeneMessage>(OnSequenceGene);
         SubscribeLocalEvent<GeneticsConsoleComponent, GeneticsSetGeneActiveMessage>(OnSetGeneActive);
         SubscribeLocalEvent<GeneticsSubjectComponent, CloningEvent>(OnCloning);
+        SubscribeLocalEvent<RoundStartingEvent>(OnRoundStarting);
     }
 
     public override void Update(float frameTime)
@@ -82,6 +84,12 @@ public sealed class GeneticsSystem : EntitySystem
             subject.ActiveGenes.Clear();
             subject.Stability = 100;
         }
+    }
+
+    private void OnRoundStarting(RoundStartingEvent args)
+    {
+        _roundPotentialGenes.Clear();
+        _roundGenesGenerated = false;
     }
 
     private void OnUiOpened(EntityUid uid, GeneticsConsoleComponent component, AfterActivatableUIOpenEvent args)
