@@ -62,6 +62,7 @@
   name: trait-muted-name
   description: trait-muted-desc
   category: Disabilities
+  cost: 1
   blacklist:
     components:
       - BorgChassis
