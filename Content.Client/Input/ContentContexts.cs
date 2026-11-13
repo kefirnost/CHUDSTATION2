@@ -119,6 +119,7 @@ namespace Content.Client.Input
             human.AddFunction(ContentKeyFunctions.Sprint);
             human.AddFunction(ContentKeyFunctions.OpenEmotesMenu);
             human.AddFunction(ContentKeyFunctions.PissEmote);
+            human.AddFunction(ContentKeyFunctions.FartEmote);
 
             var ghost = contexts.New("ghost", "human");
             ghost.AddFunction(EngineKeyFunctions.MoveUp);

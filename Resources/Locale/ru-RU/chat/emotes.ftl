@@ -98,3 +98,12 @@ chat-emote-name-piss-floor = Ссать на пол
 chat-emote-msg-piss-floor = ссыт на пол.
 chat-emote-name-piss-container = Ссать в ёмкость
 chat-emote-msg-piss-container = ссыт в ёмкость в своей руке.
+
+# Fart emote
+chat-emote-name-fart = Пердеть
+chat-emote-msg-fart-kitchen = пердит, теперь тут пахнет как на кухне.
+chat-emote-msg-fart = пердит.
+chat-emote-msg-fart-gas = выпускает газ.
+chat-emote-msg-fart-wet = жидко дрищет.
+chat-emote-msg-fart-whisper = пускает шептуна.
+chat-emote-msg-fart-face = пердит в лицо { $target }.

@@ -42,6 +42,8 @@ public sealed partial class EmotesUIController : UIController, IOnStateChanged<G
                 InputCmdHandler.FromDelegate(_ => ToggleEmotesMenu(false)))
             .Bind(ContentKeyFunctions.PissEmote,
                 InputCmdHandler.FromDelegate(_ => EntityManager.RaisePredictiveEvent(new PlayEmoteMessage("Piss"))))
+            .Bind(ContentKeyFunctions.FartEmote,
+                InputCmdHandler.FromDelegate(_ => EntityManager.RaisePredictiveEvent(new PlayEmoteMessage("Fart"))))
             .Register<EmotesUIController>();
     }
 
