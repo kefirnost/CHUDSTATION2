@@ -1,10 +1,11 @@
-# If you add a new trait, make sure to add the corresponding component to the whitelist in \Resources\Prototypes\Entities\Mobs\Player\clone.yml so it gets copied to clones correctly!
+# If you add a new trait, make sure to add the corresponding component to the whitelist in \\Resources\\Prototypes\\Entities\\Mobs\\Player\\clone.yml so it gets copied to clones correctly!
 
 - type: trait
   id: Pacifist
   name: trait-pacifist-name
   description: trait-pacifist-desc
   category: Quirks
+  icon: /Textures/_chud/quirks/pacifism.png
   components:
   - type: Pacified
 
@@ -22,6 +23,7 @@
   name: trait-snoring-name
   description: trait-snoring-desc
   category: Quirks
+  icon: /Textures/_chud/quirks/sleepingshit.png
   components:
   - type: Snoring
 
@@ -51,6 +53,7 @@
   name: trait-vitality-name
   description: trait-vitality-desc
   category: Quirks
+  icon: /Textures/_chud/quirks/healthy.png
   cost: 2
   components:
   - type: Vitality
