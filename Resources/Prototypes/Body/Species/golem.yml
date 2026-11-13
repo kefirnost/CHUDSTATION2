@@ -34,6 +34,8 @@
   categories: [ HideSpawnMenu ]
   name: golem appearance
   components:
+  - type: Inventory
+    templateId: golem
   - type: InitialBody
     organs:
       Torso: OrganGolemTorso
