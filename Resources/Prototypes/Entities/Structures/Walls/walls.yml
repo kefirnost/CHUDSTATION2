@@ -58,6 +58,7 @@
   id: BaseWall
   components:
   - type: Occluder # Breaks on diagonal walls
+  - type: FoVOverlay # SS220 perspective-wall-fov
   - type: PlacementReplacement
     key: walls
   - type: StructureAlignerPylon

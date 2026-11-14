@@ -114,6 +114,9 @@ namespace Content.Shared.DrawDepth
         /// </summary>
         Overdoors = DrawDepthTag.Default + 10,
 
+        // Extends the field-of-view mask to the center of opaque walls.
+        WallFovOverlay = DrawDepthTag.Default + 11,
+
         // NOTE: There's a gap here for subfloor layers in mapping mode (need 6 layers in between)
 
         /// <summary>
