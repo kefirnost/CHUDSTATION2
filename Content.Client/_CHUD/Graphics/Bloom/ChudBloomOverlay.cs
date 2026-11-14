@@ -26,6 +26,11 @@ internal sealed partial class ChudBloomOverlay : Overlay
     private const float SoftKnee = 0.05f;
     internal const int TargetPadding = 18;
 
+    // Keep the per-source occlusion renderer bounded on busy station views.
+    private const int MaxBloomVisibleSprites = 160;
+    private const int MaxBloomSpriteSources = 12;
+    private const int MaxBloomTileSources = 32;
+
     private static readonly ProtoId<ShaderPrototype> ExtractShader = "ChudBloomExtract";
     private static readonly ProtoId<ShaderPrototype> BlurShader = "ChudBloomBlur";
     private static readonly ProtoId<ShaderPrototype> DownsampleShader = "ChudBloomDownsample";
@@ -100,25 +105,28 @@ internal sealed partial class ChudBloomOverlay : Overlay
         var bounds = args.WorldAABB.Enlarged(3f);
         _spriteTree.QueryAabb(_sprites, args.MapId, bounds);
         _lookup.GetEntitiesIntersecting(args.MapId, bounds, _tiles, LookupFlags.Uncontained);
+        _tiles.RemoveWhere(static source => source.Comp.Deleted || source.Comp.Color.A <= 0f);
+        if (_tiles.Count > MaxBloomTileSources)
+            return false;
+
         var visibleCount = 0;
+        var emissiveCount = 0;
         for (var i = 0; i < _sprites.Count; i++)
         {
             var sprite = _sprites[i];
-            if (CanDrawSprite(sprite))
-                _sprites[visibleCount++] = sprite;
+            if (!CanDrawSprite(sprite))
+                continue;
+
+            if (visibleCount >= MaxBloomVisibleSprites)
+                return false;
+
+            _sprites[visibleCount++] = sprite;
+            if (HasBloomLayer(sprite.Comp1) && ++emissiveCount > MaxBloomSpriteSources)
+                return false;
         }
+
         _sprites.RemoveRange(visibleCount, _sprites.Count - visibleCount);
-        _tiles.RemoveWhere(static source => source.Comp.Deleted || source.Comp.Color.A <= 0f);
-        if (_tiles.Count != 0)
-            return true;
-
-        foreach (var sprite in _sprites)
-        {
-            if (HasBloomLayer(sprite.Comp1))
-                return true;
-        }
-
-        return false;
+        return _tiles.Count != 0 || emissiveCount != 0;
     }
 
     protected override void Draw(in OverlayDrawArgs args)
@@ -141,6 +149,9 @@ internal sealed partial class ChudBloomOverlay : Overlay
         var worldToTarget = GetWorldToTargetMatrix(viewport.GetWorldToLocalMatrix(), viewport.Size, contentSize, padding);
 
         PrepareSprites(eye, worldToTarget, targetSize, padding);
+        // Build the wall list once per viewport frame, not once for each render-target pass and atlas batch.
+        if (eye.DrawFov && (_tiles.Count != 0 || _sourceIndices.Count != 0))
+            _wallFoV.PrepareBloomOcclusion(args.MapId, args.WorldAABB.Enlarged(3f));
         var localSize = Vector2i.One;
         foreach (var index in _sourceIndices)
         {
@@ -157,7 +168,7 @@ internal sealed partial class ChudBloomOverlay : Overlay
                 _batch.Clear();
                 _blockerIndices.Clear();
                 AddBatchEntry(-1, worldToTarget, Vector2i.Zero, targetSize);
-                DrawBatch(args.RenderHandle, tiles, eye, pixelsPerMeter, divisor, Vector2i.One, args.MapId, args.WorldAABB.Enlarged(3f));
+                DrawBatch(args.RenderHandle, tiles, eye, pixelsPerMeter, divisor, Vector2i.One);
             }
 
             if (_sourceIndices.Count == 0)
@@ -195,7 +206,7 @@ internal sealed partial class ChudBloomOverlay : Overlay
                     AddBatchEntry(index, matrix, atlasOrigin, localSize);
                 }
 
-                DrawBatch(args.RenderHandle, resources, eye, pixelsPerMeter, divisor, atlasGrid, args.MapId, args.WorldAABB.Enlarged(3f));
+                DrawBatch(args.RenderHandle, resources, eye, pixelsPerMeter, divisor, atlasGrid);
             }
         }
         finally
@@ -211,9 +222,7 @@ internal sealed partial class ChudBloomOverlay : Overlay
         IEye eye,
         Vector2 pixelsPerMeter,
         int divisor,
-        Vector2i atlasGrid,
-        MapId mapId,
-        Box2 worldBounds)
+        Vector2i atlasGrid)
     {
         var handle = render.DrawingHandleWorld;
         var screen = render.DrawingHandleScreen;
@@ -226,12 +235,12 @@ internal sealed partial class ChudBloomOverlay : Overlay
         // Маска пропускания хранится в полном разрешении: края предметов не размываются вместе с ореолом.
         handle.RenderInRenderTarget(occlusion, () =>
         {
-            DrawBatchLayers(render, eye, divisor, false, mapId, worldBounds);
+            DrawBatchLayers(render, eye, divisor, false);
         }, Color.White);
 
         handle.RenderInRenderTarget(source, () =>
         {
-            DrawBatchLayers(render, eye, divisor, true, mapId, worldBounds);
+            DrawBatchLayers(render, eye, divisor, true);
         }, Color.Black);
 
         // Закрытая часть источника не создаёт ореол; после размытия маска применяется ещё раз.
