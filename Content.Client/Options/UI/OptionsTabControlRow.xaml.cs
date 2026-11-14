@@ -53,6 +53,12 @@ public sealed partial class OptionsTabControlRow : Control
 
     private ValueList<BaseOption> _options;
 
+    /// <summary>
+    /// Raised after option controls are loaded from their backing values or reset to defaults.
+    /// Tabs can use this to refresh previews that are not directly backed by an option control.
+    /// </summary>
+    public event Action? ValuesReset;
+
     public OptionsTabControlRow()
     {
         RobustXamlLoader.Load(this);
@@ -186,6 +192,7 @@ public sealed partial class OptionsTabControlRow : Control
         }
 
         UpdateButtonState();
+        ValuesReset?.Invoke();
     }
 
     /// <summary>
@@ -239,6 +246,7 @@ public sealed partial class OptionsTabControlRow : Control
         }
 
         UpdateButtonState();
+        ValuesReset?.Invoke();
     }
 
     private void DefaultButtonPressed(BaseButton.ButtonEventArgs obj)
@@ -249,6 +257,7 @@ public sealed partial class OptionsTabControlRow : Control
         }
 
         UpdateButtonState();
+        ValuesReset?.Invoke();
     }
 
     private string FormatPercent(OptionSliderFloatCVar slider, float value)
