@@ -41,10 +41,10 @@ public sealed partial class ExaminableCharacterSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<ExaminedEvent>(HandleExamine);
+        SubscribeLocalEvent<MetaDataComponent, ExaminedEvent>(HandleExamine);
     }
 
-    private void HandleExamine(ExaminedEvent args)
+    private void HandleExamine(EntityUid uid, MetaDataComponent metadata, ExaminedEvent args)
     {
         var uid = args.Examined;
         if (!HasComp<HumanoidProfileComponent>(uid))
