@@ -64,15 +64,12 @@ internal sealed partial class ChudBloomOverlay
                 _blockerIndices.Add(i);
         }
         _batch.Add(new BloomBatchEntry(sourceIndex, matrix, inverse, region,
-            blockerStart, _blockerIndices.Count - blockerStart));
+            blockerStart, _blockerIndices.Count - blockerStart, worldBounds));
     }
 
-    private void DrawBatchLayers(IRenderHandle render, IEye eye, int divisor, bool emissive, MapId mapId, Box2 worldBounds)
+    private void DrawBatchLayers(IRenderHandle render, IEye eye, int divisor, bool emissive)
     {
         var handle = render.DrawingHandleWorld;
-
-        if (eye.DrawFov)
-            _wallFoV.PrepareBloomOcclusion(mapId, worldBounds);
 
         try
         {
@@ -95,7 +92,7 @@ internal sealed partial class ChudBloomOverlay
 
                 // Apply the exact wall/airlock FOV corners before blur and again to the final occlusion mask.
                 if (eye.DrawFov)
-                    _wallFoV.DrawBloomOcclusion(handle, eye, matrix);
+                    _wallFoV.DrawBloomOcclusion(handle, eye, matrix, entry.WorldBounds);
             }
         }
         finally
@@ -110,5 +107,6 @@ internal sealed partial class ChudBloomOverlay
         Matrix3x2 TargetToWorld,
         UIBox2i Region,
         int BlockerStart,
-        int BlockerCount);
+        int BlockerCount,
+        Box2 WorldBounds);
 }
