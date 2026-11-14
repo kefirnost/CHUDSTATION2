@@ -22,11 +22,12 @@ namespace Content.Client.Power.APC.UI
             RobustXamlLoader.Load(this);
 
             BreakerButton.OnPressed += _ => OnBreaker?.Invoke();
+            AppendStyleClass("Apc"); // WWDP EDIT
         }
 
         public void SetEntity(EntityUid entity)
         {
-            EntityView.SetEntity(entity);
+            // The redesigned APC panel does not display the entity sprite. // WWDP EDIT
         }
 
         public void UpdateState(BoundUserInterfaceState state)
@@ -53,15 +54,15 @@ namespace Content.Client.Power.APC.UI
                 {
                     case ApcExternalPowerState.None:
                         ExternalPowerStateLabel.Text = Loc.GetString("apc-menu-power-state-none");
-                        ExternalPowerStateLabel.SetOnlyStyleClass("negative");
+                        // Style is provided by the APC stylesheet. // WWDP EDIT
                         break;
                     case ApcExternalPowerState.Low:
                         ExternalPowerStateLabel.Text = Loc.GetString("apc-menu-power-state-low");
-                        ExternalPowerStateLabel.SetOnlyStyleClass("highlight");
+                        // Style is provided by the APC stylesheet. // WWDP EDIT
                         break;
                     case ApcExternalPowerState.Good:
                         ExternalPowerStateLabel.Text = Loc.GetString("apc-menu-power-state-good");
-                        ExternalPowerStateLabel.SetOnlyStyleClass("positive");
+                        // Style is provided by the APC stylesheet. // WWDP EDIT
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -71,7 +72,7 @@ namespace Content.Client.Power.APC.UI
             if (ChargeBar != null)
             {
                 ChargeBar.Value = castState.Charge;
-                UpdateChargeBarColor(castState.Charge);
+                // Charge bar colours are defined by the APC stylesheet. // WWDP EDIT
                 var chargePercentage = (castState.Charge / ChargeBar.MaxValue);
                 ChargePercentage.Text = Loc.GetString("apc-menu-charge-label",("percent",  chargePercentage.ToString("P0")));
             }

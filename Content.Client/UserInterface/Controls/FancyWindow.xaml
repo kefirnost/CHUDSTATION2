@@ -3,11 +3,11 @@
                       xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
                       MouseFilter="Stop"
                       MinWidth="200" MinHeight="150">
-    <PanelContainer StyleClasses="BackgroundPanel" />
+    <PanelContainer StyleClasses="BackgroundPanel AngleRect" Name="WindowsPanelBackground" />
 
     <BoxContainer Orientation="Vertical">
         <Control>
-            <PanelContainer StyleClasses="WindowHeadingBackground" Name="WindowHeader" />
+            <PanelContainer StyleClasses="WindowHeadingBackground" Name="WindowsHeadingBackground" />
             <BoxContainer Margin="4 2 4 0" Orientation="Horizontal">
                 <Label Name="WindowTitle"
                        HorizontalExpand="True" VAlign="Center" StyleClasses="FancyWindowTitle" ClipText="true" />

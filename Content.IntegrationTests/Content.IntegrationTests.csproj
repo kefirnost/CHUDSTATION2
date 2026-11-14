@@ -15,6 +15,9 @@
     <ProjectReference Include="..\Content.Server\Content.Server.csproj" />
     <ProjectReference Include="..\Content.Shared\Content.Shared.csproj" />
     <ProjectReference Include="..\Content.Tests\Content.Tests.csproj" />
+    <ProjectReference Include="..\StyleSheetify\Content.StyleSheetify.Client\Content.StyleSheetify.Client.csproj" />
+    <ProjectReference Include="..\StyleSheetify\Content.StyleSheetify.Server\Content.StyleSheetify.Server.csproj" />
+    <ProjectReference Include="..\StyleSheetify\Content.StyleSheetify.Shared\Content.StyleSheetify.Shared.csproj" />
   </ItemGroup>
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
   <Import Project="..\RobustToolbox\MSBuild\Robust.CompNetworkGenerator.targets" />
