@@ -13,6 +13,8 @@ public sealed partial class ChudGrainOverlay : Overlay
 {
     private static readonly ProtoId<ShaderPrototype> ChudGrainShader = "ChudGrain";
 
+    private static readonly ProtoId<ShaderPrototype> ChudGrainShader = "ChudGrain";
+
     [Dependency] private IConfigurationManager _cfg = default!;
     [Dependency] private IPrototypeManager _prototype = default!;
 
