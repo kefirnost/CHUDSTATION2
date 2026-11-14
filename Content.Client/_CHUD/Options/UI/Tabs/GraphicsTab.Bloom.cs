@@ -13,7 +13,7 @@ public sealed partial class GraphicsTab
     private void InitializeChudBloomOptions()
     {
         var enabled = Control.AddOptionCheckBox(ChudBloomCVars.Enabled, ChudBloomEnabledCheckBox);
-        var strength = Control.AddOptionPercentSlider(ChudBloomCVars.Strength, ChudBloomStrengthSlider);
+        var strength = Control.AddOptionPercentSlider(ChudBloomCVars.Strength, ChudBloomStrengthSlider, max: 10f);
         var quality = Control.AddOptionDropDown(
             ChudBloomCVars.Quality,
             ChudBloomQualityDropDown,
