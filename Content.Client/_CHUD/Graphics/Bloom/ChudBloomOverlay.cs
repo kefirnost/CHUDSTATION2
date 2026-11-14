@@ -1,5 +1,6 @@
 using System.Numerics;
 using Content.Client.Graphics;
+using Content.Client.Wall;
 using Content.Shared._CHUD.Graphics;
 using Content.Shared.Light.Components;
 using Content.Shared.Stealth.Components;
@@ -38,6 +39,7 @@ internal sealed partial class ChudBloomOverlay : Overlay
     private readonly SharedMapSystem _map;
     private readonly SpriteSystem _sprite;
     private readonly SpriteTreeSystem _spriteTree;
+    private readonly CustomFoVSystem _wallFoV;
     private readonly EntityQuery<TransformComponent> _transformQuery;
     private readonly EntityQuery<MapGridComponent> _gridQuery;
     private readonly EntityQuery<StealthComponent> _stealthQuery;
@@ -71,6 +73,7 @@ internal sealed partial class ChudBloomOverlay : Overlay
         _map = entityManager.System<SharedMapSystem>();
         _sprite = entityManager.System<SpriteSystem>();
         _spriteTree = entityManager.System<SpriteTreeSystem>();
+        _wallFoV = entityManager.System<CustomFoVSystem>();
         _transformQuery = entityManager.GetEntityQuery<TransformComponent>();
         _gridQuery = entityManager.GetEntityQuery<MapGridComponent>();
         _stealthQuery = entityManager.GetEntityQuery<StealthComponent>();
@@ -154,7 +157,7 @@ internal sealed partial class ChudBloomOverlay : Overlay
                 _batch.Clear();
                 _blockerIndices.Clear();
                 AddBatchEntry(-1, worldToTarget, Vector2i.Zero, targetSize);
-                DrawBatch(args.RenderHandle, tiles, eye, pixelsPerMeter, divisor, Vector2i.One);
+                DrawBatch(args.RenderHandle, tiles, eye, pixelsPerMeter, divisor, Vector2i.One, args.MapId, args.WorldAABB.Enlarged(3f));
             }
 
             if (_sourceIndices.Count == 0)
@@ -192,7 +195,7 @@ internal sealed partial class ChudBloomOverlay : Overlay
                     AddBatchEntry(index, matrix, atlasOrigin, localSize);
                 }
 
-                DrawBatch(args.RenderHandle, resources, eye, pixelsPerMeter, divisor, atlasGrid);
+                DrawBatch(args.RenderHandle, resources, eye, pixelsPerMeter, divisor, atlasGrid, args.MapId, args.WorldAABB.Enlarged(3f));
             }
         }
         finally
@@ -208,7 +211,9 @@ internal sealed partial class ChudBloomOverlay : Overlay
         IEye eye,
         Vector2 pixelsPerMeter,
         int divisor,
-        Vector2i atlasGrid)
+        Vector2i atlasGrid,
+        MapId mapId,
+        Box2 worldBounds)
     {
         var handle = render.DrawingHandleWorld;
         var screen = render.DrawingHandleScreen;
@@ -221,12 +226,12 @@ internal sealed partial class ChudBloomOverlay : Overlay
         // Маска пропускания хранится в полном разрешении: края предметов не размываются вместе с ореолом.
         handle.RenderInRenderTarget(occlusion, () =>
         {
-            DrawBatchLayers(render, eye, divisor, false);
+            DrawBatchLayers(render, eye, divisor, false, mapId, worldBounds);
         }, Color.White);
 
         handle.RenderInRenderTarget(source, () =>
         {
-            DrawBatchLayers(render, eye, divisor, true);
+            DrawBatchLayers(render, eye, divisor, true, mapId, worldBounds);
         }, Color.Black);
 
         // Закрытая часть источника не создаёт ореол; после размытия маска применяется ещё раз.
