@@ -71,6 +71,13 @@
     cost: 2
     delay: 2
     fx: EffectRCDDeconstruct2
+  - type: InteractionVerbs
+    allowedVerbs:
+    - KnockOn
+    - HugObject
+    - PetObject
+    - KissObject
+    - Rattle
 
 - type: entity
   parent: BaseFenceMetal
@@ -99,11 +106,6 @@
         - FullTileMask
         layer:
         - TableLayer
-  - type: InteractionPopup
-    interactSuccessString: fence-rattle-success
-    messagePerceivedByOthers: fence-rattle-success
-    interactSuccessSound:
-      collection: FenceRattle
   - type: Construction
     graph: FenceMetal
     node: broken
@@ -136,11 +138,6 @@
         layer:
         - MidImpassable
         - LowImpassable
-  - type: InteractionPopup
-    interactSuccessString: fence-rattle-success
-    messagePerceivedByOthers: fence-rattle-success
-    interactSuccessSound:
-      collection: FenceRattle
   - type: Destructible
     thresholds:
     - trigger: *DamageBarrierNormal
@@ -186,11 +183,6 @@
         layer:
         - MidImpassable
         - LowImpassable
-  - type: InteractionPopup
-    interactSuccessString: fence-rattle-success
-    messagePerceivedByOthers: fence-rattle-success
-    interactSuccessSound:
-      collection: FenceRattle
   - type: Construction
     graph: FenceMetal
     node: corner
@@ -223,11 +215,6 @@
         layer:
         - MidImpassable
         - LowImpassable
-  - type: InteractionPopup
-    interactSuccessString: fence-rattle-success
-    messagePerceivedByOthers: fence-rattle-success
-    interactSuccessSound:
-      collection: FenceRattle
   - type: Construction
     graph: FenceMetal
     node: end
