@@ -44,9 +44,8 @@ public sealed partial class ExaminableCharacterSystem : EntitySystem
         SubscribeLocalEvent<MetaDataComponent, ExaminedEvent>(HandleExamine);
     }
 
-    private void HandleExamine(EntityUid uid, MetaDataComponent metadata, ExaminedEvent args)
+    private void HandleExamine(EntityUid uid, MetaDataComponent component, ExaminedEvent args)
     {
-        var uid = args.Examined;
         if (!HasComp<HumanoidProfileComponent>(uid))
             return;
 
