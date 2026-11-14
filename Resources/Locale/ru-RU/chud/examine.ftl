@@ -4,7 +4,7 @@ chud-examine-header-self = На вас надето:
 chud-examine-empty = На персонаже нет видимого снаряжения.
 chud-examine-empty-self = На вас нет видимого снаряжения.
 chud-examine-item = - { $slot }: [bold]{ $item }[/bold]
-chud-examine-item-self = - [bold]{ $item }[/bold] на вашем месте «{ $slot }».
+chud-examine-item-self = - На вас: [bold]{ $item }[/bold].
 
 chud-examine-slot-head = голове
 chud-examine-slot-eyes = глазах
