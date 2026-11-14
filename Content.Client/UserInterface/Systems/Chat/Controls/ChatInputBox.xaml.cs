@@ -8,6 +8,7 @@ namespace Content.Client.UserInterface.Systems.Chat.Controls;
 public class ChatInputBox : PanelContainer
 {
     public const string StyleClassChatPanel = "ChatPanel";
+    public const string StyleClassChatSubPanel = "ChatSubPanel";
     public const string StyleClassChatLineEdit = "ChatLineEdit";
     public const string StyleClassChatFilterOptionButton = "ChatFilterOptionButton";
 
@@ -48,7 +49,7 @@ public class ChatInputBox : PanelContainer
             StyleClasses = { StyleClassChatFilterOptionButton }
         };
         Container.AddChild(FilterButton);
-        AddStyleClass(StyleClassChatPanel);
+        AddStyleClass(StyleClassChatSubPanel);
         ChannelSelector.OnChannelSelect += UpdateActiveChannel;
     }
 
