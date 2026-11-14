@@ -29,11 +29,7 @@ public sealed partial class EntityWhitelistRequirement : InteractionRequirement
     {
         var whitelistSystem = IoCManager.Resolve<IEntityManager>().System<EntityWhitelistSystem>();
 
-        if (whitelistSystem.IsWhitelistFail(Whitelist, args.Target) ||
-            whitelistSystem.IsBlacklistPass(Blacklist, args.Target))
-            return false;
-
-        return true;
+        return whitelistSystem.CheckBoth(args.Target, Blacklist, Whitelist);
     }
 }
 
