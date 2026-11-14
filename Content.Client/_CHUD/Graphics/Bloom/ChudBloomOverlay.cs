@@ -26,11 +26,6 @@ internal sealed partial class ChudBloomOverlay : Overlay
     private const float SoftKnee = 0.05f;
     internal const int TargetPadding = 18;
 
-    // Keep the per-source occlusion renderer bounded on busy station views.
-    private const int MaxBloomVisibleSprites = 160;
-    private const int MaxBloomSpriteSources = 12;
-    private const int MaxBloomTileSources = 32;
-
     private static readonly ProtoId<ShaderPrototype> ExtractShader = "ChudBloomExtract";
     private static readonly ProtoId<ShaderPrototype> BlurShader = "ChudBloomBlur";
     private static readonly ProtoId<ShaderPrototype> DownsampleShader = "ChudBloomDownsample";
@@ -131,15 +126,10 @@ internal sealed partial class ChudBloomOverlay : Overlay
         _occluderCandidates.Sort(CompareUid);
         _sprites.Clear();
 
-        var sourceCount = Math.Min(MaxBloomSpriteSources, _emissiveCandidates.Count);
-        for (var i = 0; i < sourceCount; i++)
-            _sprites.Add(_emissiveCandidates[i]);
+        _sprites.AddRange(_emissiveCandidates);
+        _sprites.AddRange(_occluderCandidates);
 
-        var occluderCount = Math.Min(MaxBloomVisibleSprites - sourceCount, _occluderCandidates.Count);
-        for (var i = 0; i < occluderCount; i++)
-            _sprites.Add(_occluderCandidates[i]);
-
-        return _tiles.Count != 0 || sourceCount != 0;
+        return _tiles.Count != 0 || _emissiveCandidates.Count != 0;
     }
 
     protected override void Draw(in OverlayDrawArgs args)
@@ -457,8 +447,7 @@ internal sealed partial class ChudBloomOverlay : Overlay
         if (!float.IsFinite(strength) || strength <= 0f)
             return 0f;
 
-        var value = Math.Clamp(strength, 0f, 1f);
-        return value * (2.5f + 2.5f * value);
+        return strength * (2.5f + 2.5f * strength);
     }
 
     internal static int GetResolutionDivisor(ChudBloomQuality quality)
@@ -502,20 +491,18 @@ internal sealed partial class ChudBloomOverlay : Overlay
     internal static float CalculateBlurRadius(ChudBloomQuality quality, float pixelsPerMeter)
     {
         // Качество меняет разрешение маски, но не мировой радиус ореола.
-        return Math.Clamp(0.22f * pixelsPerMeter, 0.5f, 16f);
+        return float.IsFinite(pixelsPerMeter) && pixelsPerMeter > 0f
+            ? 0.22f * pixelsPerMeter
+            : 0f;
     }
 
     private void DrawTileEmission(DrawingHandleWorld handle, Matrix3x2 worldToTarget)
     {
-        var drawn = 0;
         foreach (var source in _tiles)
         {
             if (!_transformQuery.TryComp(source, out var xform) ||
                 xform.GridUid is not { } gridUid || !_gridQuery.TryComp(gridUid, out var grid))
                 continue;
-
-            if (drawn >= MaxBloomTileSources)
-                break;
 
             var tile = _map.LocalToTile(gridUid, grid, xform.Coordinates);
             var matrix = _transform.GetWorldMatrix(gridUid);
@@ -523,7 +510,6 @@ internal sealed partial class ChudBloomOverlay : Overlay
             handle.SetTransform(matrix * worldToTarget);
             handle.UseShader(_extract);
             handle.DrawRect(_lookup.GetLocalBounds(tile, grid.TileSize), source.Comp.Color);
-            drawn++;
         }
     }
 
