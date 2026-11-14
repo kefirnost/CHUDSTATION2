@@ -48,8 +48,8 @@ public sealed class CombatModeIndicatorsOverlay : Overlay
             "gun_sight"));
         _gunBoltSight = spriteSys.Frame0(new SpriteSpecifier.Rsi(new ResPath("/Textures/Interface/Misc/crosshair_pointers.rsi"),
             "gun_bolt_sight"));
-        _meleeSight = spriteSys.Frame0(new SpriteSpecifier.Rsi(new ResPath("/Textures/Interface/Misc/crosshair_pointers.rsi"),
-             "melee_sight"));
+        _meleeSight = spriteSys.Frame0(new SpriteSpecifier.Rsi(new ResPath("/Textures/_ES/Effects/crosshair.rsi"),
+             "melee"));
     }
 
     protected override bool BeforeDraw(in OverlayDrawArgs args)
@@ -78,8 +78,22 @@ public sealed class CombatModeIndicatorsOverlay : Overlay
         var uiScale = (args.ViewportControl as Control)?.UIScale ?? 1f;
         var limitedScale = uiScale > 1.25f ? 1.25f : uiScale;
 
-        var sight = isHandGunItem ? (isGunBolted ? _gunSight : _gunBoltSight) : _meleeSight;
-        DrawSight(sight, args.ScreenHandle, mousePos, limitedScale * Scale);
+        if (isHandGunItem)
+        {
+            var gunSight = isGunBolted ? _gunSight : _gunBoltSight;
+            DrawSight(gunSight, args.ScreenHandle, mousePos, limitedScale * Scale);
+        }
+        else
+        {
+            DrawMeleeSight(_meleeSight, args.ScreenHandle, mousePos, limitedScale * 2f);
+        }
+    }
+
+    private void DrawMeleeSight(Texture sight, DrawingHandleScreen screen, Vector2 centerPos, float scale)
+    {
+        var sightSize = sight.Size * scale;
+        screen.SetTransform(Matrix3x2.Identity);
+        screen.DrawTextureRect(sight, UIBox2.FromDimensions(centerPos - sightSize * 0.5f, sightSize));
     }
 
     private void DrawSight(Texture sight, DrawingHandleScreen screen, Vector2 centerPos, float scale)

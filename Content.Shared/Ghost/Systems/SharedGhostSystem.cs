@@ -1,5 +1,6 @@
 using Content.Shared.Administration.Managers;
 using Content.Shared.Chat;
+using Content.Shared._EE.InteractionVerbs.Events;
 using Content.Shared.Emoting;
 using Content.Shared.Examine;
 using Content.Shared.Follower;
@@ -34,6 +35,7 @@ public abstract partial class SharedGhostSystem : EntitySystem
         SubscribeLocalEvent<GhostComponent, EmoteAttemptEvent>(OnAttempt);
         SubscribeLocalEvent<GhostComponent, DropAttemptEvent>(OnAttempt);
         SubscribeLocalEvent<GhostComponent, PickupAttemptEvent>(OnAttempt);
+        SubscribeLocalEvent<GhostComponent, InteractionVerbAttemptEvent>(OnAttempt);
         SubscribeLocalEvent<GhostComponent, ExaminedEvent>(OnGhostExamine);
     }
 

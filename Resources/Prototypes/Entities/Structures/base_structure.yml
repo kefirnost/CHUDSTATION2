@@ -23,6 +23,12 @@
         - MidImpassable
         - LowImpassable
   - type: Pullable
+  - type: InteractionVerbs
+    allowedVerbs:
+    - KnockOn
+    - HugObject
+    - PetObject
+    - KissObject
   - type: Tag
     tags:
       - Structure

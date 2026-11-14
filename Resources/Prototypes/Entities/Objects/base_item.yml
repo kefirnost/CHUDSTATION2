@@ -46,6 +46,11 @@
   - type: DamageExaminable
   - type: Rotatable
     increment: 30
+  - type: InteractionVerbs
+    allowedVerbs:
+    - HugObject
+    - PetObject
+    - KissObject
 
 - type: entity
   abstract: true
