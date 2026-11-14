@@ -9,8 +9,10 @@ namespace Content.Client._CHUD.Graphics.Grain;
 /// <summary>
 /// Applies film grain to the world view.
 /// </summary>
-public sealed class ChudGrainOverlay : Overlay
+public sealed partial class ChudGrainOverlay : Overlay
 {
+    private static readonly ProtoId<ShaderPrototype> ChudGrainShader = "ChudGrain";
+
     [Dependency] private IConfigurationManager _cfg = default!;
     [Dependency] private IPrototypeManager _prototype = default!;
 
@@ -19,7 +21,7 @@ public sealed class ChudGrainOverlay : Overlay
     public ChudGrainOverlay()
     {
         IoCManager.InjectDependencies(this);
-        _shader = _prototype.Index<ShaderPrototype>("ChudGrain").InstanceUnique();
+        _shader = _prototype.Index(ChudGrainShader).InstanceUnique();
     }
 
     public override OverlaySpace Space => OverlaySpace.WorldSpace;
