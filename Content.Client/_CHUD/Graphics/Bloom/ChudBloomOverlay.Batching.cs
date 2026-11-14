@@ -1,6 +1,7 @@
 using System.Numerics;
 using Robust.Client.Graphics;
 using Robust.Shared.Graphics;
+using Robust.Shared.Map;
 
 namespace Content.Client._CHUD.Graphics.Bloom;
 
@@ -66,9 +67,13 @@ internal sealed partial class ChudBloomOverlay
             blockerStart, _blockerIndices.Count - blockerStart));
     }
 
-    private void DrawBatchLayers(IRenderHandle render, IEye eye, int divisor, bool emissive)
+    private void DrawBatchLayers(IRenderHandle render, IEye eye, int divisor, bool emissive, MapId mapId, Box2 worldBounds)
     {
         var handle = render.DrawingHandleWorld;
+
+        if (eye.DrawFov)
+            _wallFoV.PrepareBloomOcclusion(mapId, worldBounds);
+
         try
         {
             foreach (var entry in _batch)
@@ -87,6 +92,10 @@ internal sealed partial class ChudBloomOverlay
                 }
 
                 DrawOccluders(handle, eye.Rotation, matrix, entry.BlockerStart, entry.BlockerCount);
+
+                // Apply the exact wall/airlock FOV corners before blur and again to the final occlusion mask.
+                if (eye.DrawFov)
+                    _wallFoV.DrawBloomOcclusion(handle, eye, matrix);
             }
         }
         finally
