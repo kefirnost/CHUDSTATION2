@@ -14,7 +14,7 @@ public static class ChudBloomCVars
 
     /// <summary>Enables the client bloom overlay.</summary>
     public static readonly CVarDef<bool> Enabled =
-        CVarDef.Create("chud.bloom_enabled", false, CVar.CLIENTONLY | CVar.ARCHIVE);
+        CVarDef.Create("chud.bloom_enabled", true, CVar.CLIENTONLY | CVar.ARCHIVE);
 
     /// <summary>Bloom intensity in the range from zero to one. Zero disables rendering.</summary>
     public static readonly CVarDef<float> Strength =
