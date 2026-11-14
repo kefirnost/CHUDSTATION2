@@ -453,3 +453,5 @@ ui-options-admin-strip-overlay-title = Strip Overlay
 ui-options-admin-strip-overlay-setting = Show strip overlay by default
 
 ui-options-inhand-interaction-particle-scale = Overhead interaction icon size
+ui-options-film-grain = Film grain
+ui-options-film-grain-strength = Film grain strength

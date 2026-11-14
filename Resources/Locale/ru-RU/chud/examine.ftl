@@ -1,0 +1,23 @@
+chud-examine-name = { $name }
+chud-examine-header = Осмотрев персонажа, вы видите:
+chud-examine-header-self = На вас надето:
+chud-examine-empty = На персонаже нет видимого снаряжения.
+chud-examine-empty-self = На вас нет видимого снаряжения.
+chud-examine-item = - { $slot }: [bold]{ $item }[/bold]
+chud-examine-item-self = - На вас: [bold]{ $item }[/bold].
+
+chud-examine-slot-head = голове
+chud-examine-slot-eyes = глазах
+chud-examine-slot-mask = лице
+chud-examine-slot-neck = шее
+chud-examine-slot-ears = ушах
+chud-examine-slot-jumpsuit = униформе
+chud-examine-slot-outerClothing = верхней одежде
+chud-examine-slot-back = спине
+chud-examine-slot-gloves = руках
+chud-examine-slot-belt = поясе
+chud-examine-slot-id = слоте ID-карты
+chud-examine-slot-shoes = ногах
+chud-examine-slot-suitstorage = хранилище костюма
+chud-examine-slot-pocket1 = первом кармане
+chud-examine-slot-pocket2 = втором кармане
