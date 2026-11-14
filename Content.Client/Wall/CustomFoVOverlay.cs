@@ -89,7 +89,7 @@ public sealed partial class CustomFoVOverlay : Overlay
         _walls.Clear();
 
         // Include a one-tile margin so wall corners at the viewport or bloom-cell edge are still drawn.
-        _lookup.GetEntitiesIntersecting(mapId, worldBounds.Enlarged(1f), _walls);
+        _lookup.GetEntitiesIntersecting(mapId, worldBounds.Enlarged(1f).CalcBoundingBox(), _walls);
 
         foreach (var wall in _walls)
         {
