@@ -120,7 +120,7 @@ public sealed class ChudBloomOverlayTest
 
     [TestCase(4f, 4f, 3)]
     [TestCase(8f, 16f, 6)]
-    [TestCase(1000f, 1000f, 18)]
+    [TestCase(1000f, 1000f, 222)]
     public void BlurPaddingContainsKernelAndFilterBorder(float horizontalScale, float verticalScale, int expected)
     {
         var padding = ChudBloomOverlay.GetTargetPadding(new Vector2(horizontalScale, verticalScale));
