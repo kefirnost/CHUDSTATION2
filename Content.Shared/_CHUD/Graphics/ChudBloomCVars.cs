@@ -16,7 +16,7 @@ public static class ChudBloomCVars
     public static readonly CVarDef<bool> Enabled =
         CVarDef.Create("chud.bloom_enabled", true, CVar.CLIENTONLY | CVar.ARCHIVE);
 
-    /// <summary>Bloom intensity in the range from zero to one. Zero disables rendering.</summary>
+    /// <summary>Non-negative bloom intensity. Zero disables rendering; values above one increase intensity.</summary>
     public static readonly CVarDef<float> Strength =
         CVarDef.Create("chud.bloom_strength", 0.4f, CVar.CLIENTONLY | CVar.ARCHIVE);
 

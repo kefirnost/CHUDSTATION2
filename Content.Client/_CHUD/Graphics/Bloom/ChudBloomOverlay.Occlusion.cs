@@ -29,8 +29,7 @@ internal sealed partial class ChudBloomOverlay
         for (var i = 0; i < _orderedSprites.Count; i++)
         {
             var sprite = _orderedSprites[i];
-            if (_sourceIndices.Count < MaxBloomSpriteSources &&
-                sprite.Emissive && sprite.Bounds.Enlarged(padding).Intersects(viewportBounds))
+            if (sprite.Emissive && sprite.Bounds.Enlarged(padding).Intersects(viewportBounds))
                 _sourceIndices.Add(i);
         }
     }

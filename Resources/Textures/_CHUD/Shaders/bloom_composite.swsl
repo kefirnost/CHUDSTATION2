@@ -1,7 +1,7 @@
 light_mode unshaded;
 blend_mode add;
 
-uniform mediump float bloom_strength;
+uniform highp float bloom_strength;
 uniform sampler2D occlusion_texture;
 
 void fragment() {
