@@ -12,6 +12,7 @@
     snap:
     - Wallmount
   components:
+  - type: BloomOverlayVisuals
   - type: MeleeSound
     soundGroups:
       Brute:

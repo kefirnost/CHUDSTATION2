@@ -23,6 +23,9 @@ public sealed partial class GraphicsTab : Control
         var vSync = Control.AddOptionCheckBox(CVars.DisplayVSync, VSyncCheckBox);
         Control.AddOption(new OptionSliderIntInput(Control, _cfg, CVars.DisplayMaxFPS, MaxFpsInput, 0, 500));
         Control.AddOptionCheckBox(CCVars.AmbientOcclusion, AmbientOcclusionCheckBox);
+        var lightBloomEnabledOption = Control.AddOptionCheckBox(CCVars.LightBloomEnabled, LightBloomEnabledCheckBox);
+        Control.AddOptionPercentSlider(CCVars.LightBloomStrength, LightBloomStrengthSlider, max: 1f);
+        lightBloomEnabledOption.ImmediateValueChanged += _ => UpdateLightBloomOptionsVisibility();
         Control.AddOption(new OptionFullscreen(Control, _cfg, FullscreenCheckBox));
         Control.AddOption(new OptionLightingQuality(Control, _cfg, DropDownLightingQuality));
 
@@ -83,6 +86,7 @@ public sealed partial class GraphicsTab : Control
         Control.AddOptionCheckBox(CCVars.HudFpsCounterVisible, FpsCounterCheckBox);
 
         Control.Initialize();
+        UpdateLightBloomOptionsVisibility();
 
         _cfg.OnValueChanged(CCVars.ViewportMinimumWidth, _ => UpdateViewportWidthRange());
         _cfg.OnValueChanged(CCVars.ViewportMaximumWidth, _ => UpdateViewportWidthRange());
@@ -90,6 +94,11 @@ public sealed partial class GraphicsTab : Control
         UpdateViewportWidthRange();
         UpdateViewportSettingsVisibility();
         UpdateMaxFpsEnabled();
+    }
+
+    private void UpdateLightBloomOptionsVisibility()
+    {
+        LightBloomStrengthSlider.Visible = LightBloomEnabledCheckBox.Pressed;
     }
 
     private void UpdateMaxFpsEnabled()
