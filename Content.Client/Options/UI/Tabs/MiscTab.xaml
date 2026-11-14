@@ -19,6 +19,7 @@
                 <CheckBox Name="RunechatSpeechCheckBox" Text="{Loc 'ui-options-runechat'}" />
                 <CheckBox Name="FancySpeechBubblesCheckBox" Text="{Loc 'ui-options-fancy-speech'}" />
                 <CheckBox Name="FancyNameBackgroundsCheckBox" Text="{Loc 'ui-options-fancy-name-background'}" />
+                <CheckBox Name="ChudExamineLogInChatCheckBox" Text="{Loc 'chud-options-examine-log-in-chat'}" />
                 <Label Text="{Loc 'ui-options-general-cursor'}"
                        StyleClasses="LabelKeyText"/>
                 <CheckBox Name="ShowHeldItemCheckBox" Text="{Loc 'ui-options-show-held-item'}" />

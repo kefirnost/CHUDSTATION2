@@ -204,9 +204,12 @@ public abstract partial class SharedHandsSystem : EntitySystem
         var locUser = ("user", Identity.Entity(examinedUid, EntityManager));
         var locItems = ("items", ContentLocalizationManager.FormatList(heldItemNames));
 
+        if (args.Examiner == args.Examined)
+            locKey += "-selfaware";
+
         using (args.PushGroup(nameof(HandsComponent)))
         {
-            args.PushMarkup(Loc.GetString(locKey, locUser, locItems));
+            args.PushMarkup("- " + Loc.GetString(locKey, locUser, locItems));
         }
     }
 }

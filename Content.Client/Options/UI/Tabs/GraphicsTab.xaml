@@ -35,6 +35,13 @@
                                    Title="{Loc 'chud-options-bloom-quality'}"
                                    ToolTip="{Loc 'chud-options-bloom-quality-tooltip'}" />
                 <!-- CHUD-end -->
+                <!-- CHUD-start - зернистость -->
+                <Label Text="{Loc 'chud-options-grain-label'}" StyleClasses="LabelKeyText" />
+                <CheckBox Name="ChudGrainEnabledCheckBox"
+                          Text="{Loc 'chud-options-grain-enabled'}" />
+                <ui:OptionSlider Name="ChudGrainStrengthSlider"
+                                 Title="{Loc 'chud-options-grain-strength'}" />
+                <!-- CHUD-end -->
                 <ui:OptionSlider Name="SharpnessSlider" Title="{Loc 'ui-options-sharpness'}" />
 
                 <!-- Interface -->

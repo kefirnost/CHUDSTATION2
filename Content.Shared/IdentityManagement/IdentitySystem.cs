@@ -177,6 +177,16 @@ public sealed partial class IdentitySystem : EntitySystem
 
         _queuedIdentityUpdates.Add(uid);
     }
+
+    /// <summary>
+    /// Gets the identity shown when examining a character.
+    /// </summary>
+    public string GetEntityIdentity(EntityUid uid)
+    {
+        var representation = GetIdentityRepresentation(uid);
+        return GetIdentityName(uid, representation);
+    }
+
     #region Private API
 
     /// <summary>

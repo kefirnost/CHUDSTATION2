@@ -453,3 +453,9 @@ ui-options-admin-strip-overlay-title = Strip Overlay
 ui-options-admin-strip-overlay-setting = Show strip overlay by default
 
 ui-options-inhand-interaction-particle-scale = Overhead interaction icon size
+
+# CHUD options
+chud-options-grain-label = Screen effects
+chud-options-grain-enabled = Enable film grain
+chud-options-grain-strength = Grain intensity
+chud-options-examine-log-in-chat = Log character examine details in chat

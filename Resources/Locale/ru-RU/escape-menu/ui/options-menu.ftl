@@ -453,3 +453,9 @@ ui-options-admin-strip-overlay-title = Оверлей обыска
 ui-options-admin-strip-overlay-setting = Показывать админ-вид обыска по умолчанию
 
 ui-options-inhand-interaction-particle-scale = Размер значка взаимодействия над головой
+
+# Настройки CHUD
+chud-options-grain-label = Эффекты экрана
+chud-options-grain-enabled = Включить зернистость
+chud-options-grain-strength = Интенсивность зернистости
+chud-options-examine-log-in-chat = Дублировать подробности осмотра персонажа в чат

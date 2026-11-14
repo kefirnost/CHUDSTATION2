@@ -48,7 +48,11 @@ public sealed partial class HumanoidProfileSystem : EntitySystem
         var species = GetSpeciesRepresentation(ent.Comp.Species).ToLower();
         var age = GetAgeRepresentation(ent.Comp.Species, ent.Comp.Age);
 
-        args.PushText(Loc.GetString("humanoid-appearance-component-examine", ("user", identity), ("age", age), ("species", species)));
+        var locale = "humanoid-appearance-component-examine";
+        if (args.Examiner == args.Examined)
+            locale += "-selfaware";
+
+        args.PushText(Loc.GetString(locale, ("user", identity), ("age", age), ("species", species)), 100);
     }
 
     /// <summary>

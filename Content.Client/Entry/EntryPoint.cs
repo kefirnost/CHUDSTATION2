@@ -14,6 +14,7 @@ using Content.Client.Launcher;
 using Content.Client.Lobby;
 using Content.Client.MainMenu;
 using Content.Client.Overlays;
+using Content.Client._CHUD.Graphics.Grain;
 using Content.Client.Parallax.Managers;
 using Content.Client.Players.PlayTimeTracking;
 using Content.Client.Playtime;
@@ -160,6 +161,7 @@ namespace Content.Client.Entry
 
             _overlayManager.AddOverlay(new SingularityOverlay());
             _overlayManager.AddOverlay(new RadiationPulseOverlay());
+            _overlayManager.AddOverlay(new ChudGrainOverlay());
             _overlayManager.AddOverlay(new ScreechShockWaveOverlay());
             _chatManager.Initialize();
             _clientPreferencesManager.Initialize();
