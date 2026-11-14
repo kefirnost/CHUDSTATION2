@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Shared._EE.Contests;
+using Content.Shared._EE.InteractionVerbs.Events;
 using Content.Shared.DoAfter;
 using Content.Shared.Ghost.Components;
 using Content.Shared.Popups;
