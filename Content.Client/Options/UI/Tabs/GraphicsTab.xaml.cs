@@ -83,6 +83,7 @@ public sealed partial class GraphicsTab : Control
         Control.AddOptionCheckBox(CCVars.HudFpsCounterVisible, FpsCounterCheckBox);
 
         InitializeChudBloomOptions(); // CHUD-edit - предпросмотр настроек свечения.
+        InitializeChudFilmGrainOptions();
         Control.Initialize();
 
         _cfg.OnValueChanged(CCVars.ViewportMinimumWidth, _ => UpdateViewportWidthRange());

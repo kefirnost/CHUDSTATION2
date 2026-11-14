@@ -54,6 +54,7 @@
   - type: MobMover
   - type: MovementSpeedModifier
   - type: LagCompensation
+  - type: ExaminableCharacter # CHUD: detailed clothing examination
 
 - type: entity
   save: false
