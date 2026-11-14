@@ -106,11 +106,9 @@ internal sealed partial class ChudBloomOverlay : Overlay
         _spriteTree.QueryAabb(_sprites, args.MapId, bounds);
         _lookup.GetEntitiesIntersecting(args.MapId, bounds, _tiles, LookupFlags.Uncontained);
         _tiles.RemoveWhere(static source => source.Comp.Deleted || source.Comp.Color.A <= 0f);
-        if (_tiles.Count > MaxBloomTileSources)
-            return false;
 
+        // Keep the pass alive on busy views; the render loops below cap actual tile and sprite sources.
         var visibleCount = 0;
-        var emissiveCount = 0;
         for (var i = 0; i < _sprites.Count; i++)
         {
             var sprite = _sprites[i];
@@ -118,11 +116,9 @@ internal sealed partial class ChudBloomOverlay : Overlay
                 continue;
 
             if (visibleCount >= MaxBloomVisibleSprites)
-                return false;
+                break;
 
             _sprites[visibleCount++] = sprite;
-            if (HasBloomLayer(sprite.Comp1) && ++emissiveCount > MaxBloomSpriteSources)
-                return false;
         }
 
         _sprites.RemoveRange(visibleCount, _sprites.Count - visibleCount);
@@ -494,11 +490,15 @@ internal sealed partial class ChudBloomOverlay : Overlay
 
     private void DrawTileEmission(DrawingHandleWorld handle, Matrix3x2 worldToTarget)
     {
+        var drawn = 0;
         foreach (var source in _tiles)
         {
             if (!_transformQuery.TryComp(source, out var xform) ||
                 xform.GridUid is not { } gridUid || !_gridQuery.TryComp(gridUid, out var grid))
                 continue;
+
+            if (drawn >= MaxBloomTileSources)
+                break;
 
             var tile = _map.LocalToTile(gridUid, grid, xform.Coordinates);
             var matrix = _transform.GetWorldMatrix(gridUid);
@@ -506,6 +506,7 @@ internal sealed partial class ChudBloomOverlay : Overlay
             handle.SetTransform(matrix * worldToTarget);
             handle.UseShader(_extract);
             handle.DrawRect(_lookup.GetLocalBounds(tile, grid.TileSize), source.Comp.Color);
+            drawn++;
         }
     }
 
