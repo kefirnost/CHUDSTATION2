@@ -145,3 +145,10 @@
   id: VacuumDesaturation
   kind: source
   path: "/Textures/Shaders/vacuum_desaturation.swsl"
+
+- type: shader
+  id: Grain
+  kind: source
+  path: "/Textures/Shaders/grain.swsl"
+  params:
+    strength: 100.0
