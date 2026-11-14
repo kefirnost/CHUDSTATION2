@@ -49,6 +49,8 @@ internal sealed partial class ChudBloomOverlay : Overlay
     private readonly EntityQuery<MapGridComponent> _gridQuery;
     private readonly EntityQuery<StealthComponent> _stealthQuery;
     private readonly List<Entity<SpriteComponent, TransformComponent>> _sprites = new();
+    private readonly List<Entity<SpriteComponent, TransformComponent>> _emissiveCandidates = new();
+    private readonly List<Entity<SpriteComponent, TransformComponent>> _occluderCandidates = new();
     private readonly HashSet<Entity<TileEmissionComponent>> _tiles = new();
     private readonly OverlayResourceCache<CachedResources> _resources = new();
     private readonly OverlayResourceCache<CachedResources> _tileResources = new();
@@ -107,24 +109,37 @@ internal sealed partial class ChudBloomOverlay : Overlay
         _lookup.GetEntitiesIntersecting(args.MapId, bounds, _tiles, LookupFlags.Uncontained);
         _tiles.RemoveWhere(static source => source.Comp.Deleted || source.Comp.Color.A <= 0f);
 
-        // Keep the pass alive on busy views; the render loops below cap actual tile and sprite sources.
-        var visibleCount = 0;
-        var hasEmissive = false;
-        for (var i = 0; i < _sprites.Count; i++)
+        // Select emitters first, then a bounded set of occluders. Sorting by UID keeps
+        // the selected set stable when the component tree returns entities in a different order.
+        _emissiveCandidates.Clear();
+        _occluderCandidates.Clear();
+        foreach (var sprite in _sprites)
         {
-            var sprite = _sprites[i];
             if (!CanDrawSprite(sprite))
                 continue;
 
-            if (visibleCount >= MaxBloomVisibleSprites)
-                break;
-
-            _sprites[visibleCount++] = sprite;
-            hasEmissive |= HasBloomLayer(sprite.Comp1);
+            if (HasBloomLayer(sprite.Comp1))
+                _emissiveCandidates.Add(sprite);
+            else
+                _occluderCandidates.Add(sprite);
         }
 
-        _sprites.RemoveRange(visibleCount, _sprites.Count - visibleCount);
-        return _tiles.Count != 0 || hasEmissive;
+        static int CompareUid(Entity<SpriteComponent, TransformComponent> left,
+            Entity<SpriteComponent, TransformComponent> right) => left.Owner.CompareTo(right.Owner);
+
+        _emissiveCandidates.Sort(CompareUid);
+        _occluderCandidates.Sort(CompareUid);
+        _sprites.Clear();
+
+        var sourceCount = Math.Min(MaxBloomSpriteSources, _emissiveCandidates.Count);
+        for (var i = 0; i < sourceCount; i++)
+            _sprites.Add(_emissiveCandidates[i]);
+
+        var occluderCount = Math.Min(MaxBloomVisibleSprites - sourceCount, _occluderCandidates.Count);
+        for (var i = 0; i < occluderCount; i++)
+            _sprites.Add(_occluderCandidates[i]);
+
+        return _tiles.Count != 0 || sourceCount != 0;
     }
 
     protected override void Draw(in OverlayDrawArgs args)
