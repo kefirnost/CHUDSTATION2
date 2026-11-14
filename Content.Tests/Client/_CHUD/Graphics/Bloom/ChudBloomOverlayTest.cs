@@ -172,6 +172,17 @@ public sealed class ChudBloomOverlayTest
         Assert.That(Math.Sign(comparison), Is.EqualTo(expected));
     }
 
+    [Test]
+    public void WallFovMaskDrawsAboveWallMountedFixtures()
+    {
+        Assert.That(
+            (int) Content.Shared.DrawDepth.DrawDepth.WallFovOverlay,
+            Is.GreaterThan((int) Content.Shared.DrawDepth.DrawDepth.WallMountedItems));
+        Assert.That(
+            (int) Content.Shared.DrawDepth.DrawDepth.WallFovOverlay,
+            Is.LessThan((int) Content.Shared.DrawDepth.DrawDepth.LargeObjects));
+    }
+
     [TestCase(8.2f, 9.9f)]
     [TestCase(63.9f, 32.1f)]
     public void LocalBloomTargetContainsSourceAndBlurPadding(float width, float height)
@@ -230,7 +241,7 @@ public sealed class ChudBloomOverlayTest
     [TestCase(float.NaN, 0f)]
     [TestCase(0.4f, 1.4f)]
     [TestCase(1f, 5f)]
-    [TestCase(2f, 5f)]
+    [TestCase(2f, 15f)]
     public void BloomStrengthUsesPerceptualCurve(float configured, float expected)
     {
         Assert.That(ChudBloomOverlay.GetBloomStrength(configured), Is.EqualTo(expected).Within(0.0001f));
@@ -239,13 +250,14 @@ public sealed class ChudBloomOverlayTest
     [TestCase((int) ChudBloomQuality.Low, 8f, 1.76f)]
     [TestCase((int) ChudBloomQuality.Medium, 8f, 1.76f)]
     [TestCase((int) ChudBloomQuality.High, 16f, 3.52f)]
-    [TestCase((int) ChudBloomQuality.High, 1000f, 16f)]
-    [TestCase((int) ChudBloomQuality.Low, 0.5f, 0.5f)]
+    [TestCase((int) ChudBloomQuality.High, 1000f, 220f)]
+    [TestCase((int) ChudBloomQuality.Low, 0.5f, 0.11f)]
     public void BlurRadiusFitsPaddedMask(int quality, float pixelsPerMeter, float expected)
     {
         var radius = ChudBloomOverlay.CalculateBlurRadius((ChudBloomQuality) quality, pixelsPerMeter);
         Assert.That(radius, Is.EqualTo(expected).Within(0.0001f));
-        Assert.That(radius, Is.LessThan(ChudBloomOverlay.TargetPadding));
+        var padding = ChudBloomOverlay.GetTargetPadding(new Vector2(pixelsPerMeter));
+        Assert.That(radius, Is.LessThan(padding));
     }
 
     [TestCase(1920, 1080, 4, 0f, 18)]
