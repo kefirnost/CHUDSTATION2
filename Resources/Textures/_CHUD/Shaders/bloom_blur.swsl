@@ -10,7 +10,7 @@ void fragment() {
     // Плотное ядро с шагом один texel: при росте радиуса между выборками нет дыр.
     // Узкое ядро сохраняет энергию рядом с источником, а не в длинном хвосте.
     highp float sigma = max(blur_radius / 3.0, 0.35);
-    highp float radius = ceil(blur_radius);
+    highp int radius = int(ceil(max(blur_radius, 0.0)));
     highp vec3 glow = vec3(0.0);
     highp float weight_sum = 0.0;
     // Источники лежат рядом в атласе, но их ореолы и маски перекрытия независимы.
