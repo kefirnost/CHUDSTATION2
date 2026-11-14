@@ -135,7 +135,7 @@ public sealed partial class CustomFoVOverlay : Overlay
     /// <summary>
     /// Draws the prepared FOV mask. worldToTarget maps world coordinates into the active render target.
     /// </summary>
-    internal void DrawBloomOcclusion(DrawingHandleWorld handle, IEye eye, Matrix3x2 worldToTarget)
+    internal void DrawBloomOcclusion(DrawingHandleWorld handle, IEye eye, Matrix3x2 worldToTarget, Box2? worldBounds = null)
     {
         if (!eye.DrawFov)
             return;
@@ -169,6 +169,12 @@ public sealed partial class CustomFoVOverlay : Overlay
                 foreach (var (tile, wall) in gridWalls)
                 {
                     var (worldPosition, _) = _transform.GetWorldPositionRotation(wall.Comp);
+                    if (worldBounds is { } bounds &&
+                        !bounds.Enlarged(1f).Intersects(Box2.CenteredAround(worldPosition, Vector2.One)))
+                    {
+                        continue;
+                    }
+
                     var gridRotation = _transform.GetWorldRotation(gridUid);
                     var toEye = eye.Position.Position - worldPosition;
                     var gridXAxis = gridRotation.RotateVec(Vector2.UnitX);
