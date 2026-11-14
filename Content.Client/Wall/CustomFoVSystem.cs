@@ -37,7 +37,7 @@ public sealed partial class CustomFoVSystem : EntitySystem
     /// <summary>
     /// Prepares the same FOV mask used by the world overlay for bloom's off-screen render targets.
     /// </summary>
-    internal void PrepareBloomOcclusion(MapId mapId, Box2 worldBounds)
+    internal void PrepareBloomOcclusion(MapId mapId, Box2Rotated worldBounds)
     {
         (_fovOverlay ??= new CustomFoVOverlay()).PrepareBloomOcclusion(mapId, worldBounds);
     }
