@@ -52,6 +52,7 @@ public sealed partial class MiscTab : Control
         Control.AddOptionCheckBox(CCVars.ChatRunechat, RunechatSpeechCheckBox);
         Control.AddOptionCheckBox(CCVars.ChatEnableFancyBubbles, FancySpeechBubblesCheckBox);
         Control.AddOptionCheckBox(CCVars.ChatFancyNameBackground, FancyNameBackgroundsCheckBox);
+        Control.AddOptionCheckBox(CCVars.LogInChat, LogInChatCheckBox);
         Control.AddOptionCheckBox(CCVars.StaticStorageUI, StaticStorageUI);
         Control.AddOptionPercentSlider(CCVars.InHandInteractionParticleScale, InHandInteractionParticleScaleSlider);
 

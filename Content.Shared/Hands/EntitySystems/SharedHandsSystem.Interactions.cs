@@ -201,12 +201,15 @@ public abstract partial class SharedHandsSystem : EntitySystem
             .ToList();
 
         var locKey = heldItemNames.Count != 0 ? "comp-hands-examine" : "comp-hands-examine-empty";
+        if (args.Examiner == args.Examined)
+            locKey += "-selfaware";
+
         var locUser = ("user", Identity.Entity(examinedUid, EntityManager));
         var locItems = ("items", ContentLocalizationManager.FormatList(heldItemNames));
 
-        using (args.PushGroup(nameof(HandsComponent)))
+        using (args.PushGroup(nameof(HandsComponent), 99))
         {
-            args.PushMarkup(Loc.GetString(locKey, locUser, locItems));
+            args.PushMarkup("- " + Loc.GetString(locKey, locUser, locItems));
         }
     }
 }

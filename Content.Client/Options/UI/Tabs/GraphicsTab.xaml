@@ -35,6 +35,8 @@
                                    Title="{Loc 'chud-options-bloom-quality'}"
                                    ToolTip="{Loc 'chud-options-bloom-quality-tooltip'}" />
                 <!-- CHUD-end -->
+                <CheckBox Name="ChudFilmGrainEnabledCheckBox" Text="{Loc 'chud-options-film-grain-enabled'}" />
+                <ui:OptionSlider Name="ChudFilmGrainStrengthSlider" Title="{Loc 'chud-options-film-grain-strength'}" />
                 <ui:OptionSlider Name="SharpnessSlider" Title="{Loc 'ui-options-sharpness'}" />
 
                 <!-- Interface -->

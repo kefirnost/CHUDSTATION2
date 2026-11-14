@@ -106,4 +106,8 @@ public sealed partial class CCVars
     public static readonly CVarDef<bool> ChatRunechat =
         CVarDef.Create("chat.runechat", true, CVar.CLIENTONLY | CVar.ARCHIVE,
             "Toggles displaying rune-style speech bubbles.");
+
+    /// <summary>Write additional character examination details to the chat log.</summary>
+    public static readonly CVarDef<bool> LogInChat =
+        CVarDef.Create("chat.log", true, CVar.CLIENT | CVar.ARCHIVE | CVar.REPLICATED);
 }

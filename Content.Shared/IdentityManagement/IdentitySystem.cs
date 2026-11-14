@@ -286,6 +286,15 @@ public sealed partial class IdentitySystem : EntitySystem
     #endregion
 
     /// <summary>
+    /// Gets the identity representation used by character examination.
+    /// </summary>
+    public string GetEntityIdentity(EntityUid uid)
+    {
+        var representation = GetIdentityRepresentation(uid);
+        return GetIdentityName(uid, representation);
+    }
+
+    /// <summary>
     /// Attempts to get a display name and ID title for the given entity.
     /// For example "Urist McHands (Captain)" for players or "Robby (SI-123)" for silicons.
     /// </summary>

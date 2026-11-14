@@ -1,0 +1,6 @@
+- type: shader
+  id: ChudFilmGrain
+  kind: source
+  path: /Textures/_CHUD/Shaders/grain.swsl
+  params:
+    strength: 50.0
