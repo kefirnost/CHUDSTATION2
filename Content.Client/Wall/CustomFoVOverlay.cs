@@ -60,11 +60,12 @@ public sealed class CustomFoVOverlay : Overlay
 
     protected override void Draw(in OverlayDrawArgs args)
     {
-        if (args.Viewport.Eye is not { } eye || !eye.DrawFov)
-            return;
-
+        // Release the previous frame's entity references even when FOV is disabled.
         _wallMap.Clear();
         _walls.Clear();
+
+        if (args.Viewport.Eye is not { } eye || !eye.DrawFov)
+            return;
 
         // Include a one-tile margin so wall corners at the viewport edge are still drawn.
         _lookup.GetEntitiesIntersecting(args.MapId, args.WorldBounds.Enlarged(1f), _walls);
