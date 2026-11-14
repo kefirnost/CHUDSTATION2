@@ -1,6 +1,7 @@
 // © SS220, An EULA/CLA with a hosting restriction, full text: https://raw.githubusercontent.com/SerbiaStrong-220/space-station-14/master/CLA.txt
 // Adapted for CHUDSTATION2 from SS220 PR #537 (Aesthetics rework).
 using System.Numerics;
+using Content.Shared.Doors.Components;
 using Content.Shared.Wall;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
@@ -32,6 +33,7 @@ public sealed partial class CustomFoVOverlay : Overlay
 
     private readonly EntityQuery<OccluderComponent> _occluderQuery;
     private readonly EntityQuery<WallMountComponent> _wallMountQuery;
+    private readonly EntityQuery<DoorComponent> _doorQuery;
     private readonly EntityQuery<TransformComponent> _transformQuery;
     private readonly EntityQuery<MapGridComponent> _gridQuery;
 
@@ -55,6 +57,7 @@ public sealed partial class CustomFoVOverlay : Overlay
 
         _occluderQuery = _entMan.GetEntityQuery<OccluderComponent>();
         _wallMountQuery = _entMan.GetEntityQuery<WallMountComponent>();
+        _doorQuery = _entMan.GetEntityQuery<DoorComponent>();
         _transformQuery = _entMan.GetEntityQuery<TransformComponent>();
         _gridQuery = _entMan.GetEntityQuery<MapGridComponent>();
 
@@ -93,7 +96,8 @@ public sealed partial class CustomFoVOverlay : Overlay
             var uid = wall.Owner;
 
             // Wall-mounted signs, controls and fixtures never contribute to the FOV wall mask.
-            if (_wallMountQuery.HasComp(uid))
+            // Firelocks also have WallMountComponent, but are doors and must still block the FOV.
+            if (_wallMountQuery.HasComp(uid) && !_doorQuery.HasComp(uid))
                 continue;
 
             if (!_occluderQuery.TryGetComponent(uid, out var occluder) || !occluder.Enabled)
