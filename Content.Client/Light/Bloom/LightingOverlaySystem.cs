@@ -10,14 +10,14 @@ namespace Content.Client.Light.Bloom;
 /// <summary>
 /// Collects compatible lights and supplies their state to the bloom overlays.
 /// </summary>
-public sealed class LightingOverlaySystem : EntitySystem
+public sealed partial class LightingOverlaySystem : EntitySystem
 {
-    [Dependency] private readonly IConfigurationManager _configuration = default!;
-    [Dependency] private readonly BloomOverlayTreeSystem _bloomTree = default!;
-    [Dependency] private readonly IOverlayManager _overlay = default!;
-    [Dependency] private readonly IPrototypeManager _prototype = default!;
-    [Dependency] private readonly SpriteSystem _sprite = default!;
-    [Dependency] private readonly TransformSystem _transform = default!;
+    [Dependency] private IConfigurationManager _configuration = default!;
+    [Dependency] private BloomOverlayTreeSystem _bloomTree = default!;
+    [Dependency] private IOverlayManager _overlay = default!;
+    [Dependency] private IPrototypeManager _prototype = default!;
+    [Dependency] private SpriteSystem _sprite = default!;
+    [Dependency] private TransformSystem _transform = default!;
 
     private EntityQuery<PointLightComponent> _pointLightQuery;
     private PointLightingOverlay? _bloomOverlay;
