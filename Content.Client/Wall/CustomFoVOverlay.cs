@@ -31,6 +31,7 @@ public sealed partial class CustomFoVOverlay : Overlay
     private readonly SpriteSystem _sprite;
 
     private readonly EntityQuery<OccluderComponent> _occluderQuery;
+    private readonly EntityQuery<WallMountComponent> _wallMountQuery;
     private readonly EntityQuery<TransformComponent> _transformQuery;
     private readonly EntityQuery<MapGridComponent> _gridQuery;
 
@@ -53,6 +54,7 @@ public sealed partial class CustomFoVOverlay : Overlay
         _sprite = _entMan.System<SpriteSystem>();
 
         _occluderQuery = _entMan.GetEntityQuery<OccluderComponent>();
+        _wallMountQuery = _entMan.GetEntityQuery<WallMountComponent>();
         _transformQuery = _entMan.GetEntityQuery<TransformComponent>();
         _gridQuery = _entMan.GetEntityQuery<MapGridComponent>();
 
@@ -89,6 +91,10 @@ public sealed partial class CustomFoVOverlay : Overlay
         foreach (var wall in _walls)
         {
             var uid = wall.Owner;
+
+            // Wall-mounted signs, controls and fixtures never contribute to the FOV wall mask.
+            if (_wallMountQuery.HasComp(uid))
+                continue;
 
             if (!_occluderQuery.TryGetComponent(uid, out var occluder) || !occluder.Enabled)
                 continue;
