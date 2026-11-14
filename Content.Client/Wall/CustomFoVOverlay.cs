@@ -15,7 +15,7 @@ namespace Content.Client.Wall;
 /// <summary>
 /// Draws the wall-edge FOV mask so the reverse side of an opaque wall is not visible.
 /// </summary>
-public sealed class CustomFoVOverlay : Overlay
+public sealed partial class CustomFoVOverlay : Overlay
 {
     private static readonly ProtoId<ShaderPrototype> UnshadedShader = "unshaded";
 
