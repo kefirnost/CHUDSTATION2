@@ -41,11 +41,15 @@ public sealed partial class ExaminableCharacterSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<HumanoidProfileComponent, ExaminedEvent>(HandleExamine);
+        SubscribeLocalEvent<ExaminedEvent>(HandleExamine);
     }
 
-    private void HandleExamine(EntityUid uid, HumanoidProfileComponent component, ExaminedEvent args)
+    private void HandleExamine(ExaminedEvent args)
     {
+        var uid = args.Examined;
+        if (!HasComp<HumanoidProfileComponent>(uid))
+            return;
+
         var selfAware = args.Examiner == args.Examined;
         var canSeeLoc = selfAware ? "examine-can-see-selfaware" : "examine-can-see";
         var nameLoc = selfAware ? "examine-name-selfaware" : "examine-name";
