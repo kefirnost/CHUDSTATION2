@@ -54,10 +54,11 @@
 
 - type: entity
   abstract: true
-  parent: BaseStructureWall
+  parent: [BaseStructureWall, ChudWallDamageVisualsBase] # CHUD-edit - визуализация повреждений стен.
   id: BaseWall
   components:
   - type: Occluder # Breaks on diagonal walls
+  - type: FoVOverlay # SS220 perspective-wall-fov
   - type: PlacementReplacement
     key: walls
   - type: StructureAlignerPylon
@@ -67,7 +68,7 @@
 
 - type: entity
   abstract: true
-  parent: BaseStructureWall
+  parent: [BaseStructureWall, ChudWallDamageVisualsBase] # CHUD-edit - визуализация повреждений стен.
   id: WallDiagonalBase
   suffix: Diagonal
   components:

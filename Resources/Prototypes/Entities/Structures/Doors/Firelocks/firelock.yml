@@ -5,6 +5,7 @@
   name: firelock
   description: Apply crowbar.
   components:
+  - type: FoVOverlay # Include closed firelocks in the wall FOV mask.
   - type: Anchorable
     flags:
     - Anchorable

@@ -131,6 +131,7 @@
   - type: RadiationBlocker
     resistance: 3
   - type: Occluder
+  - type: FoVOverlay # Keep closed airlocks in the wall FOV mask; glass/open doors opt out via Occluder.Enabled.
   - type: Damageable
     damageModifierSet: SteelStaticMod
   - type: Construction

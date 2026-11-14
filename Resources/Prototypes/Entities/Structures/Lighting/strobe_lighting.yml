@@ -20,6 +20,7 @@
         collection: GlassSmash
   - type: Transform
     anchored: true
+  - type: WallMount
   - type: Clickable
   - type: InteractionOutline
   - type: Construction

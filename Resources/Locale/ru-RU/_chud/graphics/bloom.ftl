@@ -1,0 +1,9 @@
+chud-options-bloom-label = Свечение (Bloom)
+chud-options-bloom-enabled = Свечение ярких объектов
+chud-options-bloom-enabled-tooltip = Добавляет мягкие ореолы вокруг светящихся частей предметов и напольных плиток.
+chud-options-bloom-strength = Интенсивность свечения
+chud-options-bloom-quality = Качество свечения
+chud-options-bloom-quality-tooltip = Более высокое качество делает ореолы плавнее, но увеличивает нагрузку на видеокарту.
+chud-options-bloom-quality-low = Низкое
+chud-options-bloom-quality-medium = Среднее
+chud-options-bloom-quality-high = Высокое

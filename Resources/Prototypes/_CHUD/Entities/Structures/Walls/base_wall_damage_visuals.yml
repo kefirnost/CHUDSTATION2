@@ -1,0 +1,12 @@
+- type: entity
+  abstract: true
+  # Общая визуализация трещин на стенах по мере получения урона.
+  id: ChudWallDamageVisualsBase
+  components:
+  - type: Appearance
+  - type: DamageVisuals
+    thresholds: [5, 10, 15, 20, 25]
+    damageDivisor: 10
+    trackAllDamage: true
+    damageOverlay:
+      sprite: _CHUD/Structures/Walls/wall_cracks.rsi
