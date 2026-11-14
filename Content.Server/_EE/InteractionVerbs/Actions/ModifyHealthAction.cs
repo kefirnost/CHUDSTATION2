@@ -1,8 +1,6 @@
 using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
-using Content.Shared.Damage.Components;
-using Content.Shared.Damage.Systems;
 using Content.Shared._EE.InteractionVerbs;
 using Robust.Shared.Serialization;
 
