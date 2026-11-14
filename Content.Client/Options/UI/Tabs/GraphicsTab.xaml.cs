@@ -81,6 +81,8 @@ public sealed partial class GraphicsTab : Control
         Control.AddOptionCheckBox(CCVars.ViewportScaleRender, ViewportLowResCheckBox, invert: true);
         Control.AddOptionCheckBox(CCVars.ParallaxLowQuality, ParallaxLowQualityCheckBox);
         Control.AddOptionCheckBox(CCVars.HudFpsCounterVisible, FpsCounterCheckBox);
+        Control.AddOptionCheckBox(CCVars.FilmGrain, FilmGrainCheckBox);
+        Control.AddOptionPercentSlider(CCVars.FilmGrainStrength, FilmGrainStrengthSlider, 0.25f, 1.25f, 100f);
 
         InitializeChudBloomOptions(); // CHUD-edit - предпросмотр настроек свечения.
         Control.Initialize();
