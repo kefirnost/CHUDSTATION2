@@ -42,6 +42,11 @@ public sealed partial class CustomFoVSystem : EntitySystem
         (_fovOverlay ??= new CustomFoVOverlay()).PrepareBloomOcclusion(mapId, worldBounds);
     }
 
+    internal void PrepareBloomOcclusion(MapId mapId, Box2 worldBounds)
+    {
+        (_fovOverlay ??= new CustomFoVOverlay()).PrepareBloomOcclusion(mapId, worldBounds);
+    }
+
     /// <summary>
     /// Draws prepared FOV corners into the current bloom render target.
     /// </summary>
