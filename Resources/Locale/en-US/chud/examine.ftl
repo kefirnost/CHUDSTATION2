@@ -1,0 +1,23 @@
+chud-examine-name = { $name }
+chud-examine-header = Looking at them, you can see:
+chud-examine-header-self = You can see:
+chud-examine-empty = They are not wearing any visible equipment.
+chud-examine-empty-self = You are not wearing any visible equipment.
+chud-examine-item = - { $slot }: [bold]{ $item }[/bold]
+chud-examine-item-self = - Your [bold]{ $item }[/bold] on your { $slot }.
+
+chud-examine-slot-head = head
+chud-examine-slot-eyes = eyes
+chud-examine-slot-mask = face
+chud-examine-slot-neck = neck
+chud-examine-slot-ears = ears
+chud-examine-slot-jumpsuit = uniform
+chud-examine-slot-outerClothing = outer clothing
+chud-examine-slot-back = back
+chud-examine-slot-gloves = hands
+chud-examine-slot-belt = belt
+chud-examine-slot-id = ID slot
+chud-examine-slot-shoes = feet
+chud-examine-slot-suitstorage = suit storage
+chud-examine-slot-pocket1 = first pocket
+chud-examine-slot-pocket2 = second pocket
