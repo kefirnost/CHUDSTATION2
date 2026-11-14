@@ -50,8 +50,8 @@ public sealed partial class CustomFoVSystem : EntitySystem
     /// <summary>
     /// Draws prepared FOV corners into the current bloom render target.
     /// </summary>
-    internal void DrawBloomOcclusion(DrawingHandleWorld handle, IEye eye, Matrix3x2 worldToTarget)
+    internal void DrawBloomOcclusion(DrawingHandleWorld handle, IEye eye, Matrix3x2 worldToTarget, Box2? worldBounds = null)
     {
-        (_fovOverlay ??= new CustomFoVOverlay()).DrawBloomOcclusion(handle, eye, worldToTarget);
+        (_fovOverlay ??= new CustomFoVOverlay()).DrawBloomOcclusion(handle, eye, worldToTarget, worldBounds);
     }
 }
