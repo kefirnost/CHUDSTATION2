@@ -1,0 +1,9 @@
+chud-options-bloom-label = Bloom
+chud-options-bloom-enabled = Glowing objects
+chud-options-bloom-enabled-tooltip = Adds soft halos around glowing parts of objects and floor tiles.
+chud-options-bloom-strength = Bloom intensity
+chud-options-bloom-quality = Bloom quality
+chud-options-bloom-quality-tooltip = Higher quality makes halos smoother but increases GPU load.
+chud-options-bloom-quality-low = Low
+chud-options-bloom-quality-medium = Medium
+chud-options-bloom-quality-high = High

@@ -1,0 +1,20 @@
+# Выделение источников, уменьшение маски, размытие и наложение свечения.
+- type: shader
+  id: ChudBloomExtract
+  kind: source
+  path: /Textures/_CHUD/Shaders/bloom_extract.swsl
+
+- type: shader
+  id: ChudBloomDownsample
+  kind: source
+  path: /Textures/_CHUD/Shaders/bloom_downsample.swsl
+
+- type: shader
+  id: ChudBloomBlur
+  kind: source
+  path: /Textures/_CHUD/Shaders/bloom_blur.swsl
+
+- type: shader
+  id: ChudBloomComposite
+  kind: source
+  path: /Textures/_CHUD/Shaders/bloom_composite.swsl

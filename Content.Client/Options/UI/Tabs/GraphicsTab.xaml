@@ -24,6 +24,17 @@
                 <CheckBox Name="ViewportLowResCheckBox" Text="{Loc 'ui-options-vp-low-res'}" />
                 <CheckBox Name="ParallaxLowQualityCheckBox" Text="{Loc 'ui-options-parallax-low-quality'}" />
                 <CheckBox Name="AmbientOcclusionCheckBox" Text="{Loc 'ui-options-ambient-occlusion'}" />
+                <!-- CHUD-start - настройки свечения -->
+                <Label Text="{Loc 'chud-options-bloom-label'}" StyleClasses="LabelKeyText" />
+                <CheckBox Name="ChudBloomEnabledCheckBox"
+                          Text="{Loc 'chud-options-bloom-enabled'}"
+                          ToolTip="{Loc 'chud-options-bloom-enabled-tooltip'}" />
+                <ui:OptionSlider Name="ChudBloomStrengthSlider"
+                                 Title="{Loc 'chud-options-bloom-strength'}" />
+                <ui:OptionDropDown Name="ChudBloomQualityDropDown"
+                                   Title="{Loc 'chud-options-bloom-quality'}"
+                                   ToolTip="{Loc 'chud-options-bloom-quality-tooltip'}" />
+                <!-- CHUD-end -->
                 <ui:OptionSlider Name="SharpnessSlider" Title="{Loc 'ui-options-sharpness'}" />
 
                 <!-- Interface -->
