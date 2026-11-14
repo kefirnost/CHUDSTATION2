@@ -109,6 +109,7 @@ internal sealed partial class ChudBloomOverlay : Overlay
 
         // Keep the pass alive on busy views; the render loops below cap actual tile and sprite sources.
         var visibleCount = 0;
+        var hasEmissive = false;
         for (var i = 0; i < _sprites.Count; i++)
         {
             var sprite = _sprites[i];
@@ -119,10 +120,11 @@ internal sealed partial class ChudBloomOverlay : Overlay
                 break;
 
             _sprites[visibleCount++] = sprite;
+            hasEmissive |= HasBloomLayer(sprite.Comp1);
         }
 
         _sprites.RemoveRange(visibleCount, _sprites.Count - visibleCount);
-        return _tiles.Count != 0 || emissiveCount != 0;
+        return _tiles.Count != 0 || hasEmissive;
     }
 
     protected override void Draw(in OverlayDrawArgs args)
