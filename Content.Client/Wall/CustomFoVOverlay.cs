@@ -5,6 +5,7 @@ using Content.Shared.Wall;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Shared.Enums;
+using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Physics;
 using Robust.Shared.Prototypes;
@@ -14,6 +15,7 @@ namespace Content.Client.Wall;
 
 /// <summary>
 /// Draws the wall-edge FOV mask so the reverse side of an opaque wall is not visible.
+/// The same mask is also rendered into bloom's source and occlusion targets.
 /// </summary>
 public sealed partial class CustomFoVOverlay : Overlay
 {
@@ -31,6 +33,7 @@ public sealed partial class CustomFoVOverlay : Overlay
     private readonly EntityQuery<TransformComponent> _transformQuery;
     private readonly EntityQuery<MapGridComponent> _gridQuery;
 
+    // This marker is an explicit whitelist: wallmounts are intentionally not included.
     private readonly HashSet<Entity<FoVOverlayComponent>> _walls = new();
     private readonly Dictionary<EntityUid, Dictionary<Vector2i, Entity<TransformComponent>>> _wallMap = new();
 
@@ -60,19 +63,27 @@ public sealed partial class CustomFoVOverlay : Overlay
 
     protected override void Draw(in OverlayDrawArgs args)
     {
-        // Release the previous frame's entity references even when FOV is disabled.
         _wallMap.Clear();
         _walls.Clear();
 
         if (args.Viewport.Eye is not { } eye || !eye.DrawFov)
             return;
 
-        // Include a one-tile margin so wall corners at the viewport edge are still drawn.
-        _lookup.GetEntitiesIntersecting(args.MapId, args.WorldBounds.Enlarged(1f), _walls);
+        PrepareBloomOcclusion(args.MapId, args.WorldBounds);
+        DrawBloomOcclusion(args.WorldHandle, eye, Matrix3x2.Identity);
+    }
 
-        var texture = _sprite.Frame0(_fovCorner);
-        if (texture == null)
-            return;
+    /// <summary>
+    /// Builds the exact same wall/closed-airlock list used by the visible FOV overlay.
+    /// Entities must explicitly have FoVOverlayComponent and an enabled OccluderComponent.
+    /// </summary>
+    internal void PrepareBloomOcclusion(MapId mapId, Box2 worldBounds)
+    {
+        _wallMap.Clear();
+        _walls.Clear();
+
+        // Include a one-tile margin so wall corners at the viewport or bloom-cell edge are still drawn.
+        _lookup.GetEntitiesIntersecting(mapId, worldBounds.Enlarged(1f), _walls);
 
         foreach (var wall in _walls)
         {
@@ -103,79 +114,99 @@ public sealed partial class CustomFoVOverlay : Overlay
             if (!gridWalls.ContainsKey(tile))
                 gridWalls.Add(tile, new Entity<TransformComponent>(uid, xform));
         }
+    }
 
-        var handle = args.WorldHandle;
-        handle.UseShader(_shader);
+    /// <summary>
+    /// Draws the prepared FOV mask. worldToTarget maps world coordinates into the active render target.
+    /// </summary>
+    internal void DrawBloomOcclusion(DrawingHandleWorld handle, IEye eye, Matrix3x2 worldToTarget)
+    {
+        if (!eye.DrawFov)
+            return;
 
-        void DrawFoVCorner(Vector2 worldPosition, Angle worldRotation)
+        var texture = _sprite.Frame0(_fovCorner);
+        if (texture == null)
+            return;
+
+        var oldTransform = handle.GetTransform();
+        var oldShader = handle.GetShader();
+
+        try
         {
-            var xAxis = worldRotation.RotateVec(Vector2.UnitX);
-            var yAxis = worldRotation.RotateVec(Vector2.UnitY);
-            var transform = new Matrix3x2(
-                xAxis.X, xAxis.Y,
-                yAxis.X, yAxis.Y,
-                worldPosition.X, worldPosition.Y);
+            handle.UseShader(_shader);
 
-            handle.SetTransform(transform);
-            handle.DrawTexture(texture, new Vector2(-0.5f, -0.5f));
-        }
-
-        foreach (var (gridUid, gridWalls) in _wallMap)
-        {
-            foreach (var (tile, wall) in gridWalls)
+            void DrawFoVCorner(Vector2 worldPosition, Angle worldRotation)
             {
-                var (worldPosition, _) = _transform.GetWorldPositionRotation(wall.Comp);
-                var gridRotation = _transform.GetWorldRotation(gridUid);
-                var toEye = eye.Position.Position - worldPosition;
-                var gridXAxis = gridRotation.RotateVec(Vector2.UnitX);
-                var gridYAxis = gridRotation.RotateVec(Vector2.UnitY);
+                var xAxis = worldRotation.RotateVec(Vector2.UnitX);
+                var yAxis = worldRotation.RotateVec(Vector2.UnitY);
+                var transform = new Matrix3x2(
+                    xAxis.X, xAxis.Y,
+                    yAxis.X, yAxis.Y,
+                    worldPosition.X, worldPosition.Y);
 
-                Vector2i GetDirRelativeToEdge(Vector2i edge)
+                handle.SetTransform(transform * worldToTarget);
+                handle.DrawTexture(texture, new Vector2(-0.5f, -0.5f));
+            }
+
+            foreach (var (gridUid, gridWalls) in _wallMap)
+            {
+                foreach (var (tile, wall) in gridWalls)
                 {
-                    var relativePos = new Vector2(
-                        Vector2.Dot(toEye, gridXAxis),
-                        Vector2.Dot(toEye, gridYAxis)) + edge * 0.5f;
+                    var (worldPosition, _) = _transform.GetWorldPositionRotation(wall.Comp);
+                    var gridRotation = _transform.GetWorldRotation(gridUid);
+                    var toEye = eye.Position.Position - worldPosition;
+                    var gridXAxis = gridRotation.RotateVec(Vector2.UnitX);
+                    var gridYAxis = gridRotation.RotateVec(Vector2.UnitY);
 
-                    return new Vector2i(
-                        (int) MathF.Sign(relativePos.X),
-                        (int) MathF.Sign(relativePos.Y));
+                    Vector2i GetDirRelativeToEdge(Vector2i edge)
+                    {
+                        var relativePos = new Vector2(
+                            Vector2.Dot(toEye, gridXAxis),
+                            Vector2.Dot(toEye, gridYAxis)) + edge * 0.5f;
+
+                        return new Vector2i(
+                            (int) MathF.Sign(relativePos.X),
+                            (int) MathF.Sign(relativePos.Y));
+                    }
+
+                    var southNeighbour = gridWalls.ContainsKey(tile + Vector2i.Down);
+                    var southShadowed = GetDirRelativeToEdge(Vector2i.Up).Y > 0;
+                    var southObscured = southShadowed || southNeighbour;
+
+                    var northNeighbour = gridWalls.ContainsKey(tile + Vector2i.Up);
+                    var northShadowed = GetDirRelativeToEdge(Vector2i.Down).Y < 0;
+                    var northObscured = northShadowed || northNeighbour;
+
+                    var eastNeighbour = gridWalls.ContainsKey(tile + Vector2i.Right);
+                    var eastShadowed = GetDirRelativeToEdge(Vector2i.Left).X < 0;
+                    var eastObscured = eastShadowed || eastNeighbour;
+
+                    var westNeighbour = gridWalls.ContainsKey(tile + Vector2i.Left);
+                    var westShadowed = GetDirRelativeToEdge(Vector2i.Right).X > 0;
+                    var westObscured = westShadowed || westNeighbour;
+
+                    // Southwest corner.
+                    if (southObscured && westObscured && !(!southShadowed && !westShadowed))
+                        DrawFoVCorner(worldPosition, gridRotation);
+
+                    // Southeast corner.
+                    if (southObscured && eastObscured && !(!southShadowed && !eastShadowed))
+                        DrawFoVCorner(worldPosition, gridRotation + Angle.FromDegrees(90));
+
+                    // Northeast corner.
+                    if (northObscured && eastObscured && !(!northShadowed && !eastShadowed))
+                        DrawFoVCorner(worldPosition, gridRotation + Angle.FromDegrees(180));
+
+                    // Northwest corner.
+                    if (northObscured && westObscured && !(!northShadowed && !westShadowed))
+                        DrawFoVCorner(worldPosition, gridRotation + Angle.FromDegrees(270));
                 }
-
-                var southNeighbour = gridWalls.ContainsKey(tile + Vector2i.Down);
-                var southShadowed = GetDirRelativeToEdge(Vector2i.Up).Y > 0;
-                var southObscured = southShadowed || southNeighbour;
-
-                var northNeighbour = gridWalls.ContainsKey(tile + Vector2i.Up);
-                var northShadowed = GetDirRelativeToEdge(Vector2i.Down).Y < 0;
-                var northObscured = northShadowed || northNeighbour;
-
-                var eastNeighbour = gridWalls.ContainsKey(tile + Vector2i.Right);
-                var eastShadowed = GetDirRelativeToEdge(Vector2i.Left).X < 0;
-                var eastObscured = eastShadowed || eastNeighbour;
-
-                var westNeighbour = gridWalls.ContainsKey(tile + Vector2i.Left);
-                var westShadowed = GetDirRelativeToEdge(Vector2i.Right).X > 0;
-                var westObscured = westShadowed || westNeighbour;
-
-                // Southwest corner.
-                if (southObscured && westObscured && !(!southShadowed && !westShadowed))
-                    DrawFoVCorner(worldPosition, gridRotation);
-
-                // Southeast corner.
-                if (southObscured && eastObscured && !(!southShadowed && !eastShadowed))
-                    DrawFoVCorner(worldPosition, gridRotation + Angle.FromDegrees(90));
-
-                // Northeast corner.
-                if (northObscured && eastObscured && !(!northShadowed && !eastShadowed))
-                    DrawFoVCorner(worldPosition, gridRotation + Angle.FromDegrees(180));
-
-                // Northwest corner.
-                if (northObscured && westObscured && !(!northShadowed && !westShadowed))
-                    DrawFoVCorner(worldPosition, gridRotation + Angle.FromDegrees(270));
             }
         }
-
-        handle.UseShader(null);
-        handle.SetTransform(Matrix3x2.Identity);
+        finally
+        {
+            handle.UseShader(oldShader);
+            handle.SetTransform(oldTransform);
+        }
     }
 }
