@@ -42,7 +42,7 @@ public sealed partial class ChudBloomSystem : EntitySystem
     /// <summary>Applies a finite intensity between zero and one without saving it.</summary>
     public void PreviewStrength(float strength)
     {
-        _strength = float.IsNaN(strength) ? 0f : Math.Clamp(strength, 0f, 1f);
+        _strength = float.IsFinite(strength) ? Math.Max(0f, strength) : 0f;
         UpdateOverlay();
     }
 
