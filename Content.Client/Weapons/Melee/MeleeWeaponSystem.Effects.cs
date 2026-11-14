@@ -54,6 +54,9 @@ public sealed partial class MeleeWeaponSystem
                 && TryComp(weapon, out SpriteComponent? weaponSpriteComponent))
                 _sprite.CopySprite((weapon, weaponSpriteComponent), (animationUid, sprite));
 
+            _sprite.SetDrawDepth((animationUid, sprite), (int) Shared.DrawDepth.DrawDepth.Effects);
+            sprite.NoRotation = true;
+
             spriteRotation = meleeWeaponComponent.WideAnimationRotation;
 
             if (meleeWeaponComponent.SwingLeft)
@@ -62,26 +65,23 @@ public sealed partial class MeleeWeaponSystem
             length = (1 / meleeWeaponComponent.AttackRate) * 0.6f;
             offset = meleeWeaponComponent.AnimationOffset;
         }
-        _sprite.SetRotation((animationUid, sprite), localPos.ToWorldAngle());
-
         var xform = Transform(animationUid);
         TrackUserComponent track;
 
         switch (arcComponent.Animation)
         {
             case WeaponArcAnimation.Slash:
+                _sprite.SetRotation((animationUid, sprite), localPos.ToWorldAngle());
                 track = EnsureComp<TrackUserComponent>(animationUid);
                 track.User = user;
                 _animation.Play(animationUid, GetSlashAnimation((animationUid, sprite), angle, spriteRotation, length, offset), SlashAnimationKey);
                 if (arcComponent.Fadeout)
-                    _animation.Play(animationUid, GetFadeAnimation(sprite, length * 0.5f, length + 0.15f), FadeAnimationKey);
+                    _animation.Play(animationUid, GetFadeAnimation(sprite, 0.15f, 0.25f), FadeAnimationKey);
                 break;
             case WeaponArcAnimation.Thrust:
-                track = EnsureComp<TrackUserComponent>(animationUid);
-                track.User = user;
-                _animation.Play(animationUid, GetThrustAnimation((animationUid, sprite), offset, spriteRotation, length), ThrustAnimationKey);
+                _animation.Play(animationUid, GetThrustAnimation((animationUid, sprite), localPos, length), ThrustAnimationKey);
                 if (arcComponent.Fadeout)
-                    _animation.Play(animationUid, GetFadeAnimation(sprite, length * 0.5f, length + 0.15f), FadeAnimationKey);
+                    _animation.Play(animationUid, GetFadeAnimation(sprite, 0.1f, 0.25f), FadeAnimationKey);
                 break;
             case WeaponArcAnimation.None:
                 var (mapPos, mapRot) = TransformSystem.GetWorldPositionRotation(userXform);
@@ -148,13 +148,8 @@ public sealed partial class MeleeWeaponSystem
     /// Makes the sprite move in a thrust motion from the player towards the target, then slightly pulls back.
     /// For example for spears.
     /// </summary>
-    private Animation GetThrustAnimation(Entity<SpriteComponent> sprite, float offset, Angle spriteRotation, float length)
+    private Animation GetThrustAnimation(Entity<SpriteComponent> sprite, Vector2 endOffset, float length)
     {
-        var startOffset = sprite.Comp.Rotation.RotateVec(new Vector2(0f, 0f));
-        var endOffset = sprite.Comp.Rotation.RotateVec(new Vector2(0f, -offset * 1.2f));
-
-        _sprite.SetRotation(sprite.AsNullable(), sprite.Comp.Rotation + spriteRotation);
-
         return new Animation()
         {
             Length = TimeSpan.FromSeconds(length),
@@ -166,21 +161,14 @@ public sealed partial class MeleeWeaponSystem
                     Property = nameof(SpriteComponent.Offset),
                     KeyFrames =
                     {
-                        new AnimationTrackProperty.KeyFrame(Vector2.Lerp(startOffset, endOffset, 0f), length * 0f),
-                        new AnimationTrackProperty.KeyFrame(Vector2.Lerp(startOffset, endOffset, 0.65f), length * 0.10f),
-                        new AnimationTrackProperty.KeyFrame(Vector2.Lerp(startOffset, endOffset, 1f), length * 0.20f),
-                        new AnimationTrackProperty.KeyFrame(Vector2.Lerp(startOffset, endOffset, 0.9f), length * 0.30f),
-                        new AnimationTrackProperty.KeyFrame(Vector2.Lerp(startOffset, endOffset, 0.7f), length * 0.60f, Easings.OutQuart)
+                        new AnimationTrackProperty.KeyFrame(Vector2.Zero, 0f),
+                        new AnimationTrackProperty.KeyFrame(endOffset, length, Easings.OutQuad),
                     }
                 },
             }
         };
     }
 
-    /// <summary>
-    /// Makes the sprite slowly fade by gradually reducing its alpha value.
-    /// Used at the end of attack animations so that the weapon sprite does not abruptly disappears.
-    /// </summary>
     private Animation GetFadeAnimation(SpriteComponent sprite, float start, float end)
     {
         return new Animation
