@@ -9,7 +9,7 @@ namespace Content.Client.Wall;
 /// Registers the wall-edge FOV rendering overlay.
 /// </summary>
 [UsedImplicitly]
-public sealed class CustomFoVSystem : EntitySystem
+public sealed partial class CustomFoVSystem : EntitySystem
 {
     [Dependency] private IOverlayManager _overlay = default!;
 
