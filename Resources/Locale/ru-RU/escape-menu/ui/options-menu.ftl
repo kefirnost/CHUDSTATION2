@@ -453,3 +453,5 @@ ui-options-admin-strip-overlay-title = Оверлей обыска
 ui-options-admin-strip-overlay-setting = Показывать админ-вид обыска по умолчанию
 
 ui-options-inhand-interaction-particle-scale = Размер значка взаимодействия над головой
+ui-options-film-grain = Плёночный шум
+ui-options-film-grain-strength = Интенсивность плёночного шума
