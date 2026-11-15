@@ -39,7 +39,7 @@
                     <Control VerticalExpand="True" />
                     <BoxContainer Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Bottom" SeparationOverride="4">
                         <info:DevInfoBanner Name="DevInfoBanner" VerticalExpand="False" Margin="3" />
-                        <PanelContainer StyleClasses="BackgroundPanel">
+                        <PanelContainer StyleClasses="ChatPanel">
                             <BoxContainer Orientation="Vertical" Margin="7" SeparationOverride="3">
                                 <RichTextLabel Name="LobbySong" Access="Public" HorizontalAlignment="Left" />
                                 <RichTextLabel Name="LobbyBackground" Access="Public" HorizontalAlignment="Left" />
@@ -49,7 +49,7 @@
                 </Control>
                 <Control Access="Public" Visible="False" Name="CharacterSetupState" VerticalExpand="True" />
             </BoxContainer>
-            <PanelContainer Name="RightSide" Access="Public" StyleClasses="BackgroundPanel"
+            <PanelContainer Name="RightSide" Access="Public" StyleClasses="ChatMainPanel"
                             HorizontalAlignment="Right" VerticalExpand="True" VerticalAlignment="Stretch">
                 <BoxContainer Orientation="Vertical" HorizontalExpand="True" Margin="10" SeparationOverride="7">
                     <BoxContainer Orientation="Horizontal" MinSize="0 40" Name="HeaderContainer" Access="Public" SeparationOverride="4">

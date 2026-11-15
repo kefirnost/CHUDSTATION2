@@ -1,5 +1,6 @@
 using System.Numerics;
 using Content.Shared.Chat;
+using Robust.Client.Graphics;
 
 namespace Content.Client.UserInterface.Systems.Chat.Controls;
 
@@ -14,6 +15,7 @@ public sealed class ChannelSelectorButton : ChatPopupButton<ChannelSelectorPopup
     public ChannelSelectorButton()
     {
         Name = "ChannelSelector";
+        StyleBoxOverride = new StyleBoxEmpty();
 
         Popup.Selected += OnChannelSelected;
 
@@ -70,7 +72,8 @@ public sealed class ChannelSelectorButton : ChatPopupButton<ChannelSelectorPopup
 
     public void UpdateChannelSelectButton(ChatSelectChannel channel, Shared.Radio.RadioChannelPrototype? radio)
     {
-        Text = radio != null ? Loc.GetString(radio.Name) : ChannelSelectorName(channel);
+        var text = radio != null ? Loc.GetString(radio.Name) : ChannelSelectorName(channel);
+        Text = $"[{text}]";
         Modulate = radio?.Color ?? ChannelSelectColor(channel);
     }
 }

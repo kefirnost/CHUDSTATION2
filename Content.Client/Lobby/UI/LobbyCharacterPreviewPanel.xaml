@@ -12,12 +12,14 @@
             <BoxContainer Name="ViewBox" Orientation="Horizontal"
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center">
-                <profile:ProfilePreviewSpriteView Name="ProfilePreviewSpriteView"
-                                                  OverrideDirection="South"
-                                                  Scale="4 4"
-                                                  MaxSize="112 112"
-                                                  Stretch="Fill"
-                                                  Access="Public" />
+                <PanelContainer StyleClasses="PaperBackground">
+                    <profile:ProfilePreviewSpriteView Name="ProfilePreviewSpriteView"
+                                                      OverrideDirection="South"
+                                                      Scale="4 4"
+                                                      MaxSize="112 112"
+                                                      Stretch="Fill"
+                                                      Access="Public" />
+                </PanelContainer>
             </BoxContainer>
             <BoxContainer Orientation="Vertical"
                           HorizontalExpand="True"

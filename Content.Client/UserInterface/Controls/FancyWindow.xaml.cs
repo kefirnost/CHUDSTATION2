@@ -100,7 +100,16 @@ namespace Content.Client.UserInterface.Controls
             return mode;
         }
 
-        public string HeaderClass { set => WindowHeader.SetOnlyStyleClass(value); }
+        public void AppendStyleClass(string styleClass)
+        {
+            WindowsHeadingBackground.StyleClasses.Add(styleClass);
+            WindowsPanelBackground.StyleClasses.Add(styleClass);
+            WindowTitle.StyleClasses.Add(styleClass);
+            CloseButton.StyleClasses.Add(styleClass);
+            HelpButton.StyleClasses.Add(styleClass);
+        }
+
+        public string HeaderClass { set => WindowsHeadingBackground.SetOnlyStyleClass(value); }
         public string TitleClass { set => WindowTitle.SetOnlyStyleClass(value); }
     }
 

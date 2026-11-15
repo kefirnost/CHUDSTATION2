@@ -23,6 +23,11 @@
     <File Path="Directory.Packages.props" />
     <File Path="README.md" />
   </Folder>
+  <Folder Name="/StyleSheetify/">
+    <Project Path="StyleSheetify/Content.StyleSheetify.Client/Content.StyleSheetify.Client.csproj" />
+    <Project Path="StyleSheetify/Content.StyleSheetify.Server/Content.StyleSheetify.Server.csproj" />
+    <Project Path="StyleSheetify/Content.StyleSheetify.Shared/Content.StyleSheetify.Shared.csproj" />
+  </Folder>
   <Project Path="Content.Benchmarks/Content.Benchmarks.csproj" />
   <Project Path="Content.Client/Content.Client.csproj" />
   <Project Path="Content.IntegrationTests/Content.IntegrationTests.csproj" />
