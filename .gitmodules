@@ -4,4 +4,4 @@
 	branch = master
 [submodule "StyleSheetify"]
 	path = StyleSheetify
-	url = https://github.com/Cinkafox/StyleSheetify
+	url = https://github.com/kefirnost/StyleSheetify.git
