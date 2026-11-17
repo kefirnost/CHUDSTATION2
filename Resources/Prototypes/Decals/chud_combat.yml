@@ -1,0 +1,9 @@
+# Uses the existing CC-BY-SA-3.0 crayon splatter artwork, tinted by the server
+# to match the mob's blood colour approximation.
+- type: decal
+  id: ChudBloodSplatter
+  defaultCleanable: true
+  defaultCustomColor: true
+  sprite:
+    sprite: Effects/crayondecals.rsi
+    state: splatter
