@@ -1,0 +1,70 @@
+# Short-lived visuals used by the CHUDSTATION2 adaptation of Klovnstation14 #468 and #476.
+# All sprites are existing CHUDSTATION2 assets; no upstream NC-SA audio or texture assets are required.
+
+- type: entity
+  id: ChudBloodBurst
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    drawdepth: Effects
+    sprite: Effects/crayondecals.rsi
+    layers:
+    - state: splatter
+      color: "#A00020"
+  - type: TimedDespawn
+    lifetime: 0.35
+  - type: EffectVisuals
+  - type: Tag
+    tags:
+    - HideContextMenu
+
+- type: entity
+  id: ChudGunFiringSmoke
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    drawdepth: Effects
+    sprite: Effects/chempuff.rsi
+    layers:
+    - state: chempuff
+      color: "#A0A0A0A0"
+  - type: TimedDespawn
+    lifetime: 0.35
+  - type: EffectVisuals
+  - type: Tag
+    tags:
+    - HideContextMenu
+
+- type: entity
+  id: ChudBulletImpactSmoke
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    drawdepth: Effects
+    sprite: Effects/chempuff.rsi
+    layers:
+    - state: chempuff
+      color: "#B0B0B090"
+  - type: TimedDespawn
+    lifetime: 0.28
+  - type: EffectVisuals
+  - type: Tag
+    tags:
+    - HideContextMenu
+
+- type: entity
+  id: ChudBulletImpactSpark
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    drawdepth: Effects
+    sprite: Effects/sparks.rsi
+    layers:
+    - state: sparks
+      color: "#FFD080"
+  - type: TimedDespawn
+    lifetime: 0.2
+  - type: EffectVisuals
+  - type: Tag
+    tags:
+    - HideContextMenu
