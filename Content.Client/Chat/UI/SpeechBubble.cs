@@ -11,6 +11,8 @@ namespace Content.Client.Chat.UI
 {
     public abstract partial class SpeechBubble : BaseBubble
     {
+        // KS14: identifies the unstyled outer wrapper so the Baron stylesheet can keep it transparent.
+        public const string StyleClassOuterPanel = "ks14-speech-bubble-outer";
         [Dependency] private IGameTiming _timing = default!;
 
         public enum SpeechType : byte
@@ -250,6 +252,7 @@ namespace Content.Client.Chat.UI
 
             var panel = new PanelContainer
             {
+                StyleClasses = { StyleClassOuterPanel },
                 Children = { mainPanel, headerPanel }
             };
 
