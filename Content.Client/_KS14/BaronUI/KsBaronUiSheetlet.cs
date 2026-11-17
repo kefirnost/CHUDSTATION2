@@ -40,12 +40,28 @@ public sealed class KsBaronUiSheetlet : Sheetlet<PalettedStylesheet>
 
     public override StyleRule[] GetRules(PalettedStylesheet sheet, object config)
     {
-        var regularFont = ResCache.GetFont("/Fonts/_KS14/BaronUI/FontStack-Regular.TTF", 12);
-        var boldFont = ResCache.GetFont("/Fonts/_KS14/BaronUI/FontStack-Bold.ttf", 12);
-        var regularFontSmall = ResCache.GetFont("/Fonts/_KS14/BaronUI/FontStack-Regular.TTF", 10);
-        var regularFontLarge = ResCache.GetFont("/Fonts/_KS14/BaronUI/FontStack-Regular.TTF", 14);
-        var boldFontLarge = ResCache.GetFont("/Fonts/_KS14/BaronUI/FontStack-Bold.ttf", 16);
-        var boldFontLarger = ResCache.GetFont("/Fonts/_KS14/BaronUI/FontStack-Bold.ttf", 20);
+        // KS14: keep Baron glyphs first, then fall back to Noto for characters the display font does not contain.
+        // This prevents missing Cyrillic punctuation, symbols, and other localized text from rendering as tofu.
+        var regularFontPaths = new[]
+        {
+            "/Fonts/_KS14/BaronUI/FontStack-Regular.TTF",
+            "/Fonts/NotoSans/NotoSans-Regular.ttf",
+            "/Fonts/NotoSans/NotoSansSymbols-Regular.ttf",
+            "/Fonts/NotoSans/NotoSansSymbols2-Regular.ttf",
+        };
+        var boldFontPaths = new[]
+        {
+            "/Fonts/_KS14/BaronUI/FontStack-Bold.ttf",
+            "/Fonts/NotoSans/NotoSans-Bold.ttf",
+            "/Fonts/NotoSans/NotoSansSymbols-Bold.ttf",
+            "/Fonts/NotoSans/NotoSansSymbols2-Regular.ttf",
+        };
+        var regularFont = ResCache.GetFont(regularFontPaths, 12);
+        var boldFont = ResCache.GetFont(boldFontPaths, 12);
+        var regularFontSmall = ResCache.GetFont(regularFontPaths, 10);
+        var regularFontLarge = ResCache.GetFont(regularFontPaths, 14);
+        var boldFontLarge = ResCache.GetFont(boldFontPaths, 16);
+        var boldFontLarger = ResCache.GetFont(boldFontPaths, 20);
         var button1 = MakeBox("button_1.png", 10, 10);
         var button2 = MakeBox("button_2.png", 8, 8);
         // KS14: use the lighter shared button chrome for the general UI treatment.
