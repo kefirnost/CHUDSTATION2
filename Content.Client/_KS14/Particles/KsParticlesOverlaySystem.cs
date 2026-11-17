@@ -1,6 +1,6 @@
-using Content.Shared._KS14.IoC;
 using Robust.Client.Graphics;
 using Robust.Shared.IoC;
+using Robust.Shared.Prototypes;
 
 namespace Content.Client._KS14.Particles;
 
@@ -11,36 +11,45 @@ namespace Content.Client._KS14.Particles;
 public sealed partial class KsParticlesOverlaySystem : EntitySystem
 {
     [Dependency] private IOverlayManager _overlayManager = default!;
-    [Dependency] private SystemCollectionHookManager _systemCollectionHookManager = default!;
+    [Dependency] private KsParticlesSystem _particlesSystem = default!;
+    [Dependency] private IPrototypeManager _prototypeManager = default!;
+
+    private KsParticlesFloorOverlay? _floor;
+    private KsParticlesBelowMobsOverlay? _belowMobs;
+    private KsParticlesEffectsOverlay? _effects;
+    private KsParticlesTopOverlay? _top;
 
     public override void Initialize()
     {
         base.Initialize();
 
-        _systemCollectionHookManager.HookAction(OnDependenciesReady);
-    }
+        _floor = new KsParticlesFloorOverlay(_particlesSystem, _prototypeManager);
+        _belowMobs = new KsParticlesBelowMobsOverlay(_particlesSystem, _prototypeManager);
+        _effects = new KsParticlesEffectsOverlay(_particlesSystem, _prototypeManager);
+        _top = new KsParticlesTopOverlay(_particlesSystem, _prototypeManager);
 
-    private void OnDependenciesReady(IDependencyCollection dependencyCollection)
-    {
-        AddOverlay(dependencyCollection, new KsParticlesFloorOverlay());
-        AddOverlay(dependencyCollection, new KsParticlesBelowMobsOverlay());
-        AddOverlay(dependencyCollection, new KsParticlesEffectsOverlay());
-        AddOverlay(dependencyCollection, new KsParticlesTopOverlay());
-    }
-
-    private void AddOverlay(IDependencyCollection dependencyCollection, KsParticlesOverlay overlay)
-    {
-        dependencyCollection.InjectDependencies(overlay, oneOff: true);
-        _overlayManager.AddOverlay(overlay);
+        _overlayManager.AddOverlay(_floor);
+        _overlayManager.AddOverlay(_belowMobs);
+        _overlayManager.AddOverlay(_effects);
+        _overlayManager.AddOverlay(_top);
     }
 
     public override void Shutdown()
     {
         base.Shutdown();
 
-        _overlayManager.RemoveOverlay<KsParticlesFloorOverlay>();
-        _overlayManager.RemoveOverlay<KsParticlesBelowMobsOverlay>();
-        _overlayManager.RemoveOverlay<KsParticlesEffectsOverlay>();
-        _overlayManager.RemoveOverlay<KsParticlesTopOverlay>();
+        if (_floor != null)
+            _overlayManager.RemoveOverlay(_floor);
+        if (_belowMobs != null)
+            _overlayManager.RemoveOverlay(_belowMobs);
+        if (_effects != null)
+            _overlayManager.RemoveOverlay(_effects);
+        if (_top != null)
+            _overlayManager.RemoveOverlay(_top);
+
+        _floor = null;
+        _belowMobs = null;
+        _effects = null;
+        _top = null;
     }
 }

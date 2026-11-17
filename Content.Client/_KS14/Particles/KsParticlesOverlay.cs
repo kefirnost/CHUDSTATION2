@@ -1,11 +1,9 @@
 using System.Numerics;
-using Content.Client._KS14.Graphics;
 using Content.Shared._KS14.Particles;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Shared.Enums;
 using Robust.Shared.Prototypes;
-using DependencyAttribute = Robust.Shared.IoC.DependencyAttribute;
 
 namespace Content.Client._KS14.Particles;
 
@@ -16,8 +14,9 @@ namespace Content.Client._KS14.Particles;
 /// </summary>
 public abstract partial class KsParticlesOverlay : Overlay
 {
-    [Dependency] private KsParticlesSystem _particlesSystem = default!;
-    [Dependency] private IPrototypeManager _prototypeManager = default!;
+    private readonly KsParticlesSystem _particlesSystem;
+    private readonly IPrototypeManager _prototypeManager;
+
 
     public override OverlaySpace Space => OverlaySpace.WorldSpaceEntities;
 
@@ -31,8 +30,14 @@ public abstract partial class KsParticlesOverlay : Overlay
 
     private ShaderInstance? _unshadedShader;
 
-    protected KsParticlesOverlay(KsParticleLayer layer, int zIndex)
+    protected KsParticlesOverlay(
+        KsParticlesSystem particlesSystem,
+        IPrototypeManager prototypeManager,
+        KsParticleLayer layer,
+        int zIndex)
     {
+        _particlesSystem = particlesSystem;
+        _prototypeManager = prototypeManager;
         _layer = layer;
         ZIndex = zIndex;
     }
@@ -154,23 +159,23 @@ public abstract partial class KsParticlesOverlay : Overlay
 /// <summary>Particles above floor tiles and puddles, below everything standing on the floor.</summary>
 public sealed partial class KsParticlesFloorOverlay : KsParticlesOverlay
 {
-    public KsParticlesFloorOverlay() : base(KsParticleLayer.Floor, (int)Shared.DrawDepth.DrawDepth.HighFloorObjects) { }
+    public KsParticlesFloorOverlay(KsParticlesSystem particlesSystem, IPrototypeManager prototypeManager) : base(particlesSystem, prototypeManager, KsParticleLayer.Floor, (int)Shared.DrawDepth.DrawDepth.HighFloorObjects) { }
 }
 
 /// <summary>Particles above objects and items, below mobs.</summary>
 public sealed partial class KsParticlesBelowMobsOverlay : KsParticlesOverlay
 {
-    public KsParticlesBelowMobsOverlay() : base(KsParticleLayer.BelowMobs, (int)Shared.DrawDepth.DrawDepth.Mobs) { }
+    public KsParticlesBelowMobsOverlay(KsParticlesSystem particlesSystem, IPrototypeManager prototypeManager) : base(particlesSystem, prototypeManager, KsParticleLayer.BelowMobs, (int)Shared.DrawDepth.DrawDepth.Mobs) { }
 }
 
 /// <summary>Particles above mobs, doors and gas, with other effects.</summary>
 public sealed partial class KsParticlesEffectsOverlay : KsParticlesOverlay
 {
-    public KsParticlesEffectsOverlay() : base(KsParticleLayer.Effects, (int)Shared.DrawDepth.DrawDepth.Effects) { }
+    public KsParticlesEffectsOverlay(KsParticlesSystem particlesSystem, IPrototypeManager prototypeManager) : base(particlesSystem, prototypeManager, KsParticleLayer.Effects, (int)Shared.DrawDepth.DrawDepth.Effects) { }
 }
 
 /// <summary>Particles above every sprite.</summary>
 public sealed partial class KsParticlesTopOverlay : KsParticlesOverlay
 {
-    public KsParticlesTopOverlay() : base(KsParticleLayer.Top, (int)Shared.DrawDepth.DrawDepth.Overlays + 1) { }
+    public KsParticlesTopOverlay(KsParticlesSystem particlesSystem, IPrototypeManager prototypeManager) : base(particlesSystem, prototypeManager, KsParticleLayer.Top, (int)Shared.DrawDepth.DrawDepth.Overlays + 1) { }
 }
