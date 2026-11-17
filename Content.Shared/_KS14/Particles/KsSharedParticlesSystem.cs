@@ -8,14 +8,11 @@ namespace Content.Shared._KS14.Particles;
 
 /// <summary>
 ///     Spawns and drives <see cref="KsParticlesComponent"/>s. Shaped like <c>SharedAudioSystem</c>: the particles
-///         live on the client, so the three ways of making an emitter differ only in who makes the entity.
+///         live on the client, so the local and server spawn helpers differ only in who makes the entity.
 ///     <list type="bullet">
 ///         <item><see cref="SpawnLocal(ProtoId{KsParticlesPrototype}, EntityCoordinates)"/>: a client-only entity,
 ///             for this client alone. Does nothing on the server.</item>
-///         <item><see cref="SpawnPredicted"/>: from a user's own predicted input. Their client keeps a copy of its
-///             own; the server's copy is shown to everyone else (see <see cref="KsSharedPredictedSpawnSystem"/>).</item>
 ///         <item><see cref="SpawnPvs"/>: a server entity, for everyone in range. Does nothing on the client.</item>
-///         <item><see cref="SpawnPredictedEffect"/>: from shared code both sides run, whoever caused it (a hit's
 ///             spray). The client that predicted it shows its own copy at once and hides the server's.</item>
 ///     </list>
 ///     An existing entity can carry the component itself instead, in its prototype or by <c>EnsureComp</c> on the
