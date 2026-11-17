@@ -6,7 +6,7 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Client.Overlays;
 
-public sealed class GrainOverlay : Overlay
+public sealed partial class GrainOverlay : Overlay
 {
     private static readonly ProtoId<ShaderPrototype> Shader = "Grain";
 
