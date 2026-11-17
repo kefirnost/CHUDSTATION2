@@ -8,7 +8,7 @@ namespace Content.Server.Examine;
 /// <summary>
 /// Adds a localized, self-aware list of visible equipment to character examination.
 /// </summary>
-public sealed class ExaminableCharacterSystem : EntitySystem
+public sealed partial class ExaminableCharacterSystem : EntitySystem
 {
     [Dependency] private InventorySystem _inventory = default!;
     [Dependency] private IdentitySystem _identity = default!;
