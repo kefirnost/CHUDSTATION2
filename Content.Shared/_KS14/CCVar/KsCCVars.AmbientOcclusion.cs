@@ -8,5 +8,5 @@ public sealed partial class KsCCVars
     /// Whether items and anchored structures cast ambient occlusion, not just walls.
     /// </summary>
     public static readonly CVarDef<bool> AmbientOcclusionEntities =
-        CVarDef.Create("klovn.ambient_occlusion.entities", false, CVar.CLIENTONLY | CVar.ARCHIVE);
+        CVarDef.Create("klovn.ambient_occlusion.entities.experimental", false, CVar.CLIENTONLY);
 }

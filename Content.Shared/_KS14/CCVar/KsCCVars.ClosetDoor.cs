@@ -12,7 +12,7 @@ public sealed partial class KsCCVars
     ///     Enables the experimental animated closet-door renderer.
     /// </summary>
     public static readonly CVarDef<bool> ClosetDoorAnimation =
-        CVarDef.Create("klovn.closet_door.animation", false, CVar.CLIENTONLY | CVar.ARCHIVE);
+        CVarDef.Create("klovn.closet_door.animation", false, CVar.CLIENTONLY);
 
     public static readonly CVarDef<bool> ClosetDoorPixelSnap =
         CVarDef.Create("klovn.closet_door.pixel_snap", false, CVar.CLIENTONLY | CVar.ARCHIVE);
