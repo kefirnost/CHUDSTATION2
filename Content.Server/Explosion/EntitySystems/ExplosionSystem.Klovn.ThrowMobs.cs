@@ -51,8 +51,7 @@ public sealed partial class ExplosionSystem
 
         var distance = MathF.Min(throwForce * thrownComponent.DistancePerForce, thrownComponent.MaxDistance);
         var speed = MathF.Min(throwForce * thrownComponent.SpeedPerForce, thrownComponent.MaxSpeed);
-        _throwingSystem.TryThrow(mob, direction * distance, physicsComponent, transformComponent, baseThrowSpeed: speed,
-            predicted: false);
+        _throwingSystem.TryThrow(mob, direction * distance, physicsComponent, transformComponent, baseThrowSpeed: speed);
         _ksThrownSlamSystem.MarkThrown(mob, thrownComponent.Slam);
     }
 }
