@@ -7,6 +7,8 @@ using Content.Shared.Actions.Events;
 using Content.Shared.Administration.Components;
 using Content.Shared.Administration.Logs;
 using Content.Shared.CombatMode;
+using Content.Shared._KS14.PopupLocalization;
+using Content.Shared._KS14.Random.Helpers;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Events;
@@ -890,114 +892,83 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
     {
         var target = GetEntity(ev.Target);
 
-        if (Deleted(target) ||
-            user == target)
+        if (Deleted(target) || user == target)
+            return false;
+
+        // Only movable entities can be shoved.
+        var targetTransform = Transform(target.Value);
+        if (targetTransform.Anchored ||
+            !TryComp<PhysicsComponent>(target.Value, out var targetPhysics) ||
+            targetPhysics.BodyType == BodyType.Static)
         {
             return false;
         }
 
-
-        if (MobState.IsIncapacitated(target.Value))
-        {
+        if (!TryComp<CombatModeComponent>(user, out var combatMode) || combatMode.CanDisarm != true)
             return false;
-        }
-
-        if (!TryComp<CombatModeComponent>(user, out var combatMode) ||
-            combatMode.CanDisarm != true)
-        {
-            return false;
-        }
-
-        // Need hands or to be able to be shoved over.
-        if (!TryComp<HandsComponent>(target, out var targetHandsComponent))
-        {
-            if (!TryComp<StatusEffectsComponent>(target, out var status) ||
-                !status.AllowedEffects.Contains("KnockedDown"))
-            {
-                // Notify disarmable
-                if (HasComp<MobStateComponent>(target.Value))
-                    PopupSystem.PopupEntity(Loc.GetString("disarm-action-disarmable", ("targetName", target.Value)), target.Value, target.Value);
-
-                return false;
-            }
-        }
 
         if (!InRange(user, target.Value, component.Range, session))
-        {
             return false;
-        }
 
         EntityUid? inTargetHand = null;
-
         if (_hands.TryGetActiveItem(target.Value, out var activeHeldEntity))
-        {
             inTargetHand = activeHeldEntity.Value;
-        }
 
         var attemptEvent = new DisarmAttemptEvent(target.Value, user, inTargetHand);
-
         if (inTargetHand != null)
-        {
             RaiseLocalEvent(inTargetHand.Value, ref attemptEvent);
-        }
-
         RaiseLocalEvent(target.Value, ref attemptEvent);
-
         if (attemptEvent.Cancelled)
             return false;
 
         var chance = CalculateDisarmChance(user, target.Value, inTargetHand, combatMode);
+        // Use the same roll on the client and server so a predicted shove does not flicker while awaiting authority.
+        var predictedRandom = KsSharedRandomExtensions.RandomWithHashCodeCombinedSeed(
+            KsSharedRandomExtensions.GetNetId(user, EntityManager),
+            KsSharedRandomExtensions.GetNetId(target.Value, EntityManager),
+            (int) Timing.CurTick.Value);
+        var failed = predictedRandom.Prob(chance);
 
-        // At this point we diverge
-        if (_netMan.IsClient)
-        {
-            // Play a sound to give instant feedback; same with playing the animations
-            _meleeSound.PlaySwingSound(user, meleeUid, component);
-            return true;
-        }
-
-        if (_random.Prob(chance))
-        {
+        _meleeSound.PlaySwingSound(user, meleeUid, component);
+        if (failed)
             return false;
-        }
 
         var eventArgs = new DisarmedEvent(target.Value, user, 1 - chance);
         RaiseLocalEvent(target.Value, ref eventArgs);
 
-        // Nothing handled it so abort.
-        if (!eventArgs.Handled)
-        {
-            return false;
-        }
+        Interaction.DoContactInteraction(user, target, null, true);
+        AdminLogger.Add(LogType.DisarmedAction,
+            $"{ToPrettyString(user):user} used disarm on {ToPrettyString(target):target}");
+        _audio.PlayPredicted(combatMode.DisarmSuccessSound, target.Value, user,
+            AudioParams.Default.WithVariation(0.025f).WithVolume(5f));
 
-        Interaction.DoContactInteraction(user, target, null, true); // Goob
-        AdminLogger.Add(LogType.DisarmedAction, $"{ToPrettyString(user):user} used disarm on {ToPrettyString(target):target}");
+        // A shove handler which already displayed its own feedback owns the outcome.
+        if (!eventArgs.Handled || eventArgs.KsPopupHandled)
+            return eventArgs.Handled;
 
-        AdminLogger.Add(LogType.DisarmedAction, $"{ToPrettyString(user):user} used disarm on {ToPrettyString(target):target}");
-
-        _audio.PlayPvs(combatMode.DisarmSuccessSound, target.Value, AudioParams.Default.WithVariation(0.025f).WithVolume(5f));
         var targetEnt = Identity.Entity(target.Value, EntityManager);
         var userEnt = Identity.Entity(user, EntityManager);
-
-        var msgOther = Loc.GetString(
+        var otherMessage = KsPopupMessage.Create(
             eventArgs.PopupPrefix + "popup-message-other-clients",
             ("performerName", userEnt),
             ("targetName", targetEnt));
-
-        var msgUser = Loc.GetString(eventArgs.PopupPrefix + "popup-message-cursor", ("targetName", targetEnt));
-
-        var filterOther = Filter.PvsExcept(user, entityManager: EntityManager);
-
-        PopupSystem.PopupEntity(msgOther, user, filterOther, true);
-        PopupSystem.PopupEntity(msgUser, target.Value, user);
+        var userMessage = KsPopupMessage.Create(
+            eventArgs.PopupPrefix + "popup-message-cursor",
+            ("targetName", targetEnt));
+        PopupSystem.PopupEntity(otherMessage, user, Filter.PvsExcept(user, entityManager: EntityManager), true);
+        PopupSystem.PopupPredicted(userMessage, target.Value, user);
 
         if (eventArgs.IsStunned)
         {
-
-            PopupSystem.PopupEntity(Loc.GetString("stunned-component-disarm-success-others", ("source", userEnt), ("target", targetEnt)), targetEnt, Filter.PvsExcept(user), true, PopupType.LargeCaution);
-            PopupSystem.PopupCursor(Loc.GetString("stunned-component-disarm-success", ("target", targetEnt)), user, PopupType.Large);
-
-            AdminLogger.Add(LogType.DisarmedKnockdown, LogImpact.Medium, $"{ToPrettyString(user):user} knocked down {ToPrettyString(target):target}");
+            PopupSystem.PopupEntity(
+                KsPopupMessage.Create("stunned-component-disarm-success-others",
+                    ("source", userEnt), ("target", targetEnt)),
+                targetEnt, Filter.PvsExcept(user, entityManager: EntityManager), true, PopupType.LargeCaution);
+            PopupSystem.PopupCursor(
+                Loc.GetString("stunned-component-disarm-success", ("target", targetEnt)),
+                user, PopupType.Large);
+            AdminLogger.Add(LogType.DisarmedKnockdown, LogImpact.Medium,
+                $"{ToPrettyString(user):user} knocked down {ToPrettyString(target):target}");
         }
 
         return true;

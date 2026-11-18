@@ -76,6 +76,12 @@
     duration: 0.22s
     layers:
       enum.PaperLabelVisuals.Layer: Front
+  - type: KsEntityStorageCatch
+  - type: KsShoveObstacle
+    priority: 5
+    takesWhoStandsInIt: true
+    sound:
+      collection: MetalThud
   - type: StaticPrice
     price: 75
 

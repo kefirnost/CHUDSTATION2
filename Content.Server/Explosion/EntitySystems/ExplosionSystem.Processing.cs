@@ -475,25 +475,22 @@ public sealed partial class ExplosionSystem
             }
         }
 
-        // throw
-        if (xform == null
-            || xform.Anchored
-            || throwForce <= 0
-            || EntityManager.IsQueuedForDeletion(uid)
-            || !_physicsQuery.TryGetComponent(uid, out var physics)
-            || physics.BodyType != BodyType.Dynamic)
-            return;
+        // Throw dynamic physics bodies through the stock path.
+        if (xform is { Anchored: false } transform &&
+            throwForce > 0 &&
+            !EntityManager.IsQueuedForDeletion(uid) &&
+            _physicsQuery.TryGetComponent(uid, out var physics) &&
+            physics.BodyType == BodyType.Dynamic)
+        {
+            var pos = _transformSystem.GetWorldPosition(transform);
+            var dir = pos - epicenter.Position;
+            if (dir.IsLengthZero())
+                dir = _robustRandom.NextVector2().Normalized();
+            _throwingSystem.TryThrow(uid, dir, physics, transform, throwForce);
+        }
 
-        var pos = _transformSystem.GetWorldPosition(xform);
-        var dir = pos - epicenter.Position;
-        if (dir.IsLengthZero())
-            dir = _robustRandom.NextVector2().Normalized();
-        _throwingSystem.TryThrow(
-            uid,
-            dir,
-            physics,
-            xform,
-            throwForce);
+        // Kinematic mobs need their own throw path and slam handling.
+        KsThrowMob((uid, xform), epicenter, throwForce);
     }
 
     /// <summary>

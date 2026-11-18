@@ -150,7 +150,6 @@ public abstract partial class SharedStaminaSystem : EntitySystem
             args.Incapacitated = true;
     }
 
-    [SubscribeLocalEvent]
     private void OnDisarmed(EntityUid uid, StaminaComponent component, ref DisarmedEvent args)
     {
         if (args.Handled)
