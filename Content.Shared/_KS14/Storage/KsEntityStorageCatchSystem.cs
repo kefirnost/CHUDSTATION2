@@ -57,7 +57,7 @@ public sealed partial class KsEntityStorageCatchSystem : EntitySystem
 
         // Closing takes in what lies in the opening, which someone at its edge doesn't yet. An open storage also
         // accepts anything, so what really fits can only be asked once it is shut.
-        _entityStorageSystem.CloseStorage(storage, user);
+        _entityStorageSystem.CloseStorage((storage.Owner, entityStorage), user);
         if (!entityStorage.Contents.Contains(caught) &&
             (!_entityStorageSystem.CanInsert(caught, storage, entityStorage) ||
              !_entityStorageSystem.Insert(caught, storage, entityStorage)))

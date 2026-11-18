@@ -137,7 +137,7 @@ public sealed partial class PredictedHandsSystem : EntitySystem
         if (_timing.CurTime < hands.NextThrowTime)
             return false;
 
-        hands.NextThrowTime = _timing.CurTime + hands.ThrowCooldown;
+        _hands.SetNextThrowTime((player, hands), _timing.CurTime + hands.ThrowCooldown);
         Dirty(player, hands);
 
         var direction = _transform.ToMapCoordinates(coordinates).Position - _transform.GetWorldPosition(player);
