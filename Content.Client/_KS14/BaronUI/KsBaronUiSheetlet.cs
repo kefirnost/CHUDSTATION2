@@ -44,14 +44,14 @@ public sealed class KsBaronUiSheetlet : Sheetlet<PalettedStylesheet>
         // This prevents missing Cyrillic punctuation, symbols, and other localized text from rendering as tofu.
         var regularFontPaths = new[]
         {
-            "/Fonts/_KS14/BaronUI/FontStack-Regular.TTF",
+            "/Fonts/Kechusilka-Regular.otf",
             "/Fonts/NotoSans/NotoSans-Regular.ttf",
             "/Fonts/NotoSans/NotoSansSymbols-Regular.ttf",
             "/Fonts/NotoSans/NotoSansSymbols2-Regular.ttf",
         };
         var boldFontPaths = new[]
         {
-            "/Fonts/_KS14/BaronUI/FontStack-Bold.ttf",
+            "/Fonts/Kechusilka-Regular.otf",
             "/Fonts/NotoSans/NotoSans-Bold.ttf",
             "/Fonts/NotoSans/NotoSansSymbols-Bold.ttf",
             "/Fonts/NotoSans/NotoSansSymbols2-Regular.ttf",
