@@ -8,7 +8,7 @@ public sealed partial class KsCCVars
     /// Enables the experimental animated closet-door renderer.
     /// </summary>
     public static readonly CVarDef<bool> ClosetDoorAnimation =
-        CVarDef.Create("klovn.closet_door.animation", false, CVar.CLIENTONLY);
+        CVarDef.Create("klovn.closet_door.animation", true, CVar.CLIENTONLY);
 
     /// <summary>
     /// Whether swinging closet doors and mounted layers are drawn aligned to whole sprite pixels.
