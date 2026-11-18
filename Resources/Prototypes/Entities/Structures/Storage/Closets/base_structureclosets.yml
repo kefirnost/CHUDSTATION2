@@ -73,6 +73,7 @@
     stateBaseClosed: generic
     stateDoorOpen: generic_open
     stateDoorClosed: generic_door
+  - type: KsClosetDoorVisuals
   - type: StaticPrice
     price: 75
 

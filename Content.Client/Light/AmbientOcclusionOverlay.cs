@@ -9,6 +9,7 @@ using Robust.Client.Graphics;
 using Robust.Shared.Configuration;
 using Robust.Shared.Enums;
 using Robust.Shared.Physics;
+using Robust.Client.GameObjects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
@@ -51,6 +52,7 @@ public sealed partial class AmbientOcclusionOverlay : Overlay
         _xformSystem = _entManager.System<SharedTransformSystem>();
 
         _cfgManager.OnValueChanged(CCVars.AmbientOcclusionColor, OnColorChanged, true);
+        SubscribeCVars();
     }
 
     protected override void Draw(in OverlayDrawArgs args)
@@ -69,6 +71,7 @@ public sealed partial class AmbientOcclusionOverlay : Overlay
         var viewport = args.Viewport;
         var mapId = args.MapId;
         var worldBounds = args.WorldBounds;
+        var worldAabb = args.WorldAABB;
         var worldHandle = args.WorldHandle;
         var distance = _cfgManager.GetCVar(CCVars.AmbientOcclusionDistance);
         var resolutionScale = Math.Clamp(_cfgManager.GetCVar(CCVars.AmbientOcclusionResolutionScale), 0.1f, 1f);
@@ -111,6 +114,7 @@ public sealed partial class AmbientOcclusionOverlay : Overlay
                 }, mapId, expandedBounds);
 
                 FlushAmbientOcclusionPolygons(worldHandle);
+                DrawEntityAmbientOcclusion(worldHandle, mapId, worldAabb, worldToTargetMatrix, viewport.Eye!.Rotation, _xformSystem);
             }, Color.Transparent);
 
         _clyde.BlurRenderTarget(viewport, res.AOTarget, res.AOBlurBuffer, viewport.Eye!, BlurMultiplier);
@@ -127,6 +131,9 @@ public sealed partial class AmbientOcclusionOverlay : Overlay
 
         worldHandle.UseShader(_proto.Index(StencilEqualDrawShader).Instance());
         worldHandle.DrawTextureRect(res.AOTarget!.Texture, worldBounds, color);
+
+        // Draw item shadows on placeable surfaces after the ordinary AO pass.
+        DrawSurfaceAmbientOcclusion(worldHandle, viewport, res.AOTarget!, res.AOBlurBuffer!, scale, _entManager.System<EntityLookupSystem>());
     }
 
     private void OnColorChanged(string value)
@@ -148,6 +155,7 @@ public sealed partial class AmbientOcclusionOverlay : Overlay
     protected override void DisposeBehavior()
     {
         _cfgManager.UnsubValueChanged(CCVars.AmbientOcclusionColor, OnColorChanged);
+        UnsubscribeCVars();
         _resources.Dispose();
 
         base.DisposeBehavior();

@@ -600,6 +600,9 @@
         },
         {
             "name": "representative_door"
+        },
+        {
+            "name": "generic_back"
         }
     ]
 }

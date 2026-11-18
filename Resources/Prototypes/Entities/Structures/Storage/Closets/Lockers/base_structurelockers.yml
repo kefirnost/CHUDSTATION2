@@ -25,6 +25,10 @@
       sprite: Structures/Storage/closet_labels.rsi
       offset: "-0.065,0"
       map: ["enum.PaperLabelVisuals.Layer"]
+  - type: KsClosetDoorVisuals
+    layers:
+      enum.LockVisualLayers.Lock: Front
+      enum.PaperLabelVisuals.Layer: Front
   - type: Construction
     graph: ClosetSteelSecure
     node: done

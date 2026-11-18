@@ -27,6 +27,7 @@ using Content.Client.Viewport;
 using Content.Client.Voting;
 using Content.Shared.Ame.Components;
 using Content.Shared.Localizations;
+using Content.Shared._KS14.IoC;
 using Robust.Client;
 using Robust.Client.Graphics;
 using Robust.Client.Input;
@@ -45,6 +46,7 @@ namespace Content.Client.Entry
     public sealed partial class EntryPoint : GameClient
     {
         [Dependency] private IBaseClient _baseClient = default!;
+        [Dependency] private SystemCollectionHookManager _systemCollectionHookManager = default!;
         [Dependency] private IGameController _gameController = default!;
         [Dependency] private IStateManager _stateManager = default!;
         [Dependency] private IComponentFactory _componentFactory = default!;
@@ -150,6 +152,7 @@ namespace Content.Client.Entry
         public override void PostInit()
         {
             base.PostInit();
+            _baseClient.PlayerJoinedServer += (_, _) => _systemCollectionHookManager.TryInit();
 
             _stylesheetManager.Initialize();
 

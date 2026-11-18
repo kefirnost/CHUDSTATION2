@@ -4,6 +4,8 @@
   name: booze storage
   description: This is where the bartender keeps the booze.
   components:
+  - type: KsClosetDoorVisuals
+    duration: 0
   - type: Appearance
   - type: EntityStorageVisuals
     stateBaseClosed: cabinet

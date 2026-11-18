@@ -24,11 +24,14 @@ public sealed partial class PlanetLightSystem : EntitySystem
 
             if (value)
             {
-                _overlayMan.AddOverlay(new AmbientOcclusionOverlay());
+                var ambientOcclusionOverlay = new AmbientOcclusionOverlay();
+                _overlayMan.AddOverlay(ambientOcclusionOverlay);
+                _overlayMan.AddOverlay(new Content.Client._KS14.Light.KsSurfaceAmbientOcclusionOverlay(ambientOcclusionOverlay));
             }
             else
             {
                 _overlayMan.RemoveOverlay<AmbientOcclusionOverlay>();
+                _overlayMan.RemoveOverlay<Content.Client._KS14.Light.KsSurfaceAmbientOcclusionOverlay>();
             }
         }
     }
@@ -62,6 +65,7 @@ public sealed partial class PlanetLightSystem : EntitySystem
         _overlayMan.RemoveOverlay<SunShadowOverlay>();
         _overlayMan.RemoveOverlay<AfterLightTargetOverlay>();
         _overlayMan.RemoveOverlay<AmbientOcclusionOverlay>();
+        _overlayMan.RemoveOverlay<Content.Client._KS14.Light.KsSurfaceAmbientOcclusionOverlay>();
     }
 
     [SubscribeLocalEvent]
