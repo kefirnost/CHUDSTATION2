@@ -7,8 +7,8 @@
 
     <BoxContainer Orientation="Vertical">
         <Control>
-            <PanelContainer StyleClasses="WindowHeadingBackground" Name="WindowHeader" />
-            <BoxContainer Margin="4 2 4 0" Orientation="Horizontal">
+            <PanelContainer StyleClasses="KsBaronPanelGrey1" Name="WindowHeader" />
+            <BoxContainer Margin="15 15 15 28" Orientation="Horizontal">
                 <Label Name="WindowTitle"
                        HorizontalExpand="True" VAlign="Center" StyleClasses="FancyWindowTitle" ClipText="true" />
                 <TextureButton Name="HelpButton" StyleClasses="windowHelpButton" VerticalAlignment="Center" Disabled="True" Visible="False" Access="Public" />
@@ -16,7 +16,6 @@
                                VerticalAlignment="Center" />
             </BoxContainer>
         </Control>
-        <controls:Separator StyleClasses="LowDivider"/>
         <Control Access="Public" Name="ContentsContainer" StyleClasses="WindowContentsContainer" RectClipContent="True" VerticalExpand="true" />
     </BoxContainer>
 </controls:FancyWindow>
