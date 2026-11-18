@@ -1,6 +1,7 @@
 using System.Numerics;
 using Content.Client.Effects;
 using Content.Shared._KS14.Light;
+using Content.Shared._KS14.CCVar;
 using Content.Shared.Item;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Placeable;
@@ -8,6 +9,7 @@ using Content.Shared.Projectiles;
 using Robust.Client.GameObjects;
 using Robust.Shared.ComponentTrees;
 using Robust.Shared.Containers;
+using Robust.Shared.Configuration;
 using Robust.Shared.Physics;
 using DrawDepth = Content.Shared.DrawDepth.DrawDepth;
 
@@ -36,6 +38,9 @@ public sealed partial class KsAmbientOcclusionCasterSystem
     public const int MinEffectDrawDepth = (int)DrawDepth.Gasses;
 
     [Dependency] private SpriteSystem _spriteSystem = default!;
+    [Dependency] private IConfigurationManager _configurationManager = default!;
+
+    private bool _ambientOcclusionEntitiesEnabled;
 
     [Dependency] private EntityQuery<SpriteComponent> _spriteQuery = default!;
     [Dependency] private EntityQuery<OccluderComponent> _occluderQuery = default!;
@@ -56,12 +61,26 @@ public sealed partial class KsAmbientOcclusionCasterSystem
     {
         base.Initialize();
 
-        EntityManager.EntityInitialized += OnEntityInitialized;
+        // Avoid registering casters for every entity while the experimental AO pass is disabled.
+        Subs.CVar(_configurationManager, KsCCVars.AmbientOcclusionEntities, SetAmbientOcclusionEntitiesEnabled, invokeImmediately: true);
+    }
+
+    private void SetAmbientOcclusionEntitiesEnabled(bool enabled)
+    {
+        if (_ambientOcclusionEntitiesEnabled == enabled)
+            return;
+
+        _ambientOcclusionEntitiesEnabled = enabled;
+        if (enabled)
+            EntityManager.EntityInitialized += OnEntityInitialized;
+        else
+            EntityManager.EntityInitialized -= OnEntityInitialized;
     }
 
     public override void Shutdown()
     {
-        EntityManager.EntityInitialized -= OnEntityInitialized;
+        if (_ambientOcclusionEntitiesEnabled)
+            EntityManager.EntityInitialized -= OnEntityInitialized;
 
         base.Shutdown();
     }
