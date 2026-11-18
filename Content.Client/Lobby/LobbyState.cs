@@ -14,6 +14,7 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.ResourceManagement;
 using Robust.Shared.Configuration;
 using Robust.Shared.Timing;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
 namespace Content.Client.Lobby
@@ -29,6 +30,7 @@ namespace Content.Client.Lobby
         [Dependency] private IVoteManager _voteManager = default!;
         [Dependency] private ClientsidePlaytimeTrackingManager _playtimeTracking = default!;
         [Dependency] private IResourceCache _resourceCache = default!;
+        [Dependency] private IPrototypeManager _protoMan = default!;
 
         private ClientGameTicker _gameTicker = default!;
         private ContentAudioSystem _contentAudioSystem = default!;
@@ -63,7 +65,7 @@ namespace Content.Client.Lobby
                 : lobbyNameCvar;
 
             var width = _cfg.GetCVar(CCVars.ServerLobbyRightPanelWidth);
-            Lobby.RightSide.SetWidth = width;
+            Lobby.RightSide.SetWidth = (float)width * 0.85f /* KS14: thinner chat column */;
 
             UpdateLobbyUi();
 
@@ -125,7 +127,7 @@ namespace Content.Client.Lobby
         {
             if (_gameTicker.IsGameStarted)
             {
-                Lobby!.StartTime.Text = string.Empty;
+                Lobby!.KsSetCountdown(null, null); // KS14: hide countdown block
                 var roundTime = _gameTiming.CurTime.Subtract(_gameTicker.RoundStartTimeSpan);
                 Lobby!.StationTime.Text = Loc.GetString("lobby-state-player-status-round-time", ("hours", roundTime.Hours), ("minutes", roundTime.Minutes));
                 return;
@@ -136,11 +138,11 @@ namespace Content.Client.Lobby
 
             if (_gameTicker.Paused)
             {
-                text = Loc.GetString("lobby-state-paused");
+                text = Loc.GetString("ks-lobby-countdown-paused");
             }
             else if (_gameTicker.StartTime < _gameTiming.CurTime)
             {
-                Lobby!.StartTime.Text = Loc.GetString("lobby-state-soon");
+                Lobby!.KsSetCountdown(null, Loc.GetString("ks-lobby-countdown-soon"));
                 return;
             }
             else
@@ -149,7 +151,7 @@ namespace Content.Client.Lobby
                 var seconds = difference.TotalSeconds;
                 if (seconds < 0)
                 {
-                    text = Loc.GetString(seconds < -5 ? "lobby-state-right-now-question" : "lobby-state-right-now-confirmation");
+                    text = Loc.GetString(seconds < -5 ? "ks-lobby-countdown-right-now-question" : "ks-lobby-countdown-right-now");
                 }
                 else if (difference.TotalHours >= 1)
                 {
@@ -161,12 +163,33 @@ namespace Content.Client.Lobby
                 }
             }
 
-            Lobby!.StartTime.Text = Loc.GetString("lobby-state-round-start-countdown-text", ("timeLeft", text));
+            double? secondsLeft = _gameTicker.Paused ? null : (_gameTicker.StartTime - _gameTiming.CurTime).TotalSeconds;
+            Lobby!.KsSetCountdown(Loc.GetString("ks-lobby-countdown-caption"), text, secondsLeft: secondsLeft);
         }
 
         private void LobbyStatusUpdated()
         {
+            UpdateLobbyBackground();
             UpdateLobbyUi();
+        }
+
+        private void UpdateLobbyBackground()
+        {
+            if (_protoMan.TryIndex(_gameTicker.LobbyBackground, out var proto))
+            {
+                Lobby!.Background.Texture = _resourceCache.GetResource<TextureResource>(proto.Background);
+
+                var markup = Loc.GetString("lobby-state-background-text",
+                    ("backgroundTitle", Loc.GetString(proto.Title)),
+                    ("backgroundArtist", Loc.GetString(proto.Artist)));
+
+                Lobby!.LobbyBackground.SetMarkup(markup);
+            }
+            else
+            {
+                Lobby!.Background.Texture = null;
+                Lobby!.LobbyBackground.SetMarkup(Loc.GetString("lobby-state-background-no-background-text"));
+            }
         }
 
         private void LobbyLateJoinStatusUpdated()
@@ -178,16 +201,16 @@ namespace Content.Client.Lobby
         {
             if (_gameTicker.IsGameStarted)
             {
-                Lobby!.ReadyButton.Text = Loc.GetString("lobby-state-ready-button-join-state");
+                Lobby!.ReadyButton.Text = Loc.GetString("ks-lobby-ready-join");
                 Lobby!.ReadyButton.ToggleMode = false;
                 Lobby!.ReadyButton.Pressed = false;
                 Lobby!.ObserveButton.Disabled = false;
             }
             else
             {
-                Lobby!.StartTime.Text = string.Empty;
+                Lobby!.KsSetCountdown(null, null); // KS14: hide countdown block
                 Lobby!.ReadyButton.Pressed = _gameTicker.AreWeReady;
-                Lobby!.ReadyButton.Text = Loc.GetString(Lobby!.ReadyButton.Pressed ? "lobby-state-player-status-ready": "lobby-state-player-status-not-ready");
+                Lobby!.ReadyButton.Text = Loc.GetString(Lobby!.ReadyButton.Pressed ? "ks-lobby-ready-ready" : "ks-lobby-ready-not-ready");
                 Lobby!.ReadyButton.ToggleMode = true;
                 Lobby!.ReadyButton.Disabled = false;
                 Lobby!.ObserveButton.Disabled = true;

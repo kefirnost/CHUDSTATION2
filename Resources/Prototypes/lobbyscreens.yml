@@ -1,5 +1,5 @@
 - type: lobbyBackground
   id: BrullbarLobby
-  background: /Textures/LobbyScreens/blullbar.webp
+  background: /Textures/LobbyScreens/brullbar.webp
   title: lobby-state-background-brullbar-body
   artist: lobby-state-background-brullbar-artist

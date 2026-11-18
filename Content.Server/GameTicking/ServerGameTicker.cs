@@ -68,6 +68,7 @@ namespace Content.Server.GameTicking
             InitializeStatusShell();
             InitializeCVars();
             InitializePlayer();
+            KsInitializeForcedLobbyBackground(); // KS14: initialise logger before the first forced-background lookup
             InitializeLobbyBackground();
             InitializeGamePreset();
             DebugTools.Assert(ProtoMan.Index(FallbackOverflowJob).Name == FallbackOverflowJobName,
@@ -94,6 +95,7 @@ namespace Content.Server.GameTicking
             base.Shutdown();
 
             ShutdownGameRules();
+            KsShutdownForcedLobbyBackground(); // KS14
         }
 
         private void SendServerMessage(string message)

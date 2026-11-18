@@ -11,7 +11,8 @@ namespace Content.Client.Info
         public DevInfoBanner() {
             var buttons = new BoxContainer
             {
-                Orientation = LayoutOrientation.Horizontal
+                Orientation = LayoutOrientation.Horizontal,
+                StyleClasses = { Content.Client._KS14.Lobby.KsLobbyStyleClasses.KsLobbyMenuButtonSmall } // KS14
             };
             AddChild(buttons);
 
@@ -21,12 +22,12 @@ namespace Content.Client.Info
             var bugReport = cfg.GetCVar(CCVars.InfoLinksBugReport);
             if (!string.IsNullOrWhiteSpace(bugReport))
             {
-                var reportButton = new Button {Text = Loc.GetString("server-info-report-button")};
+                var reportButton = new Button {Text = Loc.GetString("ks-lobby-chip-report")};
                 reportButton.OnPressed += _ => uriOpener.OpenUri(bugReport);
                 buttons.AddChild(reportButton);
             }
 
-            var creditsButton = new Button {Text = Loc.GetString("server-info-credits-button")};
+            var creditsButton = new Button {Text = Loc.GetString("ks-lobby-chip-credits")};
             creditsButton.OnPressed += _ => new CreditsWindow().Open();
             buttons.AddChild(creditsButton);
         }
