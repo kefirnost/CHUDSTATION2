@@ -24,6 +24,7 @@
                 <CheckBox Name="ViewportLowResCheckBox" Text="{Loc 'ui-options-vp-low-res'}" />
                 <CheckBox Name="ParallaxLowQualityCheckBox" Text="{Loc 'ui-options-parallax-low-quality'}" />
                 <CheckBox Name="AmbientOcclusionCheckBox" Text="{Loc 'ui-options-ambient-occlusion'}" />
+                <CheckBox Name="LobbyAdaptiveContrastCheckBox" Text="{Loc 'ks-ui-options-lobby-adaptive-contrast'}" /> <!-- KS14 -->
                 <!-- CHUD-start - настройки свечения -->
                 <Label Text="{Loc 'chud-options-bloom-label'}" StyleClasses="LabelKeyText" />
                 <CheckBox Name="ChudBloomEnabledCheckBox"

@@ -189,9 +189,13 @@ namespace Content.Client.Viewport
 
             ApplySharpnessShader(handle);
 
+            // KS14: the lobby contrast/blur shader is applied to the finished viewport image.
+            if (KsDrawShader != null)
+                handle.DrawingHandleScreen.UseShader(KsDrawShader);
+
             handle.DrawingHandleScreen.DrawTextureRect(_viewport.RenderTarget.Texture, drawBoxGlobal);
 
-            if (_sharpnessStrength > 0)
+            if (KsDrawShader != null || _sharpnessStrength > 0)
                 handle.DrawingHandleScreen.UseShader(null);
 
             _viewport.RenderScreenOverlaysAbove(handle, this, drawBoxGlobal);

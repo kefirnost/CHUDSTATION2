@@ -12,13 +12,32 @@ namespace Content.Client.Lobby.UI
     {
         [Dependency] private IClientConsoleHost _consoleHost = default!;
 
+        // KS14: lobbyview addition
+        private readonly Robust.Client.Graphics.FixedEye _lobbyEye = new();
+
         public LobbyGui()
         {
             RobustXamlLoader.Load(this);
             IoCManager.InjectDependencies(this);
-            SetAnchorPreset(MainContainer, LayoutPreset.Wide);
-            SetAnchorPreset(BackgroundParallax, LayoutPreset.Wide);
+            SetAnchorPreset(KsRoot /* KS14: MainContainer -> KsRoot, so the bottom bar is full width */, LayoutPreset.Wide);
+            SetAnchorPreset(Background, LayoutPreset.Wide);
 
+            // KS14: lobbyview start
+            SetAnchorPreset(KsViewportContainer, LayoutPreset.Wide);
+            KsViewport.MinSize = new(100, 100);
+            KsViewport.ViewportSize = new(100, 100);
+
+            KsSetCameraView(null);
+            // KS14 end
+            // KS14 start: translucent fades and lobby-only chat background
+            SetAnchorPreset(KsFadeLeft, LayoutPreset.Wide);
+            SetAnchorPreset(KsFadeBottom, LayoutPreset.BottomWide);
+            SetMarginTop(KsFadeBottom, -220);
+            KsInitialiseContrast();
+            Chat.ChatWindowPanel.PanelOverride = new Robust.Client.Graphics.StyleBoxFlat(Color.Black.WithAlpha(0.35f));
+            // KS14 end
+
+            CallVoteButton.Text = Loc.GetString("ks-lobby-chip-vote"); // KS14: uppercase chip, VoteCallMenuButton sets its own text
             LobbySong.SetMarkup(Loc.GetString("lobby-state-song-no-song-text"));
 
             LeaveButton.OnPressed += _ => _consoleHost.ExecuteCommand("disconnect");
@@ -28,10 +47,23 @@ namespace Content.Client.Lobby.UI
             ExpandButton.OnPressed += _ => TogglePanel(true);
         }
 
+        // KS14: lobbyview
+        public void KsSetCameraView(Robust.Shared.Graphics.IEye? eye)
+        {
+            var visible = eye != null;
+            KsViewport.Eye = eye ?? _lobbyEye;
+
+            KsViewportContainer.Visible = visible;
+            Background.Visible = !visible;
+            KsApplyContrastShader(); // KS14: adaptive contrast is for the lobby art only, not the camera
+        }
+
         public void SwitchState(LobbyGuiState state)
         {
             DefaultState.Visible = false;
             CharacterSetupState.Visible = false;
+
+            KsSetBlurActive(state == LobbyGuiState.CharacterSetup); // KS14: blur the backdrop behind character setup
 
             switch (state)
             {
@@ -42,8 +74,8 @@ namespace Content.Client.Lobby.UI
                 case LobbyGuiState.CharacterSetup:
                     CharacterSetupState.Visible = true;
 
-                    var actualWidth = (float) UserInterfaceManager.RootControl.PixelWidth;
-                    var setupWidth = (float) LeftSide.PixelWidth;
+                    var actualWidth = (float)UserInterfaceManager.RootControl.PixelWidth;
+                    var setupWidth = (float)LeftSide.PixelWidth;
 
                     if (1 - (setupWidth / actualWidth) > 0.30)
                     {

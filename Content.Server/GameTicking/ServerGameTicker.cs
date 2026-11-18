@@ -69,6 +69,7 @@ namespace Content.Server.GameTicking
             InitializeCVars();
             InitializePlayer();
             InitializeLobbyBackground();
+            KsInitializeForcedLobbyBackground(); // KS14
             InitializeGamePreset();
             DebugTools.Assert(ProtoMan.Index(FallbackOverflowJob).Name == FallbackOverflowJobName,
                 "Overflow role does not have the correct name!");
@@ -94,6 +95,7 @@ namespace Content.Server.GameTicking
             base.Shutdown();
 
             ShutdownGameRules();
+            KsShutdownForcedLobbyBackground(); // KS14
         }
 
         private void SendServerMessage(string message)

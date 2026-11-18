@@ -27,6 +27,9 @@ public sealed partial class ServerGameTicker
             if (!WhitelistedBackgroundExtensions.Contains(ext))
                 continue;
 
+            if (!proto.RandomlySelectable) // KS14: only forced maps should show this background
+                continue;
+
             //create a protoid and add it to the list
             _lobbyBackgrounds.Add(new ProtoId<LobbyBackgroundPrototype>(proto.ID));
         }
@@ -36,6 +39,9 @@ public sealed partial class ServerGameTicker
 
     private void RandomizeLobbyBackground()
     {
+        if (KsTryApplyForcedLobbyBackground()) // KS14: selected map can force the lobby background
+            return;
+
         if (_lobbyBackgrounds != null && _lobbyBackgrounds.Count != 0)
             LobbyBackground = Random.Pick(_lobbyBackgrounds);
         else
