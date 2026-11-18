@@ -1,4 +1,5 @@
 using Content.Shared.ActionBlocker;
+using Content.Shared._KS14.Grab;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Alert;
 using Content.Shared.Buckle.Components;
@@ -247,6 +248,10 @@ public sealed partial class PullingSystem : EntitySystem
 
     private void OnVirtualItemDeleted(EntityUid uid, PullerComponent component, VirtualItemDeletedEvent args)
     {
+        // Applying authoritative hand state is not the same as the player releasing the pull.
+        if (_timing.ApplyingState)
+            return;
+
         // If client deletes the virtual hand then stop the pull.
         if (component.Pulling == null)
             return;
@@ -486,6 +491,11 @@ public sealed partial class PullingSystem : EntitySystem
 
         if (pullable.Comp.Puller == pullerUid)
         {
+            var attempt = new KsPullToggleAttemptEvent(pullerUid, pullable);
+            RaiseLocalEvent(pullerUid, ref attempt);
+            if (attempt.Handled)
+                return true;
+
             return TryStopPull(pullable, pullable.Comp);
         }
 

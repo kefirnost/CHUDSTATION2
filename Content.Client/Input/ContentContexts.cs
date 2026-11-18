@@ -1,4 +1,5 @@
 using Content.Shared.Input;
+using Content.Shared._KS14.Input;
 using Robust.Shared.Input;
 
 namespace Content.Client.Input
@@ -85,6 +86,7 @@ namespace Content.Client.Input
                 ContentKeyFunctions.OpenCharacterMenu,
                 ContentKeyFunctions.ActivateItemInWorld,
                 ContentKeyFunctions.ThrowItemInHand,
+                KsKeyFunctions.ToggleThrowMode,
                 ContentKeyFunctions.AltActivateItemInWorld,
                 ContentKeyFunctions.TryPullObject,
                 ContentKeyFunctions.MovePulledObject,

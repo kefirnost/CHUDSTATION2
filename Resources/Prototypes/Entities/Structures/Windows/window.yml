@@ -9,6 +9,7 @@
     snap:
     - Window
   components:
+  - type: KsThrowHitPriority
   - type: Anchorable
     flags:
     - Anchorable

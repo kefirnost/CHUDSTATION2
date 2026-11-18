@@ -30,4 +30,7 @@ public record struct DisarmedEvent(EntityUid Target, EntityUid Source, float Pus
     public bool IsStunned;
 
     public bool Handled;
+
+    /// <summary>Whether the shove handler already displayed its own audience-specific popups.</summary>
+    public bool KsPopupHandled;
 }

@@ -12,6 +12,7 @@ using Content.Server.Gravity;
 using Content.Server.Power.Components;
 using Content.Shared.Atmos;
 using Content.Shared.CombatMode;
+using Content.Shared._Trauma.Hands;
 using Content.Shared.Construction.Prototypes;
 using Content.Shared.Gravity;
 using Content.Shared.Item;
@@ -476,7 +477,7 @@ public abstract partial class InteractionTest
     {
         var actualTarget = SEntMan.GetCoordinates(target ?? TargetCoords);
         var result = false;
-        await Server.WaitPost(() => result = HandSys.ThrowHeldItem(SEntMan.GetEntity(Player), actualTarget, minDistance));
+        await Server.WaitPost(() => result = SEntMan.System<PredictedHandsSystem>().ThrowHeldItem(SEntMan.GetEntity(Player), actualTarget, minDistance));
         return result;
     }
 

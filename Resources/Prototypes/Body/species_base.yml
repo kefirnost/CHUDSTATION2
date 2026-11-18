@@ -95,6 +95,12 @@
   - type: Buckle
   - type: CombatMode
     canDisarm: true
+    disarmFailChance: 0
+  - type: ComplexShove
+  - type: KsShoveObstacle
+    collateralKnockdownTime: 1.1
+    ignoredWhileDown: true
+    sound: /Audio/Effects/hit_kick.ogg
   - type: MeleeWeapon
     soundHit:
       collection: Punch
@@ -135,6 +141,12 @@
       enum.StrippingUiKey.Key:
         type: StrippableBoundUserInterface
   - type: Puller
+    needsHands: false
+  - type: KsGrabber
+  - type: KsGrabbable
+  - type: KsFiremanCarrier
+  - type: KsThrowMode
+  - type: KsExplosionThrown
   - type: Speech
     speechSounds: Alto
   - type: DamageForceSay
