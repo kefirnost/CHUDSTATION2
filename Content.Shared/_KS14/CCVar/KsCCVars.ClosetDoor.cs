@@ -8,6 +8,12 @@ public sealed partial class KsCCVars
     ///     Whether swinging closet doors, and what is mounted on them, are drawn in whole sprite pixels, as BYOND draws a
     ///         transformed icon, rather than sampled smoothly at screen resolution.
     /// </summary>
+    /// <summary>
+    ///     Enables the experimental animated closet-door renderer.
+    /// </summary>
+    public static readonly CVarDef<bool> ClosetDoorAnimation =
+        CVarDef.Create("klovn.closet_door.animation", false, CVar.CLIENTONLY | CVar.ARCHIVE);
+
     public static readonly CVarDef<bool> ClosetDoorPixelSnap =
         CVarDef.Create("klovn.closet_door.pixel_snap", false, CVar.CLIENTONLY | CVar.ARCHIVE);
 

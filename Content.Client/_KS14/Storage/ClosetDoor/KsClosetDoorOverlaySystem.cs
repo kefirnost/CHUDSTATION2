@@ -27,6 +27,8 @@ public sealed partial class KsClosetDoorOverlaySystem : EntitySystem
 
     private KsClosetDoorFrontOverlay? _frontOverlay;
     private KsClosetDoorBackOverlay? _backOverlay;
+    private IDependencyCollection? _dependencyCollection;
+    private bool _animationEnabled;
     private bool _pixelSnap;
     private bool _debugMask;
     private bool _occlusionMask;
@@ -35,6 +37,7 @@ public sealed partial class KsClosetDoorOverlaySystem : EntitySystem
     {
         base.Initialize();
 
+        Subs.CVar(_configurationManager, KsCCVars.ClosetDoorAnimation, SetAnimationEnabled, invokeImmediately: true);
         Subs.CVar(_configurationManager, KsCCVars.ClosetDoorPixelSnap, SetPixelSnap, invokeImmediately: true);
         Subs.CVar(_configurationManager, KsCCVars.ClosetDoorDebugMask, SetDebugMask, invokeImmediately: true);
         Subs.CVar(_configurationManager, KsCCVars.ClosetDoorOcclusionMask, SetOcclusionMask, invokeImmediately: true);
@@ -43,7 +46,29 @@ public sealed partial class KsClosetDoorOverlaySystem : EntitySystem
 
     private void OnDependenciesReady(IDependencyCollection dependencyCollection)
     {
-        // Indexed once here: the overlays make an instance per draw from these.
+        _dependencyCollection = dependencyCollection;
+        if (_animationEnabled)
+            CreateOverlays();
+    }
+
+    private void SetAnimationEnabled(bool enabled)
+    {
+        _animationEnabled = enabled;
+        if (_dependencyCollection == null)
+            return;
+
+        if (enabled)
+            CreateOverlays();
+        else
+            RemoveOverlays();
+    }
+
+    private void CreateOverlays()
+    {
+        if (_dependencyCollection == null || _frontOverlay != null)
+            return;
+
+        // Build the rendering objects only when the optional feature is enabled.
         var snapShader = ProtoMan.Index(SnapShader);
         var snapUnshadedShader = ProtoMan.Index(SnapUnshadedShader);
 
@@ -62,11 +87,24 @@ public sealed partial class KsClosetDoorOverlaySystem : EntitySystem
                 ProtoMan.Index(OcclusionDrawShader).Instance(),
                 ProtoMan.Index(OcclusionSnapShader)));
 
-        AddOverlay(dependencyCollection, _frontOverlay);
-        AddOverlay(dependencyCollection, _backOverlay);
+        AddOverlay(_dependencyCollection, _frontOverlay);
+        AddOverlay(_dependencyCollection, _backOverlay);
         SetPixelSnap(_pixelSnap);
         SetDebugMask(_debugMask);
         SetOcclusionMask(_occlusionMask);
+    }
+
+    private void RemoveOverlays()
+    {
+        if (_frontOverlay == null)
+            return;
+
+        _overlayManager.RemoveOverlay<KsClosetDoorFrontOverlay>();
+        _overlayManager.RemoveOverlay<KsClosetDoorBackOverlay>();
+        _frontOverlay.Dispose();
+        _backOverlay?.Dispose();
+        _frontOverlay = null;
+        _backOverlay = null;
     }
 
     private void AddOverlay(IDependencyCollection dependencyCollection, KsClosetDoorOverlay overlay)
@@ -107,11 +145,7 @@ public sealed partial class KsClosetDoorOverlaySystem : EntitySystem
         base.Shutdown();
 
         // Removing an overlay doesn't dispose it, and these own the snapping shaders' unique instances.
-        _overlayManager.RemoveOverlay<KsClosetDoorFrontOverlay>();
-        _overlayManager.RemoveOverlay<KsClosetDoorBackOverlay>();
-        _frontOverlay?.Dispose();
-        _backOverlay?.Dispose();
-        _frontOverlay = null;
-        _backOverlay = null;
+        RemoveOverlays();
+        _dependencyCollection = null;
     }
 }

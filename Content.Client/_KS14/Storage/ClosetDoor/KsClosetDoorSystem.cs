@@ -3,10 +3,12 @@ using System.Numerics;
 using Content.Client.Lock.Visualizers;
 using Content.Client.Storage.Visualizers;
 using Content.Shared._KS14;
+using Content.Shared._KS14.CCVar;
 using Content.Shared.Storage;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Shared.Reflection;
+using Robust.Shared.Configuration;
 using Robust.Shared.Timing;
 
 namespace Content.Client._KS14.Storage.ClosetDoor;
@@ -26,6 +28,7 @@ namespace Content.Client._KS14.Storage.ClosetDoor;
 public sealed partial class KsClosetDoorSystem : EntitySystem
 {
     [Dependency] private IGameTiming _gameTiming = default!;
+    [Dependency] private IConfigurationManager _configurationManager = default!;
     [Dependency] private IReflectionManager _reflectionManager = default!;
     [Dependency] private AppearanceSystem _appearanceSystem = default!;
     [Dependency] private SpriteSystem _spriteSystem = default!;
@@ -50,12 +53,19 @@ public sealed partial class KsClosetDoorSystem : EntitySystem
     ///         and the closet would flicker doorless for a frame.
     /// </summary>
     private TimeSpan _frameRealTime;
+    private bool _animationEnabled;
+
+    private void SetAnimationEnabled(bool enabled)
+    {
+        _animationEnabled = enabled;
+    }
 
     public override void Initialize()
     {
         base.Initialize();
 
         _transformSystem.OnGlobalMoveEvent += OnGlobalMove;
+        Subs.CVar(_configurationManager, KsCCVars.ClosetDoorAnimation, SetAnimationEnabled, invokeImmediately: true);
     }
 
     public override void Shutdown()
@@ -71,7 +81,8 @@ public sealed partial class KsClosetDoorSystem : EntitySystem
     [SubscribeLocalEvent(after: [typeof(EntityStorageVisualizerSystem), typeof(GenericVisualizerSystem), typeof(LockVisualizerSystem)])]
     private void OnAppearanceChange(Entity<KsClosetDoorVisualsComponent> entity, ref AppearanceChangeEvent args)
     {
-        if (args.Sprite == null ||
+        if (!_animationEnabled ||
+            args.Sprite == null ||
             !_appearanceSystem.TryGetData<bool>(entity.Owner, StorageVisuals.Open, out var open, args.Component))
             return;
 
@@ -106,8 +117,8 @@ public sealed partial class KsClosetDoorSystem : EntitySystem
             entity.Comp.HiddenLayers.Add(layerId);
         }
 
-        // tgstation draws no shut door until the swing has finished.
-        if (!open && _spriteSystem.TryGetLayer(spriteEntity, StorageVisualLayers.Door, out var doorLayer, logMissing: false))
+        // The sprite's normal open-state layer is hidden while the overlay animates the door.
+        if (_spriteSystem.TryGetLayer(spriteEntity, StorageVisualLayers.Door, out var doorLayer, logMissing: false))
         {
             _spriteSystem.LayerSetVisible(doorLayer, false);
             entity.Comp.DoorLayerHidden = true;

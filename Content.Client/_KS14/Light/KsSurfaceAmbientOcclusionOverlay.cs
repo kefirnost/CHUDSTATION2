@@ -23,7 +23,7 @@ public sealed partial class KsSurfaceAmbientOcclusionOverlay : Overlay
     [Dependency] private IPrototypeManager _prototypeManager = default!;
 
     private readonly AmbientOcclusionOverlay _ambientOcclusionOverlay;
-    private readonly ShaderInstance _maskedTextureShader;
+    private ShaderInstance? _maskedTextureShader;
 
     public override OverlaySpace Space => OverlaySpace.WorldSpaceEntities;
 
@@ -32,8 +32,6 @@ public sealed partial class KsSurfaceAmbientOcclusionOverlay : Overlay
         IoCManager.InjectDependencies(this);
 
         _ambientOcclusionOverlay = ambientOcclusionOverlay;
-        _maskedTextureShader = _prototypeManager.Index(MaskedTextureShader).InstanceUnique();
-
         ZIndex = OverlayZIndex;
     }
 
@@ -42,6 +40,8 @@ public sealed partial class KsSurfaceAmbientOcclusionOverlay : Overlay
         if (!_ambientOcclusionOverlay.TryTakeSurfaceTextures(args.Viewport, out var aoTexture, out var maskTexture))
             return;
 
+        // Instantiate the optional shader only when there is surface AO data to composite.
+        _maskedTextureShader ??= _prototypeManager.Index(MaskedTextureShader).InstanceUnique();
         _maskedTextureShader.SetParameter("MASK", maskTexture);
         args.WorldHandle.UseShader(_maskedTextureShader);
         args.WorldHandle.DrawTextureRect(aoTexture, args.WorldBounds, _ambientOcclusionOverlay.Color);
@@ -50,7 +50,7 @@ public sealed partial class KsSurfaceAmbientOcclusionOverlay : Overlay
 
     protected override void DisposeBehavior()
     {
-        _maskedTextureShader.Dispose();
+        _maskedTextureShader?.Dispose();
         base.DisposeBehavior();
     }
 }
