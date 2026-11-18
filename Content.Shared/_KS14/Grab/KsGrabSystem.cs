@@ -141,7 +141,7 @@ public sealed partial class KsGrabSystem : EntitySystem
         if (!TerminatingOrDeleted(victim))
             _actionBlockerSystem.UpdateCanMove(victim);
 
-        _movementSpeedModifierSystem.RefreshMovementSpeedModifiers(grabber);
+        _movementSpeedModifierSystem.RefreshMovementSpeedModifiers((grabber.Owner, CompOrNull<MovementSpeedModifierComponent>(grabber.Owner)));
     }
 
     [SubscribeLocalEvent]
@@ -313,7 +313,7 @@ public sealed partial class KsGrabSystem : EntitySystem
         if (stage.FloorsVictim)
             _stunSystem.TryKnockdown(victim, grabber.Comp.FloorKnockdownTime, drop: false);
 
-        _movementSpeedModifierSystem.RefreshMovementSpeedModifiers(grabber);
+        _movementSpeedModifierSystem.RefreshMovementSpeedModifiers((grabber.Owner, CompOrNull<MovementSpeedModifierComponent>(grabber.Owner)));
         UpdateVictimAlert(victim, oldStage, stage);
 
         if (oldStage != null)

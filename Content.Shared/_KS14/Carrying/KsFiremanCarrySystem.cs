@@ -236,7 +236,7 @@ public sealed partial class KsFiremanCarrySystem : EntitySystem
         _transformSystem.SetCoordinates(victim, new EntityCoordinates(carrier, Vector2.Zero));
 
         _actionBlockerSystem.UpdateCanMove(victim);
-        _movementSpeedModifierSystem.RefreshMovementSpeedModifiers(carrier);
+        _movementSpeedModifierSystem.RefreshMovementSpeedModifiers((carrier.Owner, CompOrNull<MovementSpeedModifierComponent>(carrier.Owner)));
         _alertsSystem.ShowAlert(carrier.Owner, carrier.Comp.CarryingAlert);
         _alertsSystem.ShowAlert(victim, carrier.Comp.CarriedAlert);
 

@@ -219,7 +219,7 @@ public sealed partial class ComplexShoveSystem : EntitySystem
         {
             // Stunned by something else: a kick wouldn't add anything, and mustn't extend it.
             if (HasComp<StunnedComponent>(target) ||
-                !_stunSystem.TryUpdateParalyzeDuration(target, shover.Comp.ChainParalyzeTime, drop: false))
+                !_stunSystem.TryUpdateParalyzeDuration(target, shover.Comp.ChainParalyzeTime))
             {
                 return KsShoveOutcome.Pushed;
             }

@@ -1,4 +1,4 @@
-using Content.Shared.Localizations;
+using Robust.Shared.Localization;
 using Robust.Shared.IoC;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
@@ -13,7 +13,7 @@ public sealed record KsPopupPrototypeName(string Id)
     {
         var prototypes = IoCManager.Resolve<IPrototypeManager>();
         return prototypes.TryIndex<EntityPrototype>(Id, out var prototype)
-            ? IoCManager.Resolve<ContentLocalizationManager>().GetLocalizedPrototypeName(prototype)
+            ? Loc.GetString(prototype.Name)
             : Id;
     }
 }

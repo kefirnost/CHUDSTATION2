@@ -69,30 +69,6 @@ public sealed partial class PredictedHandsSystem : EntitySystem
         CommandBinds.Unregister<PredictedHandsSystem>();
     }
 
-    private void OnDisarmed(Entity<HandsComponent> ent, ref DisarmedEvent args)
-    {
-        if (args.Handled)
-            return;
-
-        var seed = SharedRandomExtensions.HashCodeCombine((int)_timing.CurTick.Value, GetNetEntity(ent).Id);
-        var rand = new System.Random(seed);
-        if (!rand.Prob(args.DisarmProbability))
-            return;
-
-        args.WasDisarmed = true;
-        // Break any pulls
-        if (TryComp(ent, out PullerComponent? puller) && TryComp(puller.Pulling, out PullableComponent? pullable))
-            _pulling.TryStopPull(puller.Pulling.Value, pullable);
-
-        var offset = rand.NextAngle().RotateVec(new Vector2(rand.NextFloat(1, 1.5f), 0));
-        var coords = _transform.GetMoverCoordinates(args.Target).Offset(offset);
-        if (!ThrowHeldItem(args.Target, coords))
-            return;
-
-        args.Handled = true;
-        args.PopupPrefix = "disarm-action-"; // KS14: Added popupprefix
-    }
-
     #region Interactions
 
     private bool HandleThrowItem(ICommonSession? session, EntityCoordinates coordinates, EntityUid entity)
