@@ -68,8 +68,8 @@ namespace Content.Server.GameTicking
             InitializeStatusShell();
             InitializeCVars();
             InitializePlayer();
+            KsInitializeForcedLobbyBackground(); // KS14: initialise logger before the first forced-background lookup
             InitializeLobbyBackground();
-            KsInitializeForcedLobbyBackground(); // KS14
             InitializeGamePreset();
             DebugTools.Assert(ProtoMan.Index(FallbackOverflowJob).Name == FallbackOverflowJobName,
                 "Overflow role does not have the correct name!");
