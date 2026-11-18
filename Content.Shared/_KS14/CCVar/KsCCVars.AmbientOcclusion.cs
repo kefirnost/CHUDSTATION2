@@ -2,6 +2,7 @@ using Robust.Shared.Configuration;
 
 namespace Content.Shared._KS14.CCVar;
 
+[CVarDefs]
 public sealed partial class KsCCVars
 {
     /// <summary>
