@@ -71,9 +71,11 @@
   - type: Appearance
   - type: EntityStorageVisuals
     stateBaseClosed: generic
-    stateDoorOpen: generic_open
     stateDoorClosed: generic_door
   - type: KsClosetDoorVisuals
+    duration: 0.22s
+    layers:
+      enum.PaperLabelVisuals.Layer: Front
   - type: StaticPrice
     price: 75
 

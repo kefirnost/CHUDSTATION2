@@ -157,6 +157,7 @@ public sealed partial class AmbientOcclusionOverlay : Overlay
         _cfgManager.UnsubValueChanged(CCVars.AmbientOcclusionColor, OnColorChanged);
         UnsubscribeCVars();
         _resources.Dispose();
+        _surfaceResources.Dispose();
 
         base.DisposeBehavior();
     }
