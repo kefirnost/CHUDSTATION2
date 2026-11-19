@@ -4,7 +4,7 @@ This file records the upstream contributions represented by the sprite-only port
 
 ## Port scope
 
-- The port updates **938 existing PNG sprite files** in the current CHUDSTATION2 resource layout.
+- The port updates **905 existing PNG sprite files** in the current CHUDSTATION2 resource layout.
 - Files were matched to existing `.rsi` directories and states; the current prototype and metadata layout was retained.
 - This is an artwork/resource port only. It does not port the upstream YAML/prototype changes, new item definitions, or gameplay changes.
 - Sprite states without an unambiguous current destination, and new states requiring corresponding metadata/prototype work, were left out. Some PRs are therefore only partially represented.
